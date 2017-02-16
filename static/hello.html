@@ -19,6 +19,7 @@
 
 		// Получаем имя из query-string
 		const name = location.search.split('=').pop() || 'Anonimous';
+		console.log(name);
 
 		// Выводим приветствие
 		header.textContent = `Привет, ${name}!`;
