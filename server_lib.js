@@ -98,23 +98,39 @@ function prefixFromPrefixStr (prefixStr) {
     return prefixStr.replace(exports.prefixStrPrefix, "");
 }
 
+exports.callbackTemplates = {
+    "default": function (request, response) {
+        console.log("Incorrect URL requested: " + request.url);
+
+        exports.fs.readFile("./static/html/error_page.html", function (err, data) {
+            if (err) {
+                console.error(err);
+            } else {
+                response.write(data.toString());
+            }
+            response.end();
+        });
+    },
+
+    "pageNotFound": function (request, response) {
+        console.error("404 error: " + request.url);
+        response.writeHead(404, {"Content-Type": "text/html"});
+        response.write("404 Not Found\n");
+        response.end();
+    },
+
+    "notAuthorized": function (request, response) {
+        console.log("403 error: " + request.url);
+        response.writeHead(404, {"Content-Type": "text/html"});
+        response.write("403 Not Found\n");
+        response.end();
+    }
+};
+
 exports.getStaticServer = function(_urlCallbackDict) {
     let urlCallbackDict = _urlCallbackDict || {};
 
     return exports.http.createServer(function (request, response) {
-        let defaultCallback = function (request, response) {
-            console.log("Incorrect URL requested: " + request.url);
-
-            exports.fs.readFile("./static/html/error_page.html", function (err, data) {
-                if (err) {
-                    console.error(err);
-                } else {
-                    response.write(data.toString());
-                }
-                response.end();
-            });
-        };
-
         let callback = urlCallbackDict[request.url] || null;
 
         if (!callback) {
@@ -149,7 +165,7 @@ exports.getStaticServer = function(_urlCallbackDict) {
             }
         }
 
-        callback = callback || defaultCallback;
+        callback = callback || exports.callbackTemplates.pageNotFound;
         callback(request, response);
     });
 };
