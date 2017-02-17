@@ -6,6 +6,7 @@
 
 exports.fs = require("fs");
 exports.http = require("http");
+exports.path = require("path");
 
 exports.FileByPrefixFunc = function (request, response) {
     console.log("Requested URL: " + request.url);
@@ -58,11 +59,18 @@ exports.FolderFileFunc = function (folderPath, urlPrefix) {
         }
 
         let filePath = folderPath + relPath;
+        let normalizedPath = exports.path.relative(folderPath, filePath);
+        if (normalizedPath.startsWith('..')) {
+            console.log(normalizedPath);
+            response.writeHead(404, {"Content-Type": "text/html"});
+            response.end();
+            return;
+        }
+
         exports.fs.readFile(filePath, function (err, data) {
             if (err) {
                 console.error(err);
                 response.write(err.toString());
-                response.end();
             } else {
                 response.write(data);
             }
