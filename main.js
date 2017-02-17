@@ -10,6 +10,7 @@ let lib = require("./server_lib");
 let urlDict = {
     "/index/": new lib.BindedFileFunc("./static/html/index.html"),  // particular file is binded to particular URL
     "/about/": new lib.BindedFileFunc("./static/html/about.html"),
+    "/game/": new lib.BindedFileFunc("./static/html/about.html"),
     "/leaders/": new lib.BindedFileFunc("./static/html/leaders.html"),
     "/login/": new lib.BindedFileFunc("./static/html/login.html"),
     "/signup/": new lib.BindedFileFunc("./static/html/signup.html"),
