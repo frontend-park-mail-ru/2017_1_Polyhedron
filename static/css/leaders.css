@@ -1,0 +1,16 @@
+.heading-leaders{
+font-size: 20pt; 
+margin-left: 42%; 
+margin-top: 5%;
+}
+
+.list-fields{
+position: block; 
+margin-left: 35%; 
+width: 30%;
+font-size: large;
+}
+
+ol.list-fields a{
+padding-left: 110px !important;
+}
