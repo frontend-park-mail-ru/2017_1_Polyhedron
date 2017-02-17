@@ -11,7 +11,7 @@ position: relative;
 display: block;
 padding: .4em .4em .4em 2em;
 margin: .5em 0;
-background: rgb(237, 237, 237);
+background: #FFFAFA;
 color: #444;
 text-decoration: none;
 border-radius: .3em;

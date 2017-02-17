@@ -3,6 +3,7 @@ position: fixed;
 top: 35%;
 left: 50%;
 }
+//style="position: fixed; top: 35%; left: 50%"
 
 .user-presentation{
 position: fixed; 
