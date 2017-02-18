@@ -46,7 +46,7 @@ function BindedFile (pagePath) {
  * @returns {Function}
  * @constructor
  */
-function FolderFile (folderPath, urlPrefix) {
+function BindedFolder (folderPath, urlPrefix) {
     return function (request, response) {
         console.log("Requested URL: ", request.url);
 
@@ -221,7 +221,7 @@ function getStaticServer (router) {
 }
 
 module.exports.BindedFile = BindedFile;
-module.exports.FolderFile = FolderFile;
+module.exports.FolderFile = BindedFolder;
 module.exports.getRegexStr = getRegexStr;
 module.exports.getPrefixStr = getPrefixStr;
 module.exports.Router = Router;
