@@ -221,7 +221,7 @@ function getStaticServer (router) {
 }
 
 module.exports.BindedFile = BindedFile;
-module.exports.FolderFile = BindedFolder;
+module.exports.BindedFolder = BindedFolder;
 module.exports.getRegexStr = getRegexStr;
 module.exports.getPrefixStr = getPrefixStr;
 module.exports.Router = Router;
