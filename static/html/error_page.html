@@ -1,0 +1,19 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>Error page</title>
+</head>
+<body>
+    <h1 id="err_msg">Wrong URL</h1>
+
+    <script>
+        function errorFunc () {
+            let errorHeader = document.getElementById("err_msg");
+            errorHeader.textContent = "Wrong URL: " + document.URL;
+        }
+
+        errorFunc();
+    </script>
+</body>
+</html>
