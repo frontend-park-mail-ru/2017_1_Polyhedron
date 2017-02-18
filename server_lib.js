@@ -1,24 +1,28 @@
-/**
- * Created by artem on 2/12/17.
- */
-
 "use strict";
 
-exports.fs = require("fs");
-exports.http = require("http");
-exports.path = require("path");
+const fs = require("fs");
+const http = require("http");
+const path = require("path");
 
-exports.FileByPrefixFunc = function (request, response) {
+
+const REG_EXP_PREFIX = "REGEX";
+const PREFIX_STR_PREFIX = "PREFIX";
+
+function FileByPrefixFunc (request, response) {
     console.log("Requested URL: " + request.url);
-    exports.fs.readFile(request.url, function (err, data) {
+
+    fs.readFile(request.url, function (err, data) {
         if (err) {
             console.error(err);
+            response.writeHead(404, {"Content-Type": "text/html"});
+            response.write("404 Not Found\n");
+            response.end();
         } else {
             response.write(data);
         }
         response.end();
     });
-};
+}
 
 /**
  *
@@ -26,21 +30,24 @@ exports.FileByPrefixFunc = function (request, response) {
  * @returns {Function} callback responding with predefined path
  * @constructor
  */
-exports.BindedFileFunc = function(pagePath) {
+function BindedFile (pagePath) {
     return function (request, response) {
         console.log("Requested URL: " + request.url);
-        exports.fs.readFile(pagePath, function (err, data) {
+
+        fs.readFile(pagePath, function (err, data) {
             if (err) {
                 console.error(err);
-                response.write(err);
+                response.writeHead(404, {"Content-Type": "text/html"});
+                response.write("404 Not Found\n");
                 response.end();
             } else {
                 response.write(data);
+                response.end();
             }
             response.end();
         });
     }
-};
+}
 
 /**
  *
@@ -49,7 +56,7 @@ exports.BindedFileFunc = function(pagePath) {
  * @returns {Function}
  * @constructor
  */
-exports.FolderFileFunc = function (folderPath, urlPrefix) {
+function FolderFile (folderPath, urlPrefix) {
     return function (request, response) {
         console.log("Requested URL: " + request.url);
 
@@ -59,7 +66,7 @@ exports.FolderFileFunc = function (folderPath, urlPrefix) {
         }
 
         let filePath = folderPath + relPath;
-        let normalizedPath = exports.path.relative(folderPath, filePath);
+        let normalizedPath = path.relative(folderPath, filePath);
         if (normalizedPath.startsWith('..')) {
             console.log(normalizedPath);
             response.writeHead(404, {"Content-Type": "text/html"});
@@ -67,7 +74,7 @@ exports.FolderFileFunc = function (folderPath, urlPrefix) {
             return;
         }
 
-        exports.fs.readFile(filePath, function (err, data) {
+        fs.readFile(filePath, function (err, data) {
             if (err) {
                 console.error(err);
                 response.write(err.toString());
@@ -77,42 +84,43 @@ exports.FolderFileFunc = function (folderPath, urlPrefix) {
             response.end();
         });
     }
-};
-
-exports.regExpPrefix = "REGEX";
-exports.prefixStrPrefix = "PREFIX";
-
-exports.getRegexStr = function (str) {
-    return exports.regExpPrefix + str;
-};
-
-exports.getPrefixStr = function (str) {
-    return exports.prefixStrPrefix + str;
-};
-
-function isRegExpStr (str) {
-    return str.startsWith(exports.regExpPrefix);
 }
 
-function isPrefixStr (str) {
-    return str.startsWith(exports.prefixStrPrefix);
+
+function getRegexStr (str) {
+    return REG_EXP_PREFIX + str;
 }
 
-function regexFromRegexStr (str) {
-    return str.replace(exports.regExpPrefix, "");
+function getPrefixStr (str) {
+    return PREFIX_STR_PREFIX + str;
 }
 
-function prefixFromPrefixStr (prefixStr) {
-    return prefixStr.replace(exports.prefixStrPrefix, "");
+function _isRegExpStr (str) {
+    return str.startsWith(REG_EXP_PREFIX);
 }
 
-exports.callbackTemplates = {
+function _isPrefixStr (str) {
+    return str.startsWith(PREFIX_STR_PREFIX);
+}
+
+function _regexFromRegexStr (str) {
+    return str.replace(REG_EXP_PREFIX, "");
+}
+
+function _prefixFromPrefixStr (prefixStr) {
+    return prefixStr.replace(PREFIX_STR_PREFIX, "");
+}
+
+const _callbackTemplates = {
     "default": function (request, response) {
         console.log("Incorrect URL requested: " + request.url);
 
-        exports.fs.readFile("./static/html/error_page.html", function (err, data) {
+        fs.readFile("./static/html/error_page.html", function (err, data) {
             if (err) {
                 console.error(err);
+                response.writeHead(404, {"Content-Type": "text/html"});
+                response.write("404 Not Found\n");
+                response.end();
             } else {
                 response.write(data.toString());
             }
@@ -129,51 +137,98 @@ exports.callbackTemplates = {
 
     "notAuthorized": function (request, response) {
         console.log("403 error: " + request.url);
-        response.writeHead(404, {"Content-Type": "text/html"});
+        response.writeHead(403, {"Content-Type": "text/html"});
         response.write("403 Not Found\n");
         response.end();
     }
 };
 
-exports.getStaticServer = function(_urlCallbackDict) {
-    let urlCallbackDict = _urlCallbackDict || {};
+class URLMap {
+    constructor() {
+        this._urlDict = {};
+    }
 
-    return exports.http.createServer(function (request, response) {
+    addPlainURL(url, bind) {
+        this._urlDict[url] = bind;
+    }
+
+    addRegexURL(url, bind) {
+        this._urlDict[getRegexStr(url)] = bind;
+    }
+
+    addPrefixURL(url, bind) {
+        this._urlDict[getPrefixStr(url)] = bind;
+    }
+
+    get getURLDict() {
+        return this._urlDict;
+    }
+}
+
+function getStaticServer (_URLMap) {
+    let urlCallbackDict = _URLMap.getURLDict;
+
+    return http.createServer(function (request, response) {
         let callback = urlCallbackDict[request.url] || null;
 
-        if (!callback) {
+        if (callback) {
+            callback(request, response);
+            console.log("Complete match succeeded: " + request.url);
+            return
+        } else {
             console.log("Complete match failed: " + request.url);
-            for (let url in urlCallbackDict) {
-                if (isRegExpStr(url) && request.url.match(new RegExp(regexFromRegexStr(url)))) {
-                    callback = urlCallbackDict[url];
-                    console.log("URL " + request.url +  " match regex: " + url);
-                    break;
-                }
-            }
+        }
 
-            if (!callback) {
-                console.log("Regex match failed: " + request.url);
-            } else {
-                callback(request, response);
-                return
-            }
-
-            for (let url in urlCallbackDict) {
-                if (isPrefixStr(url) && request.url.startsWith(prefixFromPrefixStr(url))) {
-                    callback = urlCallbackDict[url];
-                    console.log("URL " + request.url + " match prefix " + url);
-                }
-            }
-
-            if (!callback) {
-                console.log("Prefix match failed: " + request.url);
-            } else {
-                callback(request, response);
-                return
+        for (let url in urlCallbackDict) {
+            if (_isRegExpStr(url) && request.url.match(new RegExp(_regexFromRegexStr(url)))) {
+                callback = urlCallbackDict[url];
+                console.log("URL " + request.url +  " match regex: " + url);
+                break;
             }
         }
 
-        callback = callback || exports.callbackTemplates.pageNotFound;
+        if (callback) {
+            callback(request, response);
+            return
+        } else {
+            console.log("Regex match failed: " + request.url);
+        }
+
+        let urlPair = {
+            "longestPrefix": "",
+            "url": null
+        };
+
+        for (let url in urlCallbackDict) {
+            if (_isPrefixStr(url) && request.url.startsWith(_prefixFromPrefixStr(url))) {
+                let prefix = _prefixFromPrefixStr(url);
+
+                if (prefix.length > urlPair.longestPrefix.length) {
+                    urlPair.longestPrefix = prefix;
+                    urlPair.url = url;
+                }
+            }
+        }
+
+        if (urlPair.url) {
+            callback = urlCallbackDict[urlPair.url];
+            callback(request, response);
+            console.log("URL " + request.url + " match prefix " + urlPair.url);
+            return
+        } else {
+            console.log("Prefix match failed: " + request.url + " " + urlPair.longestPrefix);
+        }
+
+
+        callback = _callbackTemplates.pageNotFound;
         callback(request, response);
     });
-};
+}
+
+module.exports.FileByPrefixFunc = FileByPrefixFunc;
+module.exports.BindedFile = BindedFile;
+module.exports.FolderFile = FolderFile;
+module.exports.getRegexStr = getRegexStr;
+module.exports.getPrefixStr = getPrefixStr;
+module.exports.URLMap = URLMap;
+module.exports.getStaticServer = getStaticServer;

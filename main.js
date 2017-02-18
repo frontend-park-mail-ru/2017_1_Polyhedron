@@ -1,27 +1,22 @@
-/**
- * Created by artem on 2/12/17.
- */
-
 "use strict";
-
 let lib = require("./server_lib");
 
+const DEFAULT_PORT = 3000;
 
-let urlDict = {
-    "/index/": new lib.BindedFileFunc("./static/html/index.html"),  // particular file is binded to particular URL
-    "/about/": new lib.BindedFileFunc("./static/html/about.html"),
-    "/game/": new lib.BindedFileFunc("./static/html/about.html"),
-    "/leaders/": new lib.BindedFileFunc("./static/html/leaders.html"),
-    "/login/": new lib.BindedFileFunc("./static/html/login.html"),
-    "/signup/": new lib.BindedFileFunc("./static/html/signup.html"),
-    "/": new lib.BindedFileFunc("./static/html/index.html"),
+let map = new lib.URLMap();
+map.addPlainURL("/index/", new lib.BindedFile("./static/html/index.html"));
+map.addPlainURL("/about/", new lib.BindedFile("./static/html/about.html"));
+map.addPlainURL("/game/", new lib.BindedFile("./static/html/game.html"));
+map.addPlainURL("/leaders/", new lib.BindedFile("./static/html/leaders.html"));
+map.addPlainURL("/login/", new lib.BindedFile("./static/html/login.html"));
+map.addPlainURL("/signup/", new lib.BindedFile("./static/html/signup.html"));
+map.addPlainURL("/", new lib.BindedFile("./static/html/index.html"));
 
-};
-urlDict[lib.getRegexStr("/static_js/")] = new lib.FolderFileFunc("./static/js/", "/static_js/"); // particular folder is binded to regexp
-urlDict[lib.getPrefixStr("/static/")] = new lib.FolderFileFunc("./static/", "/static/");    // particular folder is binded to prefix
+map.addRegexURL("\.*\.js", new lib.FolderFile("."));
+map.addPrefixURL("/static/", new lib.FolderFile("./static/", "/static/"));
 
-let server = lib.getStaticServer(urlDict);
+let server = lib.getStaticServer(map);
 
-let port = process.env.PORT || 3000;
+let port = process.env.PORT || DEFAULT_PORT;
 server.listen(port);
 
