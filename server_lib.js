@@ -143,7 +143,7 @@ const _callbackTemplates = {
     }
 };
 
-class URLMap {
+class Router {
     constructor() {
         this._urlDict = {};
     }
@@ -230,5 +230,5 @@ module.exports.BindedFile = BindedFile;
 module.exports.FolderFile = FolderFile;
 module.exports.getRegexStr = getRegexStr;
 module.exports.getPrefixStr = getPrefixStr;
-module.exports.URLMap = URLMap;
+module.exports.Router = Router;
 module.exports.getStaticServer = getStaticServer;
