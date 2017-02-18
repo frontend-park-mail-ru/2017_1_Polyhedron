@@ -1,28 +1,19 @@
 "use strict";
 
 const fs = require("fs");
+
+
 const http = require("http");
+
+
 const path = require("path");
 
 
 const REG_EXP_PREFIX = "REGEX";
+
+
 const PREFIX_STR_PREFIX = "PREFIX";
 
-function FileByPrefixFunc (request, response) {
-    console.log("Requested URL: " + request.url);
-
-    fs.readFile(request.url, function (err, data) {
-        if (err) {
-            console.error(err);
-            response.writeHead(404, {"Content-Type": "text/html"});
-            response.write("404 Not Found\n");
-            response.end();
-        } else {
-            response.write(data);
-        }
-        response.end();
-    });
-}
 
 /**
  *
@@ -32,22 +23,21 @@ function FileByPrefixFunc (request, response) {
  */
 function BindedFile (pagePath) {
     return function (request, response) {
-        console.log("Requested URL: " + request.url);
+        console.log("Requested URL: ", request.url);
 
         fs.readFile(pagePath, function (err, data) {
             if (err) {
                 console.error(err);
                 response.writeHead(404, {"Content-Type": "text/html"});
                 response.write("404 Not Found\n");
-                response.end();
             } else {
                 response.write(data);
-                response.end();
             }
             response.end();
         });
     }
 }
+
 
 /**
  *
@@ -58,7 +48,7 @@ function BindedFile (pagePath) {
  */
 function FolderFile (folderPath, urlPrefix) {
     return function (request, response) {
-        console.log("Requested URL: " + request.url);
+        console.log("Requested URL: ", request.url);
 
         let relPath = request.url;
         if (urlPrefix) {
@@ -91,36 +81,41 @@ function getRegexStr (str) {
     return REG_EXP_PREFIX + str;
 }
 
+
 function getPrefixStr (str) {
     return PREFIX_STR_PREFIX + str;
 }
+
 
 function _isRegExpStr (str) {
     return str.startsWith(REG_EXP_PREFIX);
 }
 
+
 function _isPrefixStr (str) {
     return str.startsWith(PREFIX_STR_PREFIX);
 }
+
 
 function _regexFromRegexStr (str) {
     return str.replace(REG_EXP_PREFIX, "");
 }
 
+
 function _prefixFromPrefixStr (prefixStr) {
     return prefixStr.replace(PREFIX_STR_PREFIX, "");
 }
 
+
 const _callbackTemplates = {
     "default": function (request, response) {
-        console.log("Incorrect URL requested: " + request.url);
+        console.log("Incorrect URL requested: ", request.url);
 
         fs.readFile("./static/html/error_page.html", function (err, data) {
             if (err) {
                 console.error(err);
                 response.writeHead(404, {"Content-Type": "text/html"});
                 response.write("404 Not Found\n");
-                response.end();
             } else {
                 response.write(data.toString());
             }
@@ -129,19 +124,20 @@ const _callbackTemplates = {
     },
 
     "pageNotFound": function (request, response) {
-        console.error("404 error: " + request.url);
+        console.error("404 error: ", request.url);
         response.writeHead(404, {"Content-Type": "text/html"});
         response.write("404 Not Found\n");
         response.end();
     },
 
     "notAuthorized": function (request, response) {
-        console.log("403 error: " + request.url);
+        console.log("403 error: ", request.url);
         response.writeHead(403, {"Content-Type": "text/html"});
         response.write("403 Not Found\n");
         response.end();
     }
 };
+
 
 class Router {
     constructor() {
@@ -165,24 +161,25 @@ class Router {
     }
 }
 
-function getStaticServer (_URLMap) {
-    let urlCallbackDict = _URLMap.getURLDict;
+
+function getStaticServer (router) {
+    let urlCallbackDict = router.getURLDict;
 
     return http.createServer(function (request, response) {
         let callback = urlCallbackDict[request.url] || null;
 
         if (callback) {
             callback(request, response);
-            console.log("Complete match succeeded: " + request.url);
+            console.log("Complete match succeeded: ", request.url);
             return
         } else {
-            console.log("Complete match failed: " + request.url);
+            console.log("Complete match failed: ", request.url);
         }
 
         for (let url in urlCallbackDict) {
             if (_isRegExpStr(url) && request.url.match(new RegExp(_regexFromRegexStr(url)))) {
                 callback = urlCallbackDict[url];
-                console.log("URL " + request.url +  " match regex: " + url);
+                console.log("URL ", request.url, " match regex: ", url);
                 break;
             }
         }
@@ -191,7 +188,7 @@ function getStaticServer (_URLMap) {
             callback(request, response);
             return
         } else {
-            console.log("Regex match failed: " + request.url);
+            console.log("Regex match failed: ", request.url);
         }
 
         let urlPair = {
@@ -200,9 +197,8 @@ function getStaticServer (_URLMap) {
         };
 
         for (let url in urlCallbackDict) {
-            if (_isPrefixStr(url) && request.url.startsWith(_prefixFromPrefixStr(url))) {
-                let prefix = _prefixFromPrefixStr(url);
-
+            let prefix = _prefixFromPrefixStr(url);
+            if (_isPrefixStr(url) && request.url.startsWith(prefix)) {
                 if (prefix.length > urlPair.longestPrefix.length) {
                     urlPair.longestPrefix = prefix;
                     urlPair.url = url;
@@ -213,19 +209,17 @@ function getStaticServer (_URLMap) {
         if (urlPair.url) {
             callback = urlCallbackDict[urlPair.url];
             callback(request, response);
-            console.log("URL " + request.url + " match prefix " + urlPair.url);
+            console.log("URL ", request.url, " match prefix ", urlPair.url);
             return
         } else {
-            console.log("Prefix match failed: " + request.url + " " + urlPair.longestPrefix);
+            console.log("Prefix match failed: ", request.url, " ", urlPair.longestPrefix);
         }
-
 
         callback = _callbackTemplates.pageNotFound;
         callback(request, response);
     });
 }
 
-module.exports.FileByPrefixFunc = FileByPrefixFunc;
 module.exports.BindedFile = BindedFile;
 module.exports.FolderFile = FolderFile;
 module.exports.getRegexStr = getRegexStr;
