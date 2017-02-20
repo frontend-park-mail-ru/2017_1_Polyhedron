@@ -1,18 +1,24 @@
 "use strict";
 
 const fs = require("fs");
-
-
 const http = require("http");
-
-
 const path = require("path");
 
 
-const REG_EXP_PREFIX = "REGEX";
+const DEFAULT_PAGE = "./static/html/error_page.html";
 
 
-const PREFIX_STR_PREFIX = "PREFIX";
+function _promiseReadFile(pagePath) {
+    return new Promise((resolve, reject) => {
+        fs.readFile(pagePath, (err, data) => {
+            if (err) {
+                reject(err);
+            } else {
+                resolve(data);
+            }
+        })
+    })
+}
 
 
 /**
@@ -25,16 +31,15 @@ function BindedFile (pagePath) {
     return function (request, response) {
         console.log("Requested URL: ", request.url);
 
-        fs.readFile(pagePath, function (err, data) {
-            if (err) {
-                console.error(err);
-                response.writeHead(404, {"Content-Type": "text/html"});
-                response.write("404 Not Found\n");
-            } else {
-                response.write(data);
-            }
+        _promiseReadFile(pagePath).then(data => {
+            response.write(data);
+        }).catch(err => {
+            console.error(err);
+            response.writeHead(404, {"Content-Type": "text/html"});
+            response.write("404 Not Found\n");
+        }).then(() => {
             response.end();
-        });
+        })
     }
 }
 
@@ -42,7 +47,7 @@ function BindedFile (pagePath) {
 /**
  *
  * @param folderPath path to the static root
- * @param urlPrefix (optional): prefix which must be removed to get relative path
+ * @param urlPrefix: prefix which must be removed to get relative path
  * @returns {Function}
  * @constructor
  */
@@ -50,12 +55,7 @@ function BindedFolder (folderPath, urlPrefix) {
     return function (request, response) {
         console.log("Requested URL: ", request.url);
 
-        let relPath = request.url;
-        if (urlPrefix) {
-            relPath = relPath.replace(urlPrefix, "");
-        }
-
-        let filePath = folderPath + relPath;
+        let filePath = folderPath + request.url.replace(urlPrefix, "");
         let normalizedPath = path.relative(folderPath, filePath);
         if (normalizedPath.startsWith('..')) {
             console.log(normalizedPath);
@@ -64,46 +64,15 @@ function BindedFolder (folderPath, urlPrefix) {
             return;
         }
 
-        fs.readFile(filePath, function (err, data) {
-            if (err) {
-                console.error(err);
-                response.write(err.toString());
-            } else {
-                response.write(data);
-            }
+        _promiseReadFile(filePath).then(data => {
+            response.write(data);
+        }).catch(err => {
+            console.error(err);
+            response.write(err.toString());
+        }).then(() => {
             response.end();
         });
     }
-}
-
-
-function getRegexStr (str) {
-    return REG_EXP_PREFIX + str;
-}
-
-
-function getPrefixStr (str) {
-    return PREFIX_STR_PREFIX + str;
-}
-
-
-function _isRegExpStr (str) {
-    return str.startsWith(REG_EXP_PREFIX);
-}
-
-
-function _isPrefixStr (str) {
-    return str.startsWith(PREFIX_STR_PREFIX);
-}
-
-
-function _regexFromRegexStr (str) {
-    return str.replace(REG_EXP_PREFIX, "");
-}
-
-
-function _prefixFromPrefixStr (prefixStr) {
-    return prefixStr.replace(PREFIX_STR_PREFIX, "");
 }
 
 
@@ -111,14 +80,13 @@ const _callbackTemplates = {
     "default": function (request, response) {
         console.log("Incorrect URL requested: ", request.url);
 
-        fs.readFile("./static/html/error_page.html", function (err, data) {
-            if (err) {
-                console.error(err);
-                response.writeHead(404, {"Content-Type": "text/html"});
-                response.write("404 Not Found\n");
-            } else {
-                response.write(data.toString());
-            }
+        _promiseReadFile(DEFAULT_PAGE).then(data => {
+            response.write(data);
+        }).catch(err => {
+            console.error(err);
+            response.writeHead(404, {"Content-Type": "text/html"});
+            response.write("404 Not Found\n");
+        }).then(() => {
             response.end();
         });
     },
@@ -141,79 +109,86 @@ const _callbackTemplates = {
 
 class Router {
     constructor() {
-        this._urlDict = {};
+        this._plainURLDict = {};
+        this._regexpURLDict = {};
+        this._prefixURLDict = {};
     }
 
     addPlainURL(url, bind) {
-        this._urlDict[url] = bind;
+        this._plainURLDict[url] = bind;
     }
 
     addRegexURL(url, bind) {
-        this._urlDict[getRegexStr(url)] = bind;
+        this._regexpURLDict[url] = bind;
     }
 
     addPrefixURL(url, bind) {
-        this._urlDict[getPrefixStr(url)] = bind;
+        this._prefixURLDict[url] = bind;
     }
 
-    get getURLDict() {
-        return this._urlDict;
+    get getPlainURLDict() {
+        return this._plainURLDict;
+    }
+
+    get getRegexpURLDict() {
+        return this._regexpURLDict;
+    }
+
+    get getPrefixURLDict() {
+        return this._prefixURLDict;
     }
 }
 
 
 function getStaticServer (router) {
-    let urlCallbackDict = router.getURLDict;
 
     return http.createServer(function (request, response) {
-        let callback = urlCallbackDict[request.url] || null;
+        let callback = router.getPlainURLDict[request.url] || null;
 
         if (callback) {
             callback(request, response);
             console.log("Complete match succeeded: ", request.url);
             return
-        } else {
-            console.log("Complete match failed: ", request.url);
         }
+        console.log("Complete match failed: ", request.url);
 
-        for (let url in urlCallbackDict) {
-            if (_isRegExpStr(url) && request.url.match(new RegExp(_regexFromRegexStr(url)))) {
-                callback = urlCallbackDict[url];
-                console.log("URL ", request.url, " match regex: ", url);
-                break;
-            }
-        }
+        let regexpURL = Object.keys(router.getRegexpURLDict).find(
+            (url) => { return request.url.match(new RegExp(url))}
+        );
+        callback = regexpURL ? router.getRegexpURLDict[regexpURL] : null;
 
         if (callback) {
             callback(request, response);
+            console.log("URL ", request.url, " match regex: ", regexpURL);
             return
-        } else {
-            console.log("Regex match failed: ", request.url);
         }
+        console.log("Regex match failed: ", request.url);
 
-        let urlPair = {
-            "longestPrefix": "",
-            "url": null
-        };
 
-        for (let url in urlCallbackDict) {
-            let prefix = _prefixFromPrefixStr(url);
-            if (_isPrefixStr(url) && request.url.startsWith(prefix)) {
-                if (prefix.length > urlPair.longestPrefix.length) {
-                    urlPair.longestPrefix = prefix;
-                    urlPair.url = url;
-                }
-            }
-        }
+        /*
+        Sorting below to prevent name collisions in cases like:
+            Dirs:
+                dir_1/mid_dir/file,
+                dir_2/file
+            Routing:
+                /static/ => dir_1,
+                /static/mid_dir => dir_2
+            Url:
+                /static/mid_dir/file
+        If not sorting may return dir_1/mid_dir/file instead of dir_2/mid_dir/file
+        */
+        let prefixURL = Object.keys(router.getPrefixURLDict).filter(
+            url => request.url.startsWith(url)
+        ).sort((a, b) => b - a)[0];
 
-        if (urlPair.url) {
-            callback = urlCallbackDict[urlPair.url];
+        callback = prefixURL ? router.getPrefixURLDict[prefixURL] : null;
+
+        if (callback) {
             callback(request, response);
-            console.log("URL ", request.url, " match prefix ", urlPair.url);
+            console.log("URL ", request.url, " match prefix ", prefixURL);
             return
-        } else {
-            console.log("Prefix match failed: ", request.url, " ", urlPair.longestPrefix);
         }
+        console.log("Prefix match failed: ", request.url);
 
         callback = _callbackTemplates.pageNotFound;
         callback(request, response);
@@ -222,7 +197,5 @@ function getStaticServer (router) {
 
 module.exports.BindedFile = BindedFile;
 module.exports.BindedFolder = BindedFolder;
-module.exports.getRegexStr = getRegexStr;
-module.exports.getPrefixStr = getPrefixStr;
 module.exports.Router = Router;
 module.exports.getStaticServer = getStaticServer;
