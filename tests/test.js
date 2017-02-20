@@ -16,10 +16,11 @@ function _getHtmlFilePath(filename) {
 }
 
 
-const urlDict = {'/': new lib.BindedFileFunc(_getHtmlFilePath('index.html'))};
+let router = new lib.Router();
+router.addPlainURL('/', new lib.BindedFile(_getHtmlFilePath('index.html')));
 
 
-let staticServer = lib.getStaticServer(urlDict);
+let staticServer = lib.getStaticServer(router);
 
 
 describe('Static server testing', () => {
