@@ -1,7 +1,8 @@
 .heading-login{
 font-size: 20pt; 
-margin-left: 42%;
-margin-top: 10%;
+left: 45%;
+padding-top: 20px; 
+width: 100px;
 }
 
 .heading-signup{
@@ -12,7 +13,7 @@ margin-top: 5%;
 
 .form-fields{
 position: block; 
-margin-left: 20%; 
+left: 20%; 
 width: 60%;
 }
 
