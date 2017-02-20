@@ -4,7 +4,8 @@
   "description": "Polyhedron",
   "main": "main.js",
   "scripts": {
-    "start": "node main.js"
+    "start": "node main.js",
+    "test": "mocha tests/test.js"
   },
   "repository": {
     "type": "git",
@@ -13,4 +14,7 @@
   "keywords": [],
   "author": "",
   "homepage": "https://polyhedron.herokuapp.com/"
+  "dependencies": {
+    "mocha": ">=3.0.0"
+  }
 }

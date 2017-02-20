@@ -39,3 +39,4 @@ jspm_packages
 # Additional
 *~
 .idea
+.DS_Store
