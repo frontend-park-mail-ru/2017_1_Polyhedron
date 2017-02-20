@@ -13,7 +13,7 @@
   },
   "keywords": [],
   "author": "",
-  "homepage": "https://polyhedron.herokuapp.com/"
+  "homepage": "https://polyhedron.herokuapp.com/",
   "dependencies": {
     "mocha": ">=3.0.0"
   }
