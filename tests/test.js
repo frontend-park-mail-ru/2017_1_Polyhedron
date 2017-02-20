@@ -2,7 +2,7 @@
 
 
 const PORT = 3000;
-const SERVER_URL = `http://localhost:${PORT}`
+const SERVER_URL = `http://localhost:${PORT}`;
 const HTTP_CODE_OK = 200;
 
 
@@ -12,7 +12,7 @@ let lib = require('../server_lib.js');
 
 
 function _getHtmlFilePath(filename) {
-	return `${__dirname}/../static/html/${filename}`
+	return `${__dirname}/../static/html/${filename}`;
 }
 
 
