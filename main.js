@@ -1,27 +1,28 @@
-/**
- * Created by artem on 2/12/17.
- */
-
 "use strict";
-
 let lib = require("./server_lib");
 
+const DEFAULT_PORT = 3000;
 
-let urlDict = {
-    "/index/": new lib.BindedFileFunc("./static/html/index.html"),  // particular file is binded to particular URL
-    "/about/": new lib.BindedFileFunc("./static/html/about.html"),
-    "/game/": new lib.BindedFileFunc("./static/html/about.html"),
-    "/leaders/": new lib.BindedFileFunc("./static/html/leaders.html"),
-    "/login/": new lib.BindedFileFunc("./static/html/login.html"),
-    "/signup/": new lib.BindedFileFunc("./static/html/signup.html"),
-    "/": new lib.BindedFileFunc("./static/html/index.html"),
+let router = new lib.Router();
 
-};
-urlDict[lib.getRegexStr("/static_js/")] = new lib.FolderFileFunc("./static/js/", "/static_js/"); // particular folder is binded to regexp
-urlDict[lib.getPrefixStr("/static/")] = new lib.FolderFileFunc("./static/", "/static/");    // particular folder is binded to prefix
+const PLAIN_URLS = ['index', 'about', 'game', 'leaders', 'login', 'singin', 'signup'];
+PLAIN_URLS.forEach((url) => {
+    router.addPlainURL(`/${url}/`, new lib.BindedFile(`./static/html/${url}.html`));
+});
 
-let server = lib.getStaticServer(urlDict);
+router.addPlainURL("/", new lib.BindedFile("./static/html/index.html"));
 
-let port = process.env.PORT || 3000;
+// TODO Delete row below to disable serving static from urls like /static/js/polyfills.js
+// TODO beforehand change urls in static files from something like /static/js/polyfills.js to polyfills.js
+router.addPrefixURL("/static/", new lib.BindedFolder("./static/", "/static/"));
+
+// "." below because paths to static files in html are now written like ./static/...
+router.addRegexURL("\.*\.js$", new lib.BindedFolder("."));
+router.addRegexURL("\.*\.css$", new lib.BindedFolder("."));
+router.addRegexURL("\.*\.html$", new lib.BindedFolder("."));
+
+let server = lib.getStaticServer(router);
+
+let port = process.env.PORT || DEFAULT_PORT;
 server.listen(port);
 

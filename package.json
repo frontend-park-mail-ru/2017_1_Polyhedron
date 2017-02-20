@@ -1,7 +1,7 @@
 {
-  "name": "sample",
+  "name": "Polyhedron",
   "version": "1.0.0",
-  "description": "Sample",
+  "description": "Polyhedron",
   "main": "main.js",
   "scripts": {
     "start": "node main.js",
@@ -9,11 +9,11 @@
   },
   "repository": {
     "type": "git",
-    "url": "git+https://github.com/frontend-park-mail-ru/sample.git"
+    "url": "git+https://github.com/frontend-park-mail-ru/2017_1_Polyhedron"
   },
   "keywords": [],
   "author": "",
-  "homepage": "https://github.com/frontend-park-mail-ru/sample#readme",
+  "homepage": "https://polyhedron.herokuapp.com/"
   "dependencies": {
     "mocha": ">=3.0.0"
   }
