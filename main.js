@@ -11,6 +11,7 @@ PLAIN_URLS.forEach((url) => {
 });
 
 router.addPlainURL("/", new lib.BindedFile("./static/html/index.html"));
+router.addPlainURL("/game", new lib.BindedFile("./static/html/game_logic_test.html"));
 
 // TODO Delete row below to disable serving static from urls like /static/js/polyfills.js
 // TODO beforehand change urls in static files from something like /static/js/polyfills.js to polyfills.js
