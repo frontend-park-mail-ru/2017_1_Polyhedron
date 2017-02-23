@@ -2,29 +2,50 @@
 <html lang="en">
 
 <head>
-    <meta charset="utf-8">
-    <meta http-equiv="X-UA-Compatible" content="IE=edge">
-    <meta name="viewport" content="width=device-width, initial-scale=1">
-    <!-- The above 3 meta tags *must* come first in the head; any other head content must come *after* these tags -->
-    <meta name="description" content="Project for TP">
-    <link rel="icon" href="/media/ping_pong.ico">
+  <meta charset="utf-8">
+  <meta http-equiv="X-UA-Compatible" content="IE=edge">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <!-- The above 3 meta tags *must* come first in the head; any other head content must come *after* these tags -->
+  <meta name="description" content="Project for TP">
+  <link rel="icon" href="/media/ping_pong.ico">
 
-    <title>One more question</title>
+  <title>One more question</title>
 
-    <!-- Bootstrap core CSS -->
-    <link href="/lib/bootstrap.min.css" rel="stylesheet">
-    <link href="/lib/bootstrap.css" rel="stylesheet">
+  <!-- Bootstrap core CSS -->
+  <link href="/lib/bootstrap.min.css" rel="stylesheet">
+  <link href="/lib/bootstrap.css" rel="stylesheet">
 
-    <!-- Custom styles for this template -->
-    <link href="/login-signup.css" rel="stylesheet">
-  </head>
+  <!-- Custom styles for this template -->
+  <link href="/signup.css" rel="stylesheet">
+  <link href="/other-carousel.css" rel="stylesheet">
+  <script src="/lib/modernizr-2.6.2.min.js"></script>
+</head>
 
-  <body>
-      <div class="container">
-          <p class="heading-signup">About game</p>
-          
-          <p class="form-fields">Some text here</p>
-    	</div>
-	    
-    </body>
+<body>
+  <div class="container">
+    <p class="heading-signup">About game</p>
+    <p class="form-fields">Some text here</p>
+  </div>
+
+  <div class="menu">
+    <!-- Start Nav Structure -->
+    <button class="cn-button" id="cn-button">Menu</button>
+    <div class="cn-wrapper" id="cn-wrapper">
+      <ul>
+        <li><a href="about"><span>About</span></a></li>
+        <li><a href="leaders"><span>Leaders</span></a></li>
+        <li><a href="index"><span>Play</span></a></li>
+        <li><a href="login"><span>Login</span></a></li>
+        <li><a href="signup"><span>Sign Up</span></a></li>
+      </ul>
+    </div>
+    <!-- End of Nav Structure -->
+  </div>
+
+<!-- Core JavaScript-->
+<script src="/polyfills.js"></script>
+<script src="/carousel-listener-other.js"></script>
+
+</body>
+
 </html>
