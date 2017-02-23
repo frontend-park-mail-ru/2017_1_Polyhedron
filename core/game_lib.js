@@ -118,7 +118,7 @@ class Triangle {
         let x = point[0] + this._halfWidth;
         let y = point[1] + this._height;
 
-        return (y > 0) && (y <= this._height / this._halfWidth * x) && (y <= this._height * (2 - x / this._halfWidth))
+        return (y > 0) && (y <= this._height / this._halfWidth * x) && (y <= this._height * (2 - x / this._halfWidth));
 
     }
 }
