@@ -12,7 +12,7 @@ let lib = require('../core/server_lib.js');
 
 
 function _getHtmlFilePath(filename) {
-	return `${__dirname}/../static/html/${filename}`;
+	return `${__dirname}/../html/${filename}`;
 }
 
 
