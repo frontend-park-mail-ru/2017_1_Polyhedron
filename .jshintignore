@@ -1,6 +1,9 @@
 node_modules
 core/_lib
 static/_lib
+static/js/polyfills.js
 
 #line below is temporary: module is under construction
 core/game_lib.js
+static/js/carousel-listener-other.js
+static/js/carousel-listener-index.js
