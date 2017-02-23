@@ -1,9 +1,9 @@
 (function(){
 
-	var button = document.getElementById('cn-button'),
+	let button = document.getElementById('cn-button'),
    wrapper = document.getElementById('cn-wrapper');
 
-	var open = false;
+	let open = false;
 	
 	button.addEventListener('click', handler, false);
 
@@ -20,8 +20,8 @@
 	  open = !open;
 	}
 	
-	function closeWrapper(){
+	/*function closeWrapper(){
 		classie.remove(wrapper, 'opened-nav');
-	}
+	}*/
 
 })();
