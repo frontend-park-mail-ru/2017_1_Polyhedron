@@ -1,5 +1,5 @@
 "use strict";
-let lib = require("./core/server_lib");
+let lib = require("./core/server");
 
 const DEFAULT_PORT = 3000;
 
@@ -21,7 +21,6 @@ router.addRegexURL(".*\.css$", new lib.BindedFolder("./static/css"));
 
 router.addRegexURL("^/media/", new lib.BindedFolder("./static/media/", "/media/"));
 router.addRegexURL("^/core/.*\.js$", new lib.BindedFolder("./core/", "/core/"));
-router.addRegexURL("^/core/lib/.*\.js$", new lib.BindedFolder("./core/_lib/", "/core/lib/"));
 
 let server = lib.getStaticServer(router);
 
