@@ -1,0 +1,6 @@
+node_modules
+core/_lib
+static/_lib
+
+#line below is temporary: module is under construction
+core/game_lib.js

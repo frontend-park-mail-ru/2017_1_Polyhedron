@@ -1,0 +1,21 @@
+{
+  "name": "Polyhedron",
+  "version": "1.0.0",
+  "description": "Polyhedron",
+  "main": "main.js",
+  "scripts": {
+    "start": "node main.js",
+    "test": "echo '*** Static analysis ***' && jshint --show-non-errors . && echo '*** Testing ***' && mocha tests/test.js"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/frontend-park-mail-ru/2017_1_Polyhedron"
+  },
+  "keywords": [],
+  "author": "",
+  "homepage": "https://polyhedron.herokuapp.com/",
+  "devDependencies": {
+    "jshint": "^2.9.4",
+    "mocha": "^3.2.0"
+  }
+}
