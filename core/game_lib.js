@@ -1,5 +1,5 @@
 
-//const math = require('mathjs');
+//const math = require('mathjs');   // Do not delete. This expression is used to debug without browser
 
 
 class SolidBody {

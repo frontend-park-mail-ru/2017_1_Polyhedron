@@ -8776,7 +8776,7 @@
              *
              * @param {*} value             Value to be stringified
              * @param {Object | number | Function} [options]  Formatting options. See
-             *                                                lib/utils/number:format for a
+             *                                                _lib/utils/number:format for a
              *                                                description of the available
              *                                                options.
              * @return {string} str
@@ -8842,7 +8842,7 @@
              * Example output: "[[1, 2], [3, 4]]"
              * @param {Array} array
              * @param {Object | number | Function} [options]  Formatting options. See
-             *                                                lib/utils/number:format for a
+             *                                                _lib/utils/number:format for a
              *                                                description of the available
              *                                                options.
              * @returns {string} str
@@ -9171,7 +9171,7 @@
                  * Get a string representation of the complex number,
                  * with optional formatting options.
                  * @param {Object | number | Function} [options]  Formatting options. See
-                 *                                                lib/utils/number:format for a
+                 *                                                _lib/utils/number:format for a
                  *                                                description of the available
                  *                                                options.
                  * @return {string} str
@@ -11903,7 +11903,7 @@
                 /**
                  * Get a string representation of the matrix, with optional formatting options.
                  * @param {Object | number | Function} [options]  Formatting options. See
-                 *                                                lib/utils/number:format for a
+                 *                                                _lib/utils/number:format for a
                  *                                                description of the available
                  *                                                options.
                  * @returns {string} str
@@ -13089,7 +13089,7 @@
                  * Get a string representation of the matrix, with optional formatting options.
                  * @memberof DenseMatrix
                  * @param {Object | number | Function} [options]  Formatting options. See
-                 *                                                lib/utils/number:format for a
+                 *                                                _lib/utils/number:format for a
                  *                                                description of the available
                  *                                                options.
                  * @returns {string} str
@@ -14327,7 +14327,7 @@
                  * Get a string representation of the matrix, with optional formatting options.
                  * @memberof SparseMatrix
                  * @param {Object | number | Function} [options]  Formatting options. See
-                 *                                                lib/utils/number:format for a
+                 *                                                _lib/utils/number:format for a
                  *                                                description of the available
                  *                                                options.
                  * @returns {string} str
@@ -17817,7 +17817,7 @@
                  * Output is formatted as 'start:step:end', for example '2:6' or '0:0.2:11'
                  * @memberof Range
                  * @param {Object | number | function} [options]  Formatting options. See
-                 *                                                lib/utils/number:format for a
+                 *                                                _lib/utils/number:format for a
                  *                                                description of the available
                  *                                                options.
                  * @returns {string} str
@@ -19345,7 +19345,7 @@
                  * Get a string representation of the Unit, with optional formatting options.
                  * @memberof Unit
                  * @param {Object | number | Function} [options]  Formatting options. See
-                 *                                                lib/utils/number:format for a
+                 *                                                _lib/utils/number:format for a
                  *                                                description of the available
                  *                                                options.
                  * @return {string}

@@ -152,9 +152,10 @@ function getStaticServer (router) {
         }
         console.log("Complete match failed: ", request.url);
 
-        let regexpURL = Object.keys(router.getRegexpURLDict).find(
+        let regexpURL = Object.keys(router.getRegexpURLDict).filter(
             (url) => { return request.url.match(new RegExp(url)); }
-        );
+        ).sort((a, b) => b.length - a.length)[0];
+
         callback = regexpURL ? router.getRegexpURLDict[regexpURL] : null;
 
         if (callback) {
@@ -179,7 +180,7 @@ function getStaticServer (router) {
         */
         let prefixURL = Object.keys(router.getPrefixURLDict).filter(
             url => request.url.startsWith(url)
-        ).sort((a, b) => b - a)[0];
+        ).sort((a, b) => b.length - a.length)[0];
 
         callback = prefixURL ? router.getPrefixURLDict[prefixURL] : null;
 

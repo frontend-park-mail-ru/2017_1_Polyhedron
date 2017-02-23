@@ -1,26 +1,26 @@
 "use strict";
-let lib = require("./server_lib");
+let lib = require("./core/server_lib");
 
 const DEFAULT_PORT = 3000;
 
 let router = new lib.Router();
 
-const PLAIN_URLS = ['index', 'about', 'game', 'leaders', 'login', 'singin', 'signup'];
+const PLAIN_URLS = ['index', 'about', 'leaders', 'login', 'singin', 'signup'];
 PLAIN_URLS.forEach((url) => {
-    router.addPlainURL(`/${url}/`, new lib.BindedFile(`./static/html/${url}.html`));
+    router.addRegexURL(`^/${url}/?$`, new lib.BindedFile(`./html/${url}.html`));
 });
 
-router.addPlainURL("/", new lib.BindedFile("./static/html/index.html"));
-router.addPlainURL("/game", new lib.BindedFile("./static/html/game_logic_test.html"));
+router.addPlainURL("/", new lib.BindedFile("./html/index.html"));
+router.addRegexURL("^/game/?$", new lib.BindedFile("./html/game_logic_test.html"));
 
-// TODO Delete row below to disable serving static from urls like /static/js/polyfills.js
-// TODO beforehand change urls in static files from something like /static/js/polyfills.js to polyfills.js
-router.addPrefixURL("/static/", new lib.BindedFolder("./static/", "/static/"));
+router.addRegexURL("^/lib/.*\.js$", new lib.BindedFolder("./static/_lib/js/", "/lib/"));
+router.addRegexURL("^/lib/.*\.css$", new lib.BindedFolder("./static/_lib/css/", "/lib/"));
 
-// "." below because paths to static files in html are now written like ./static/...
-router.addRegexURL("\.*\.js$", new lib.BindedFolder("."));
-router.addRegexURL("\.*\.css$", new lib.BindedFolder("."));
-router.addRegexURL("\.*\.html$", new lib.BindedFolder("."));
+router.addRegexURL(".*\.js$", new lib.BindedFolder("./static/js"));
+router.addRegexURL(".*\.css$", new lib.BindedFolder("./static/css"));
+
+router.addRegexURL("^/media/", new lib.BindedFolder("./static/media/", "/media/"));
+router.addRegexURL("^/core/.*\.js", new lib.BindedFolder("./core/", "/core/"));
 
 let server = lib.getStaticServer(router);
 
