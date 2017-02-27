@@ -16,8 +16,8 @@ function _promiseReadFile(pagePath) {
             } else {
                 resolve(data);
             }
-        })
-    })
+        });
+    });
 }
 
 
@@ -39,8 +39,8 @@ function BindedFile (pagePath) {
             response.write("404 Not Found\n");
         }).then(() => {
             response.end();
-        })
-    }
+        });
+    };
 }
 
 
@@ -72,7 +72,7 @@ function BindedFolder (folderPath, urlPrefix) {
         }).then(() => {
             response.end();
         });
-    }
+    };
 }
 
 
@@ -148,19 +148,19 @@ function getStaticServer (router) {
         if (callback) {
             callback(request, response);
             console.log("Complete match succeeded: ", request.url);
-            return
+            return;
         }
         console.log("Complete match failed: ", request.url);
 
         let regexpURL = Object.keys(router.getRegexpURLDict).find(
-            (url) => { return request.url.match(new RegExp(url))}
+            (url) => { return request.url.match(new RegExp(url));}
         );
         callback = regexpURL ? router.getRegexpURLDict[regexpURL] : null;
 
         if (callback) {
             callback(request, response);
             console.log("URL ", request.url, " match regex: ", regexpURL);
-            return
+            return;
         }
         console.log("Regex match failed: ", request.url);
 
@@ -186,7 +186,7 @@ function getStaticServer (router) {
         if (callback) {
             callback(request, response);
             console.log("URL ", request.url, " match prefix ", prefixURL);
-            return
+            return;
         }
         console.log("Prefix match failed: ", request.url);
 
