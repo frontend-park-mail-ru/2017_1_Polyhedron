@@ -17,8 +17,8 @@ router.addPlainURL("/", new lib.BindedFile("./static/html/index.html"));
 router.addPrefixURL("/static/", new lib.BindedFolder("./static/", "/static/"));
 
 // "." below because paths to static files in html are now written like ./static/...
-router.addRegexURL("\.*\.js$", new lib.BindedFolder("./static/js"));
-router.addRegexURL("\.*\.css$", new lib.BindedFolder("./static/css"));
+router.addRegexURL("\.*\.js$", new lib.BindedFolder("."));
+router.addRegexURL("\.*\.css$", new lib.BindedFolder("."));
 router.addRegexURL("\.*\.html$", new lib.BindedFolder("./static/html"));
 
 let server = lib.getStaticServer(router);
