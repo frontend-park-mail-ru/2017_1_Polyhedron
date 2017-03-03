@@ -9,6 +9,7 @@ const HTTP_CODE_OK = 200;
 let assert = require('assert');
 let http = require('http');
 let lib = require('../core/server.js');
+let game = require('../core/game.js');
 
 
 function _getHtmlFilePath(filename) {

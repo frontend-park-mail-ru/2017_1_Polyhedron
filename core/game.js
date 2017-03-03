@@ -190,10 +190,11 @@ class Ball extends SolidBody {
 
 
 class Platform extends SolidBody {
-    constructor(length, width) {
+    constructor(length, width, isActive) {
         super();
         this._length = length;
         this._width = width;
+        this._isActive = isActive || false;
 
         this._optionalPositioningInfo = null;   // extra info necessary to make positioning inside another object
     }
@@ -219,6 +220,14 @@ class Platform extends SolidBody {
         };
 
         return platform;
+    }
+
+    setActive() {
+        this._isActive = true;
+    }
+
+    setPassive() {
+        this._isActive = false;
     }
 
     getPointArray() {
@@ -285,7 +294,7 @@ class Platform extends SolidBody {
         }
         context.closePath();
 
-        context.fillStyle = 'blue';
+        context.fillStyle = this._isActive ? 'green' : 'blue';
         context.fill();
         context.lineWidth = 1;
         context.stroke();
@@ -298,6 +307,7 @@ class TriangleField extends SolidBody {
         super();
         this._triangle = new Triangle(height, sectorAngle);
         this._isNeutral = isNeutral;
+        this._isLoser = false;
     }
 
     get height() {
@@ -318,6 +328,14 @@ class TriangleField extends SolidBody {
 
     isNeutral() {
         return this._isNeutral;
+    }
+
+    isLoser() {
+        return this._isLoser;
+    }
+
+    setLoser() {
+        this._isLoser = true;
     }
 
     containsGlobalPoint(point) {
@@ -357,8 +375,15 @@ class TriangleField extends SolidBody {
         }
         context.closePath();
 
-        //context.fillStyle = 'blue';
-        context.fillStyle = this.isNeutral() ? 'white': 'red';
+        let fillStyle = null;
+        if (this.isNeutral()) {
+            fillStyle = 'white';
+        } else if (this.isLoser()) {
+            fillStyle = 'blue';
+        } else {
+            fillStyle = 'red';
+        }
+        context.fillStyle = fillStyle;
         context.fill();
         context.lineWidth = 1;
         context.stroke();
@@ -434,35 +459,61 @@ class GameWorld {
 }
 
 
+const DEFAULT_PLAYER_NUM = 4;
+const DEFAULT_FRAME_RATE = 60;
+const DEFAULT_FILL_FACTOR = 0.8;
+const DEFAULT_BALL_RELATIVE_RADIUS = 0.05;
+const DEFAULT_RELATIVE_BALL_OFFSET = [0.1, 0.05];
+const DEFAULT_RELATIVE_BALL_VELOCITY = [0.25, 0.25];
+
+const PLATFORM_TOLERANCE = 5;
 class Game {
-    constructor(canvas, playerNum, sectorHeight, ballRadius) {
+    constructor(canvas, playerNum, frameRate, fillFactor, ballRelativeRadius,
+                initialRelativeBallOffset, initialRelativeBallVelocity) {
         this._canvas = canvas;
         this._context = canvas.getContext("2d");
-        this._playerNum = playerNum;
-        this._sectorHeight = sectorHeight;
-        this._ballRadius = ballRadius;
+        this._playerNum = playerNum || DEFAULT_PLAYER_NUM;
+        this._frameRate = frameRate || DEFAULT_FRAME_RATE;
+        this._fillFactor = fillFactor || DEFAULT_FILL_FACTOR;
+        this._initialRelativeBallOffset = initialRelativeBallOffset || DEFAULT_RELATIVE_BALL_OFFSET;
+        this._initialRelativeBallVelocity  = initialRelativeBallVelocity || DEFAULT_RELATIVE_BALL_VELOCITY;
+        this._ballRelativeRadius = ballRelativeRadius || DEFAULT_BALL_RELATIVE_RADIUS;
 
-        this._worldPosition = [this._canvas.width / 2, this._canvas.height / 2];
         this._lastCollidedObject = null;
 
         this._leftPressed = false;
         this._rightPressed = false;
 
         this._platformVelocityDirection = [0, 0];
+        this._setIntervalID = null;
+        this._lastPlatformPosition = null;
     }
 
     start() {
         this._setListeners();
         this._initWorld();
 
-        let time = 10;
-        setInterval(() => this._makeIteration(time), time);
+        let time = 1000 / this._frameRate;
+        this._setIntervalID = setInterval(() => this._makeIteration(time), time);
+    }
+
+    get _activePlatform() {
+        return this._world._platforms[Math.floor(this._playerNum / 2)];
     }
 
     _initWorld() {
-        this._world = new GameWorld(this._playerNum, this._sectorHeight, this._ballRadius, this._worldPosition);
-        this._world.ball.moveTo([this._worldPosition[0] - 50, this._worldPosition[1]]);   // TODO remove. Now it just moves ball from center
-        this._world.ball.velocity = [0.13, 0.10];   // TODO make velocity outer parameter
+        let worldPosition = [this._canvas.width / 2, this._canvas.height / 2];
+        let sectorHeight = Math.min(this._canvas.width, this._canvas.height) * this._fillFactor / 2;
+        let ballRadius = this._ballRelativeRadius * sectorHeight;
+        let ballPosition = math.add(worldPosition, math.multiply(this._initialRelativeBallOffset, sectorHeight));
+        let ballVelocity = math.multiply(this._initialRelativeBallVelocity, sectorHeight / this._frameRate);
+
+        this._world = new GameWorld(this._playerNum, sectorHeight, ballRadius, worldPosition);
+        this._world.ball.moveTo(ballPosition);   // TODO remove. Now it just moves ball from center
+        this._world.ball.velocity = ballVelocity;
+
+        this._activePlatform.setActive();
+        this._lastPlatformPosition = this._activePlatform.position.slice();
 
         this._redraw();
     }
@@ -473,18 +524,20 @@ class Game {
     }
 
     _makeIteration(time) {
+        this._redraw();
+
         this._world.ball.moveBy(math.multiply(this._world.ball.velocity, time));
         this._handleUserInput();
 
         this._world.userSectors.forEach(sector => {
             if (sector.containsGlobalPoint(this._world.ball.position) && sector.reachesBottomLevel(this._world.ball)) {
-                this._handleSectorCollision(sector, this._world.ball);
+                this._handleUserSectorCollision(sector, this._world.ball);
             }
         });
 
         this._world.neutralSectors.forEach(sector => {
             if (sector.containsGlobalPoint(this._world.ball.position) && sector.reachesBottomLevel(this._world.ball)) {
-                this._handleSectorCollision(sector, this._world.ball);
+                this._handleNeutralSectorCollision(sector, this._world.ball);
             }
         });
 
@@ -494,10 +547,26 @@ class Game {
             }
         });
 
-        this._redraw();
+        let activePlatformOffset = math.subtract(this._activePlatform.position, this._lastPlatformPosition);
+        if (math.norm(activePlatformOffset) > PLATFORM_TOLERANCE) {
+            this._throwPlatformMovedEvent(activePlatformOffset);
+            this._lastPlatformPosition = this._activePlatform.position;
+        }
     }
 
-    _handleSectorCollision(sector, ball) {
+    _stopGameLoop() {
+        clearInterval(this._setIntervalID);
+    }
+
+    _handleUserSectorCollision(sector, ball) {
+        if (sector != this._lastCollidedObject) {
+            this._stopGameLoop();
+            sector.setLoser();
+            this._redraw();
+        }
+    }
+
+    _handleNeutralSectorCollision(sector, ball) {
         if (sector != this._lastCollidedObject) {
             ball.bounce(sector.getBottomNorm());
             this._lastCollidedObject = sector;
@@ -549,13 +618,21 @@ class Game {
             let originalPosition = platform.optionalPositioningInfo.originalPosition;
             let offsetVec = math.subtract(platform.position, originalPosition);
 
-            let step = platform.toGlobalsWithoutOffset(math.multiply(this._platformVelocityDirection, platformVelocity));
-            let newOffsetVec = math.add(step, offsetVec);
+            let localStep = math.multiply(this._platformVelocityDirection, platformVelocity);
+
+            let globalStep = platform.toGlobalsWithoutOffset(localStep);
+            let newOffsetVec = math.add(globalStep, offsetVec);
 
             if (math.norm(newOffsetVec) <= platform.optionalPositioningInfo.maxOffset) {
-                platform.moveBy(step);
+                platform.moveBy(globalStep);
             }
         });
+    }
+
+    _throwPlatformMovedEvent(platformOffset) {
+        document.dispatchEvent(
+            new PlatformMovedEvent(platformOffset)
+        );
     }
 
     _redraw() {
@@ -564,53 +641,7 @@ class Game {
     }
 }
 
-
-
-
-function testCS() {
-    let globals = [1, 1];
-    let cs = new SolidBody([1, 0], 45 * Math.PI / 180);
-    let locals = cs.toLocals(globals);
-    let newGlobals = cs.toGlobals(locals);
-
-    console.log(locals);
-    console.log(newGlobals);
-}
-
-
-function testTriangle() {
-    let triangle = new Triangle(1, 90 * Math.PI / 180);
-    console.log(triangle.getPointArray());
-}
-
-function testContainsGlobal() {
-    let triangleField = new TriangleField(100, Math.PI / 4, true);
-    //console.log(triangleField.getPointArray());
-    console.log(triangleField.containsGlobalPoint([-10, -30]));
-}
-
-function testField() {
-    let field = new TriangleField(1, 90 * Math.PI / 180);
-    field.moveBy([0, -1]);
-    field.rotateBy(90 * Math.PI / 180);
-    console.log(field.getPointArray());
-}
-
-function testBounce() {
-    let ball = new Ball(100);
-    ball.velocity = [-100, 0];
-    console.log(ball.velocity);
-    ball.bounce([1, -1]);
-    console.log(ball.velocity);
-    ball.bounce([-1, 1]);
-    console.log(ball.velocity);
-}
-
-
-//testCS();
-//testTriangle();
-//testField();
-//testBounce();
-
-//testContainsGlobal();
+document.addEventListener(PlatformMovedEvent.eventName, (e) => {
+    console.log(e.detail);
+});
 
