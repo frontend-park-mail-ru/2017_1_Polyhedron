@@ -4,7 +4,7 @@
   "description": "Polyhedron",
   "main": "main.js",
   "scripts": {
-    "prestart": "node node_modules/.bin/grunt",
+    "postinstall": "grunt webpack",
     "start": "node main.js"
   },
   "repository": {
