@@ -37,9 +37,9 @@ module.exports = function(grunt) {
                     ]
                 },
 
-                plugins: [
-                    new webpack.optimize.UglifyJsPlugin({minimize: true})
-                ]
+                //plugins: [
+                //    new webpack.optimize.UglifyJsPlugin({minimize: true})
+                //]
             },
         },
 
@@ -91,8 +91,7 @@ module.exports = function(grunt) {
     grunt.registerTask('default', [
         'jshintStarted', 'jshint',
         'mochaStarted', 'mochaTest',
-        'webpackStarted', 'webpack',
-        'watch'
+        'webpackStarted', 'webpack'
     ]);
 };
 
