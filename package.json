@@ -4,7 +4,8 @@
   "description": "Polyhedron",
   "main": "main.js",
   "scripts": {
-    "start": "./node_modules/.bin/grunt && node main.js"
+    "prestart": "node node_modules/.bin/grunt",
+    "start": "node main.js"
   },
   "repository": {
     "type": "git",
