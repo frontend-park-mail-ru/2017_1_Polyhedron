@@ -5,7 +5,7 @@
   "main": "main.js",
   "scripts": {
     "test": "grunt test",
-    "postinstall": "npm install --save grunt-cli && grunt postinstall",
+    "postinstall": "ls -la && ls node_modules && ls node_modules/bin && grunt postinstall",
     "start": "node main.js"
   },
   "repository": {
@@ -32,6 +32,7 @@
     "webpack": "^2.2.1"
   },
   "dependencies": {
-    "babel-runtime": "^6.23.0"
+    "babel-runtime": "^6.23.0",
+    "grunt-cli": "^1.2.0"
   }
 }
