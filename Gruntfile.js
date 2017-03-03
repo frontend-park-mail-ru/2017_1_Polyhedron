@@ -88,6 +88,15 @@ module.exports = function(grunt) {
     grunt.registerTask('mochaStarted', () => {console.log('*** Testing ***');});
     grunt.registerTask('webpackStarted', () => {console.log('*** Minification ***');});
 
+    grunt.registerTask('postinstall', [
+        'webpackStarted', 'webpack'
+    ]);
+
+    grunt.registerTask('test', [
+        'jshintStarted', 'jshint',
+        'mochaStarted', 'mochaTest'
+    ]);
+
     grunt.registerTask('default', [
         'jshintStarted', 'jshint',
         'mochaStarted', 'mochaTest',

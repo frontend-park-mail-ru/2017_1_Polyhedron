@@ -1,4 +1,5 @@
 
+// Useless comment
 
 class PlatformMovedEvent extends CustomEvent {
     static get eventName() {
