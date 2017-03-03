@@ -1,6 +1,6 @@
 
-const webpack = require('webpack');
-const path = require('path');
+
+import * as path from "path";
 
 module.exports = {
     module: {
