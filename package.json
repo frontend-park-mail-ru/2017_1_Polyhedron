@@ -5,7 +5,7 @@
   "main": "main.js",
   "scripts": {
     "test": "grunt test",
-    "postinstall": "grunt postinstall",
+    "postinstall": "npm install --save grunt-cli && grunt postinstall",
     "start": "node main.js"
   },
   "repository": {
