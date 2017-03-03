@@ -5,7 +5,7 @@
   "main": "main.js",
   "scripts": {
     "test": "grunt test",
-    "postinstall": "ls node_modules/grunt-cli && ls node_modules/grunt-cli/bin && node_modules/grunt-cli/bin/grunt postinstall",
+    "postinstall": "ls node_modules && node_modules/grunt-cli/bin/grunt postinstall",
     "start": "node main.js"
   },
   "repository": {
