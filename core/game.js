@@ -246,7 +246,7 @@ class Platform extends SolidBody {
             [this.rightBorder, this.lowerBorder],
             [this.rightBorder, this.upperBorder],
             [this.leftBorder, this.upperBorder],
-        ].map(point => this.toGlobals(point))
+        ].map(point => this.toGlobals(point));
     }
 
     get leftBorder() {
@@ -360,7 +360,7 @@ class TriangleField extends SolidBody {
         let localBallPosition = this.toLocals(ball.position);
         let ballRadius = ball.radius;
 
-        return this._triangle.getBottomDistance(localBallPosition) < ballRadius
+        return this._triangle.getBottomDistance(localBallPosition) < ballRadius;
     }
 
     getWidthOnDistance(bottomDistance) {
@@ -377,7 +377,7 @@ class TriangleField extends SolidBody {
 
         context.beginPath();
         for (let i = 0; i != points.length; ++i) {
-            if (i == 0) {
+            if (i === 0) {
                 context.moveTo(points[i][0], points[i][1]);
             } else {
                 context.lineTo(points[i][0], points[i][1]);
@@ -533,7 +533,7 @@ class Game {
 
         this._world.userSectors.forEach(sector => {
             if (sector.containsGlobalPoint(this._world.ball.position) && sector.reachesBottomLevel(this._world.ball)) {
-                this._handleUserSectorCollision(sector, this._world.ball);
+                this._handleUserSectorCollision(sector);
             }
         });
 
@@ -560,7 +560,7 @@ class Game {
         clearInterval(this._setIntervalID);
     }
 
-    _handleUserSectorCollision(sector, ball) {
+    _handleUserSectorCollision(sector) {
         if (sector != this._lastCollidedObject) {
             this._stopGameLoop();
             sector.setLoser();
