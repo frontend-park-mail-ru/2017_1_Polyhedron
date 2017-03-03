@@ -1,4 +1,6 @@
 
+const game = require('./game');
+
 const CANVAS_ID = "game";
 const PLAYER_NUM = 4;
 const FRAME_RATE = 60;
@@ -9,7 +11,7 @@ const INITIAL_RELATIVE_BALL_VELOCITY = [0.01, 0.04];    // ball velocity divided
 
 
 (function () {
-    let loop = new Game(
+    let loop = new game.Game(
         document.getElementById(CANVAS_ID),
         PLAYER_NUM, FRAME_RATE, CANVAS_FILL_FACTOR, BALL_RELATIVE_RADIUS,
         INITIAL_RELATIVE_BALL_OFFSET, INITIAL_RELATIVE_BALL_VELOCITY

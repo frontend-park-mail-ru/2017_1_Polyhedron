@@ -1,6 +1,7 @@
 
 //const math = require('mathjs');   // Do not delete. This expression is used to debug without browser
-
+const math = require('./_lib/math');
+const events = require('./events');
 
 const KEY_LEFT = 39;
 const KEY_RIGHT = 37;
@@ -8,6 +9,15 @@ const KEY_RIGHT = 37;
 const DEFAULT_RELATIVE_DISTANCE = 0.05;
 const DEFAULT_RELATIVE_LENGTH = 0.3;
 const DEFAULT_WIDTH = 5;
+
+const DEFAULT_PLAYER_NUM = 4;
+const DEFAULT_FRAME_RATE = 60;
+const DEFAULT_FILL_FACTOR = 0.8;
+const DEFAULT_BALL_RELATIVE_RADIUS = 0.05;
+const DEFAULT_RELATIVE_BALL_OFFSET = [0.1, 0.05];
+const DEFAULT_RELATIVE_BALL_VELOCITY = [0.25, 0.25];
+
+const PLATFORM_TOLERANCE = 5;
 
 
 class SolidBody {
@@ -459,14 +469,6 @@ class GameWorld {
 }
 
 
-const DEFAULT_PLAYER_NUM = 4;
-const DEFAULT_FRAME_RATE = 60;
-const DEFAULT_FILL_FACTOR = 0.8;
-const DEFAULT_BALL_RELATIVE_RADIUS = 0.05;
-const DEFAULT_RELATIVE_BALL_OFFSET = [0.1, 0.05];
-const DEFAULT_RELATIVE_BALL_VELOCITY = [0.25, 0.25];
-
-const PLATFORM_TOLERANCE = 5;
 class Game {
     constructor(canvas, playerNum, frameRate, fillFactor, ballRelativeRadius,
                 initialRelativeBallOffset, initialRelativeBallVelocity) {
@@ -631,7 +633,7 @@ class Game {
 
     _throwPlatformMovedEvent(platformOffset) {
         document.dispatchEvent(
-            new PlatformMovedEvent(platformOffset)
+            new events.PlatformMovedEvent(platformOffset)
         );
     }
 
@@ -641,7 +643,6 @@ class Game {
     }
 }
 
-document.addEventListener(PlatformMovedEvent.eventName, (e) => {
-    console.log(e.detail);
-});
+
+module.exports.Game = Game;
 
