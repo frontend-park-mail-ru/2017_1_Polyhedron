@@ -1,6 +1,4 @@
 
-// Useless comment
-
 class PlatformMovedEvent extends CustomEvent {
     static get eventName() {
         return "PlatformMoved";
@@ -36,3 +34,8 @@ class LoseEvent extends CustomEvent {
         super(LoseEvent.eventName);
     }
 }
+
+
+module.exports.PlatformMovedEvent = PlatformMovedEvent;
+module.exports.BallPositionCorrectionEvent = BallPositionCorrectionEvent;
+module.exports.LoseEvent = LoseEvent;
