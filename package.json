@@ -4,7 +4,7 @@
   "description": "Polyhedron",
   "main": "main.js",
   "scripts": {
-    "start": "grunt"
+    "start": "npm install grunt-cli -g && grunt"
   },
   "repository": {
     "type": "git",
