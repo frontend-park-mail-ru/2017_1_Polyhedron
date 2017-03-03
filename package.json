@@ -4,8 +4,7 @@
   "description": "Polyhedron",
   "main": "main.js",
   "scripts": {
-    "postinstall": "grunt postinstall",
-    "test": "grunt test",
+    "test": "grunt postinstall && grunt test",
     "start": "node main.js"
   },
   "repository": {
