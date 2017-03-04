@@ -86,7 +86,7 @@ function BindedFunction(handlerFunc) {
     return function (request, response) {
         console.log("Requested URL: ", request.url);
         handlerFunc(request, response);
-    }
+    };
 }
 
 
@@ -212,5 +212,6 @@ function getStaticServer (router) {
 
 module.exports.BindedFile = BindedFile;
 module.exports.BindedFolder = BindedFolder;
+module.exports.BindedFunction = BindedFunction;
 module.exports.Router = Router;
 module.exports.getStaticServer = getStaticServer;
