@@ -1,41 +1,43 @@
 
-class PlatformMovedEvent extends CustomEvent {
+class PlatformMovedEvent {
     static get eventName() {
         return "PlatformMoved";
     }
 
-    constructor(platformOffset) {
-        super(PlatformMovedEvent.eventName, {
+    static create(platformOffset) {
+        return new CustomEvent(PlatformMovedEvent.eventName, {
             detail: platformOffset,
         });
     }
 }
 
 
-class BallPositionCorrectionEvent extends CustomEvent {
+class BallPositionCorrectionEvent {
     static get eventName() {
         return "BallPositionCorrectionEvent";
     }
 
-    constructor(ballPosition) {
-        super(BallPositionCorrectionEvent.eventName, {
+    static create(ballPosition) {
+        return new CustomEvent(BallPositionCorrectionEvent.eventName, {
             detail: ballPosition
         });
     }
 }
 
 
-class LoseEvent extends CustomEvent {
+class DefeatEvent {
     static get eventName() {
-        return "LoseEvent";
+        return "DefeatEvent";
     }
 
-    constructor() {
-        super(LoseEvent.eventName);
+    static create(sectorIndex) {
+        return new CustomEvent(DefeatEvent.eventName, {
+            detail: sectorIndex
+        });
     }
 }
 
 
 module.exports.PlatformMovedEvent = PlatformMovedEvent;
 module.exports.BallPositionCorrectionEvent = BallPositionCorrectionEvent;
-module.exports.LoseEvent = LoseEvent;
+module.exports.DefeatEvent = DefeatEvent;

@@ -100,7 +100,9 @@ module.exports = function(grunt) {
     grunt.registerTask('default', [
         'jshintStarted', 'jshint',
         'mochaStarted', 'mochaTest',
-        'webpackStarted', 'webpack'
+        'webpackStarted', 'webpack', 'watch'
     ]);
+
+    grunt.registerTask('dev', ['webpackStarted', 'webpack', 'watch'])
 };
 

@@ -46,8 +46,25 @@ class Game {
         this._setIntervalID = setInterval(() => this._makeIteration(time), time);
     }
 
+    stop() {
+        clearInterval(this._setIntervalID);
+    }
+
+    continueGame() {
+        let time = 1000 / this._frameRate;
+        this._setIntervalID = setInterval(() => this._makeIteration(time), time);
+    }
+
+    get _playerItemsId() {
+        return Math.floor(this._playerNum / 2);
+    }
+
     get _activePlatform() {
-        return this._world._platforms[Math.floor(this._playerNum / 2)];
+        return this._world._platforms[this._playerItemsId];
+    }
+
+    get _activeSector() {
+        return this._world.userSectors[this._playerItemsId];
     }
 
     _initWorld() {
@@ -68,8 +85,11 @@ class Game {
     }
 
     _setListeners() {
-        document.addEventListener("keydown", event => this._handleKeyDown(event), false);
-        document.addEventListener("keyup", event => this._handleKeyUp(event), false);
+        document.addEventListener("keydown", event => this._handleKeyDown(event));
+        document.addEventListener("keyup", event => this._handleKeyUp(event));
+        window.addEventListener(events.DefeatEvent.eventName, event => this._handleDefeatEvent(event));
+        window.addEventListener(events.BallPositionCorrectionEvent.eventName,
+            event => this._handleBallPositionCorrectionEvent(event));
     }
 
     _makeIteration(time) {
@@ -103,13 +123,11 @@ class Game {
         }
     }
 
-    _stopGameLoop() {
-        clearInterval(this._setIntervalID);
-    }
+
 
     _handleUserSectorCollision(sector) {
         if (sector != this._lastCollidedObject) {
-            this._stopGameLoop();
+            this.stop();
             sector.setLoser();
             this._redraw();
         }
@@ -180,8 +198,27 @@ class Game {
 
     _throwPlatformMovedEvent(platformOffset) {
         document.dispatchEvent(
-            new events.PlatformMovedEvent(platformOffset)
+            events.PlatformMovedEvent.create(platformOffset)
         );
+    }
+
+    _handleDefeatEvent(event) {
+        // TODO сделать что-нибудь поинтереснее
+        let sectorId = event.detail;
+        if (sectorId == this._playerItemsId) {
+            alert("You lose");
+        } else {
+            alert("You win");
+        }
+        this._world.userSectors[event.detail].setLoser();
+        this._redraw();
+        this.stop();
+
+    }
+
+    _handleBallPositionCorrectionEvent(event) {
+        console.log("Ball position corrected");
+        this._world.ball.moveTo(event.detail);
     }
 
     _redraw() {

@@ -1,5 +1,7 @@
 
 const game = require('./game');
+const dispatcher = require('./client_sever_dispatcher').ClientServerDispatcher;
+const events = require('./events');
 
 const CANVAS_ID = "game";
 const PLAYER_NUM = 4;
@@ -11,10 +13,13 @@ const INITIAL_RELATIVE_BALL_VELOCITY = [0.01, 0.04];    // ball velocity divided
 
 
 (function () {
-    let loop = new game.Game(
+    window.loop = new game.Game(
         document.getElementById(CANVAS_ID),
         PLAYER_NUM, FRAME_RATE, CANVAS_FILL_FACTOR, BALL_RELATIVE_RADIUS,
         INITIAL_RELATIVE_BALL_OFFSET, INITIAL_RELATIVE_BALL_VELOCITY
     );
-    loop.start();
+    window.loop.start();
 })();
+
+window.events = events;
+window.disp = new dispatcher();
