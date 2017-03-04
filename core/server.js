@@ -76,6 +76,20 @@ function BindedFolder (folderPath, urlPrefix) {
 }
 
 
+/**
+ * This function is just a wrapper around a callback, logging requested url
+ * @param handlerFunc must accept request and response as input parameters
+ * @returns {Function}
+ * @constructor
+ */
+function BindedFunction(handlerFunc) {
+    return function (request, response) {
+        console.log("Requested URL: ", request.url);
+        handlerFunc(request, response);
+    }
+}
+
+
 const _callbackTemplates = {
     "default": function (request, response) {
         console.log("Incorrect URL requested: ", request.url);
