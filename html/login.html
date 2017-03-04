@@ -1,82 +1,41 @@
-<!DOCTYPE html>
-<html lang="en">
-
+<!doctype html>
+<html lang="ru">
 <head>
-  <meta charset="utf-8">
-  <meta http-equiv="X-UA-Compatible" content="IE=edge">
-  <meta name="viewport" content="width=device-width, initial-scale=1">
-  <!-- The above 3 meta tags *must* come first in the head; any other head content must come *after* these tags -->
-  <meta name="description" content="Project for TP">
-  <link rel="icon" href="/media/ping_pong.ico">
-
-  <title>ping-pong.io</title>
-
-  <!-- Bootstrap core CSS -->
-  <link href="/lib/bootstrap.min.css" rel="stylesheet">
-  <link href="/lib/bootstrap.css" rel="stylesheet">
-
-  <!-- Custom styles for this template -->
-  <link href="/login.css" rel="stylesheet">
-  <link href="/other-carousel.css" rel="stylesheet">
-  <script src="/lib/modernizr-2.6.2.min.js"></script>
+    <title>Polyhedron - многопользовательский пинг-понг</title>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <link rel="stylesheet" href="styles.css">
 </head>
-
 <body>
-  <div class="container">
-    <div class="container-login">
-      <p class="heading-login">
-        <span class="title-heading-login"><strong>L</strong>ogin</span>
-      </p>
+<div class="top">
+    Нет логина? <a href="/register">Зарегистрироваться</a>
+</div>
+<div class="container">
+    <div class="container-inner">
+        <a href="/index">Вернуться к меню</a>
+        <h1 class="header">Polyhedron</h1>
+        <h2 class="subheader">Вход в игру</h2>
+        <div class="items">
+            <form class="login" action="" autocomplete="off">
+                <p>
+                    <label for="username">Логин:</label>
+                    <input type="text" id="username" autofocus placeholder="Введите логин" required>
+                </p>
+                <p>
+                    <label for="password">Пароль:</label>
+                    <input type="password" id="password" placeholder="Введите пароль" required>
+                </p>
 
-      <p class="main-sentense">Please, login</p>
-      <form class="form-horizontal form-fields">
-        <div class="form-group">
-          <label for="inputEmail3" class="control-label login-label">Email</label>
-          <input type="email" class="form-control field-width" id="inputEmail3" placeholder="Email">
-        </div>
+                <p>
+                    <input type="submit" value="Войти" class="submit">
+                </p>
 
-        <div class="form-group">
-          <label for="inputPassword3" class="control-label login-label">Password</label>
-          <input type="password" class="form-control field-width" id="inputPassword3" placeholder="Password">
-        </div>
+                <br>
+                <a href="/register">Нет логина? Зарегистрироваться</a>
+            </form>
 
-        <div class="form-group">
-          <div class="checkbox">
-            <label class="login-chkbox">
-              <input type="checkbox"> Remember me
-            </label>
-          </div>
         </div>
-
-        <div class="form-group">
-          <button type="submit" class="btn btn-default">Sign in</button>
-          <button class="btn btn-default">Create new account</button>
-        </div>
-      </form>
     </div>
-    <!-- End of container-login -->
-
-    <div class="menu">
-      <!-- Start Nav Structure -->
-      <button class="cn-button" id="cn-button">Menu</button>
-      <div class="cn-wrapper" id="cn-wrapper">
-        <ul>
-          <li><a href="about"><span>About</span></a></li>
-          <li><a href="leaders"><span>Leaders</span></a></li>
-          <li><a href="index"><span>Play</span></a></li>
-          <li><a href="login"><span>Login</span></a></li>
-          <li><a href="signup"><span>Sign Up</span></a></li>
-        </ul>
-      </div>
-      <!-- End of Nav Structure -->
-    </div>
-
-  </div>
-  <!-- End of container -->
-  
-  <!-- Core JavaScript-->
-  <script src="/polyfills.js"></script>
-  <script src="/carousel-listener-other.js"></script>
-
+</div>
 </body>
 </html>

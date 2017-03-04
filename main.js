@@ -5,7 +5,7 @@ const DEFAULT_PORT = 3000;
 
 let router = new lib.Router();
 
-const PLAIN_URLS = ['index', 'about', 'leaders', 'login', 'singin', 'signup'];
+const PLAIN_URLS = ['index', 'about', 'leaders', 'login', 'singin', 'signup', 'register'];
 PLAIN_URLS.forEach((url) => {
     router.addRegexURL(`^/${url}/?$`, new lib.BindedFile(`./html/${url}.html`));
 });
