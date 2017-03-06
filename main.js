@@ -5,8 +5,7 @@ const DEFAULT_PORT = 3000;
 
 let router = new lib.Router();
 
-router.addPlainURL("/", new lib.BindedFile("./static/html/main.html"));
-router.addPlainURL("/index.html", new lib.BindedFile("./static/html/main.html"));
+router.addPlainURL("/", new lib.BindedFile("./html/index.html"));
 
 router.addRegexURL("^/lib/.*\.js$", new lib.BindedFolder("./static/_lib/js/", "/lib/"));
 router.addRegexURL("^/lib/.*\.css$", new lib.BindedFolder("./static/_lib/css/", "/lib/"));
