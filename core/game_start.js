@@ -1,6 +1,6 @@
 
 const game = require('./game');
-const dispatcher = require('./client_sever_dispatcher').ClientServerDispatcher;
+const ClientServer = require('./client_sever_dispatcher');
 const events = require('./events');
 
 const CANVAS_ID = "game";
@@ -22,4 +22,4 @@ const INITIAL_RELATIVE_BALL_VELOCITY = [0.01, 0.04];    // ball velocity divided
 })();
 
 window.events = events;
-window.disp = new dispatcher();
+window.disp = new ClientServer();

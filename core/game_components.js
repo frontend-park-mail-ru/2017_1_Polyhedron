@@ -1,7 +1,7 @@
 
 const math = require('./_lib/math');
 const shapes = require('./geometry_shapes');
-const SolidBody = require('./solid_body').SolidBody;
+const SolidBody = require('./solid_body');
 
 const DEFAULT_RELATIVE_DISTANCE = 0.05;
 const DEFAULT_RELATIVE_LENGTH = 0.3;

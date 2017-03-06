@@ -80,4 +80,4 @@ class SolidBody {
     }
 }
 
-module.exports.SolidBody = SolidBody;
+module.exports = SolidBody;

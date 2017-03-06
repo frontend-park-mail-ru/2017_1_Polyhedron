@@ -69,4 +69,4 @@ class GameWorld {
     }
 }
 
-module.exports.GameWorld = GameWorld;
+module.exports = GameWorld;

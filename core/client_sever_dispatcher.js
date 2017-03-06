@@ -25,4 +25,4 @@ class ClientServerDispatcher {
     }
 }
 
-module.exports.ClientServerDispatcher = ClientServerDispatcher;
+module.exports = ClientServerDispatcher;

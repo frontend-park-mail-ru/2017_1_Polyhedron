@@ -1,43 +1,32 @@
-
-class PlatformMovedEvent {
+/**
+ * NEVER create instances of BaseEvent class with new. ALWAYS use classname.create(...).
+ */
+class BaseEvent {
     static get eventName() {
-        return "PlatformMoved";
+        return this.name;
     }
 
-    static create(platformOffset) {
-        return new CustomEvent(PlatformMovedEvent.eventName, {
-            detail: platformOffset,
+    static create(eventDetail) {
+        return new CustomEvent(this.name, {
+            detail: eventDetail,
         });
     }
 }
 
 
-class BallPositionCorrectionEvent {
-    static get eventName() {
-        return "BallPositionCorrectionEvent";
-    }
-
-    static create(ballPosition) {
-        return new CustomEvent(BallPositionCorrectionEvent.eventName, {
-            detail: ballPosition
-        });
-    }
-}
+class PlatformMovedEvent extends BaseEvent {}
 
 
-class DefeatEvent {
-    static get eventName() {
-        return "DefeatEvent";
-    }
+class BallPositionCorrectionEvent extends BaseEvent {}
 
-    static create(sectorIndex) {
-        return new CustomEvent(DefeatEvent.eventName, {
-            detail: sectorIndex
-        });
-    }
-}
+
+class DefeatEvent extends BaseEvent {}
+
+
+class EnemyPositionCorrectionEvent extends BaseEvent {}
 
 
 module.exports.PlatformMovedEvent = PlatformMovedEvent;
 module.exports.BallPositionCorrectionEvent = BallPositionCorrectionEvent;
 module.exports.DefeatEvent = DefeatEvent;
+module.exports.EnemyPositionCorrectionEvent = EnemyPositionCorrectionEvent;

@@ -1,7 +1,7 @@
 
 const math = require('./_lib/math');
 const events = require('./events');
-const GameWorld = require('./game_world').GameWorld;
+const GameWorld = require('./game_world');
 
 const KEY_LEFT = 39;
 const KEY_RIGHT = 37;
@@ -14,6 +14,8 @@ const DEFAULT_RELATIVE_BALL_OFFSET = [0.1, 0.05];
 const DEFAULT_RELATIVE_BALL_VELOCITY = [0.25, 0.25];
 
 const PLATFORM_TOLERANCE = 5;
+
+const MILLISECONDS_PER_SECOND = 1000;
 
 
 class Game {
@@ -42,7 +44,7 @@ class Game {
         this._setListeners();
         this._initWorld();
 
-        let time = 1000 / this._frameRate;
+        let time = MILLISECONDS_PER_SECOND / this._frameRate;
         this._setIntervalID = setInterval(() => this._makeIteration(time), time);
     }
 
@@ -51,7 +53,7 @@ class Game {
     }
 
     continueGame() {
-        let time = 1000 / this._frameRate;
+        let time = MILLISECONDS_PER_SECOND / this._frameRate;
         this._setIntervalID = setInterval(() => this._makeIteration(time), time);
     }
 
@@ -210,7 +212,7 @@ class Game {
         } else {
             alert("You win");
         }
-        this._world.userSectors[event.detail].setLoser();
+        this._world.userSectors[sectorId].setLoser();
         this._redraw();
         this.stop();
 
@@ -228,5 +230,5 @@ class Game {
 }
 
 
-module.exports.Game = Game;
+module.exports = Game;
 
