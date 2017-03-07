@@ -31,9 +31,11 @@ class Data {
   }
 
   checkSubmitButton(){
-	if(!this.error.login && !this.error.email &&
-	   !this.error.pass && !this.error.pass2){
+	if(!this.error.errorLogin && !this.error.errorEmail &&
+	   !this.error.errorPass && !this.error.errorPass2){
 		submitForm.disabled = 0;
+	} else {
+		submitForm.disabled = 1;
 	}
   }
 
