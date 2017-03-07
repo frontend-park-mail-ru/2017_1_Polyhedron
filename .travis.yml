@@ -3,26 +3,25 @@ sudo: required
 
 language: node_js
 node_js:
-- '7'
 # [- Your NodeJS version]
+- '7'
 
 branches:
   only:
+  # - Your branch name
     - master
     - dev
-  # - Your branch name
 
 deploy:
   provider: heroku
   app:
+  # Your branch name: Your heroku application name
     master: polyhedron
-    #Your branch name: Your heroku application name
     dev: polyhedron-team
   api_key:
+    # Your branch name:
+      # secure: Your api secret
     master:
       secure: nD6SI04xOLgJ8TAPbTUb5lvgVGGhc7wMtiryq6DjtlWrGLJOiLmlXrJadfbzt2+qQDqL4IJIlVlDwl4CP1mDJlMormoOt+UpNtCGVPlHP9VFdDonDadUDgUE5eNmh5A3cOEO/CnXWCbc1nK+nOgTsN6wwBdKb+7fPjSmqpLkIhW/HT/FssLIShjPA+Tr7BVocGMeilb2Z8tsQjxFCDTzIUpviy2ITVPmWg/wHg3S4IiQbw19CIObCktxAgDhhUuL0FfCzzL/9Hbj+hzI5PbMFEXKmxnK3T3B7Dj4w7ef5wDPV5EShbV6yN7urOU3TNfJK4asGRhQsdymP9HgCxr3I5lWPlrHHC/ETFLH5ngjqYmoNuZLw+M5TjB6iutkif+7uK0MBrY5A8D3tTdtcuQb4dTymwRL1nuy75dUZCnZaErRAP+k8Iqwk3a3Fd1eG8E/AikDanG1xuL6m0CXarrdYmZvPD0dS4E4fD5pADte8VsWd0q3gTHCrtQOXdj0TUg6K6imQ3Rubvfq0D+3lbT9W/rQdd2QKH92dybarchxNQZne8hKVZDXwj/MWAKxWsNl6yVsbVeUPwygDl8ZOY1pU48OxREzbq+fvPy3dg3idxGhrmMplu9+aFK6+dZfHqt/B2O9png9kUkt+YlzRAwiGUpdtZih/ApOtRdD2SLMwLM=
     dev:
-      secure: ZhmYHEvvoIC6Mr9VN4oaUQqaDIyTCV5ae79wJCBhljMnF+axgGo/d3ednlQtJYUt7C0cNgMU52WpquVqy6tXbPdtt7MtQk7FZIkV19AL05yeGNngzzAp/QeCxP+Nyaa4jrqx+8PbH7qYa29Nk+CDtgOsQfHhwxg0s4BX0S1KH1NkTSu24Uif3SCbnnN8rTcRpfOQFt9RLoyaYR0rzNgKyH9ORh99hDWFdx97fYnCSPhK09CqkeoREIBeJOeV2cyKscClxhy9ab7xSAAUKiK5Ml5WEBpt2PkQPw9hJxc/gPvAYXjrjocI4FI8lub4sMyiBYulPvpEqVPT+pQmEgj7ECYMhsJKeQyYB6X6W9bvWsP+7I/CoWRHPdX1c3d4QUR5p/F9cczOb0wVuNF3pQvhhbQcXPLOGutTR5pSOApybKG39i+OJy+2tSAdy60BbEX6uBLXSJZTMksvKezhGOfLVazZ/vOeTNds3K2K6ZJThQXqnuZfjD29pSA4tlRr4fHdPYu8wAO4++t3WN1/0Gb64DwzjDpzsZJewRkAttbroLmc2p0AZmrbesQj130YtGFYMRLWo3HAIjJIn5pOiietiXdtJ2aorUduTtL0IR+wrpKfjQVf1CWJVM7pcmWho+wehxl3RFCKrxTZ+Nwtun+NwUORgD8cfDIe2kySElQ+vdg=
-
-  # Your branch name:
-# secure: Your api secret
+      secure: NdMEJIejvVuMnKdngCDRmuAAVvijF4GsuVu3srXuaV+jk4nmCgdJJYkLoC8RNg+uwBTcs4VcktzbdneYcKLFjwz8q0K4e3SJpRdipkWsb9z4TtlEFOu2RAZHMbAiI/kFFdE261PDMbCR9EC6H0Ilw0H1qN54kPjSElSKzhlUyac33JidbBltWGeQyMPG0pzJrg0J5C+4s2pK7icda5xTpQO+Kxp0rZVMHBl7kqCs9FVVzYjytqZATF8PhZaJVv+MoMkg0aSPL3NogLjMbwgwyP3OqezS/xhSkYebbd5DIZSn37OMamjgQwvb1QFbXabae7WjuelFnGM7B5yQTHUXYxFGoqKJgnNAs7b6b1/aKVSJNRw8HL9NAIo5/wId5NoiV7oI7o5Wbmz5JvDSJJ6GceEXcfDqRwcZ/ZIPEFRmGJbKWsqjP3ZIg4ooAsUQsIuylWVTI2hEhxVC8Wxmqug2OArw8FDjG40J5QcRyMb8sHu8fx91b5th0UOR3FJXHDlUGAkdaxClvSMJcsE18jMvLsZDE8AP+vveF/PkLVyLQg+vmS+Md+EnRsk9IaSXBGigI1iFsZmABCAhpvON/b7yCJEIeszS9SeQKOaI1moy1f7UI7ltILMrPYzQgQldYLYUts2Zv7SDCP07tHUW3onJMKToKWwEaCQI4JDyZhM+7zw=
