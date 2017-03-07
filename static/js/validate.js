@@ -31,8 +31,12 @@ class Data {
   }
 
   checkSubmitButton(){
-	if(!this.error.errorLogin && !this.error.errorEmail &&
-	   !this.error.errorPass && !this.error.errorPass2){
+	let result = false;
+	for (let key in this.error) {
+		result +=  this.error[key];
+	}
+
+	if(!result){
 		submitForm.disabled = 0;
 	} else {
 		submitForm.disabled = 1;
@@ -120,24 +124,25 @@ class Data {
     this.login = "";
     this.email = "";
     this.password = "";
-    this.error = { errorLogin: true,
-		   errorEmail: true,
-		   errorPass: true,
-		   errorPass2: true };
+    this.error = {};
 
     //submitForm.addEventListener("click", () => this.sendData());
 
     if(elems.login != null){
     	elems.login.addEventListener("change", () => this.validateLogin());
+	this.error.errorLogin = true;
     }
     if(elems.email != null){
     	elems.email.addEventListener("change", () => this.validateEmail());
+	this.error.errorEmail = true;
     }
     if(elems.password != null){
     	elems.password.addEventListener("change", () => this.validatePassword());
+	this.error.errorPass = true;
     }
     if(elems.password2 != null){
     	elems.password2.addEventListener("change", () => this.validatePassword2());
+	this.error.errorPass2 = true;
     }
   }
 };
