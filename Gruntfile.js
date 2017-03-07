@@ -99,7 +99,7 @@ module.exports = function(grunt) {
     grunt.registerTask('startServer', () => {require('./main');});
 
     grunt.registerTask('postinstall', [
-        'webpackStarted', 'webpack', 'concurrent:watch'
+        'webpackStarted', 'webpack'
     ]);
 
     grunt.registerTask('test', [
