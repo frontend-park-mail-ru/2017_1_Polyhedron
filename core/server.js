@@ -16,8 +16,8 @@ function _promiseReadFile(pagePath) {
             } else {
                 resolve(data);
             }
-        })
-    })
+        });
+    });
 }
 
 
@@ -39,8 +39,8 @@ function BindedFile (pagePath) {
             response.write("404 Not Found\n");
         }).then(() => {
             response.end();
-        })
-    }
+        });
+    };
 }
 
 
@@ -72,7 +72,21 @@ function BindedFolder (folderPath, urlPrefix) {
         }).then(() => {
             response.end();
         });
-    }
+    };
+}
+
+
+/**
+ * This function is just a wrapper around a callback, logging requested url
+ * @param handlerFunc must accept request and response as input parameters
+ * @returns {Function}
+ * @constructor
+ */
+function BindedFunction(handlerFunc) {
+    return function (request, response) {
+        console.log("Requested URL: ", request.url);
+        handlerFunc(request, response);
+    };
 }
 
 
@@ -148,19 +162,20 @@ function getStaticServer (router) {
         if (callback) {
             callback(request, response);
             console.log("Complete match succeeded: ", request.url);
-            return
+            return;
         }
         console.log("Complete match failed: ", request.url);
 
-        let regexpURL = Object.keys(router.getRegexpURLDict).find(
-            (url) => { return request.url.match(new RegExp(url))}
-        );
+        let regexpURL = Object.keys(router.getRegexpURLDict).filter(
+            (url) => { return request.url.match(new RegExp(url)); }
+        ).sort((a, b) => b.length - a.length)[0];
+
         callback = regexpURL ? router.getRegexpURLDict[regexpURL] : null;
 
         if (callback) {
             callback(request, response);
             console.log("URL ", request.url, " match regex: ", regexpURL);
-            return
+            return;
         }
         console.log("Regex match failed: ", request.url);
 
@@ -179,14 +194,14 @@ function getStaticServer (router) {
         */
         let prefixURL = Object.keys(router.getPrefixURLDict).filter(
             url => request.url.startsWith(url)
-        ).sort((a, b) => b - a)[0];
+        ).sort((a, b) => b.length - a.length)[0];
 
         callback = prefixURL ? router.getPrefixURLDict[prefixURL] : null;
 
         if (callback) {
             callback(request, response);
             console.log("URL ", request.url, " match prefix ", prefixURL);
-            return
+            return;
         }
         console.log("Prefix match failed: ", request.url);
 
@@ -197,5 +212,6 @@ function getStaticServer (router) {
 
 module.exports.BindedFile = BindedFile;
 module.exports.BindedFolder = BindedFolder;
+module.exports.BindedFunction = BindedFunction;
 module.exports.Router = Router;
 module.exports.getStaticServer = getStaticServer;

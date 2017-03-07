@@ -1,7 +1,4 @@
-/*!
- * classie - class helper functions
- * from bonzo https://github.com/ded/bonzo
- * 
+/*
  * classie.has( elem, 'my-class' ) -> true/false
  * classie.add( elem, 'my-new-class' )
  * classie.remove( elem, 'my-unwanted-class' )
@@ -78,7 +75,7 @@ if ( typeof define === 'function' && define.amd ) {
 }
 
 })( window );
-// EventListener | @jon_neal | //github.com/jonathantneal/EventListener
+// EventListener
 !window.addEventListener && window.Element && (function () {
     function addToPrototype(name, method) {
         Window.prototype[name] = HTMLDocument.prototype[name] = Element.prototype[name] = method;

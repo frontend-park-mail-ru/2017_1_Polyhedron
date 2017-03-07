@@ -8,11 +8,11 @@ const HTTP_CODE_OK = 200;
 
 let assert = require('assert');
 let http = require('http');
-let lib = require('../server_lib.js');
+let lib = require('../core/server.js');
 
 
 function _getHtmlFilePath(filename) {
-	return `${__dirname}/../static/html/${filename}`;
+	return `${__dirname}/../html/${filename}`;
 }
 
 
