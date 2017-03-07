@@ -118,6 +118,34 @@ class Data {
 		this.checkSubmitButton();			
 	}
 
+	sendData(){
+		let xhr = new XMLHttpRequest();
+
+		let json;
+		if(this.email.length == 0) {
+			json = JSON.stringify({
+				login: this.login,
+				password: this.password,	
+			});
+			xhr.open("POST", '/api/user/login', true);
+		} else {
+			json = JSON.stringify({
+				email: this.email,
+				login: this.login,
+				password: this.password,	
+			});
+			xhr.open("POST", '/api/user/registr', true);
+		}
+
+		xhr.setRequestHeader('Content-type', 'application/json; charset=utf-8');
+		xhr.onreadystatechange = function () {
+			if(xhr.readyState === XMLHttpRequest.DONE && xhr.status === 200) {
+				console.log("Successful sending");
+			};
+		};
+		xhr.send(json);
+	}
+
 	constructor(form) {
 		let elems = form.elements;
 		this.login = "";
@@ -125,24 +153,25 @@ class Data {
 		this.password = "";
 		this.error = {};
 
-	    //submitForm.addEventListener("click", () => this.sendData());
-
-	    if(elems.login != null){
-	    	elems.login.addEventListener("change", () => this.validateLogin());
-	    	this.error.errorLogin = true;
-	    }
-	    if(elems.email != null){
-	    	elems.email.addEventListener("change", () => this.validateEmail());
-	    	this.error.errorEmail = true;
-	    }
-	    if(elems.password != null){
-	    	elems.password.addEventListener("change", () => this.validatePassword());
-	    	this.error.errorPass = true;
-	    }
-	    if(elems.password2 != null){
-	    	elems.password2.addEventListener("change", () => this.validatePassword2());
-	    	this.error.errorPass2 = true;
-	    }
+		if(elems.login != null){
+		    	elems.login.addEventListener("change", () => this.validateLogin());
+		    	this.error.errorLogin = true;
+		}
+		if(elems.email != null){
+		    	elems.email.addEventListener("change", () => this.validateEmail());
+		    	this.error.errorEmail = true;
+		}
+		if(elems.password != null){
+		    	elems.password.addEventListener("change", () => this.validatePassword());
+		    	this.error.errorPass = true;
+		}
+	    	if(elems.password2 != null){
+	    		elems.password2.addEventListener("change", () => this.validatePassword2());
+			this.error.errorPass2 = true;
+		}
+	    	if(submitForm != null){
+			submitForm.addEventListener("click", () => this.sendData());
+		}
 	}
 };
 
