@@ -36,7 +36,7 @@ class Data {
 			result +=  this.error[key];
 		}
 
-		if(!result){
+		if(result == false){
 			submitForm.disabled = false;
 		} else {
 			submitForm.disabled = true;
