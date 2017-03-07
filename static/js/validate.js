@@ -1,5 +1,5 @@
-const loginAndPassword_pattern = /^[a-z][a-z0-9]*?([_][a-z0-9]+){0,2}$/i;
-const email_pattern = /^(([^<>()\[\]\.,;:\s@\"]+(\.[^<>()\[\]\.,;:\s@\"]+)*)|(\".+\"))@(([^<>()[\]\.,;:\s@\"]+\.)+[^<>()[\]\.,;:\s@\"]{2,})$/i;
+const loginAndPasswordPattern = /^[a-z][a-z0-9]*?([_][a-z0-9]+){0,2}$/i;
+const emailPattern = /^(([^<>()\[\]\.,;:\s@\"]+(\.[^<>()\[\]\.,;:\s@\"]+)*)|(\".+\"))@(([^<>()[\]\.,;:\s@\"]+\.)+[^<>()[\]\.,;:\s@\"]{2,})$/i;
 const errorLogin = document.getElementById('errorLogin');
 const errorPassword = document.getElementById('errorPassword');
 const errorPassword2 = document.getElementById('errorPassword2');
@@ -54,7 +54,7 @@ class Data {
 			if (login.length > MAX_LENGTH){
 				errorLogin.innerHTML = 'Поле должно содержать меньше ' + MAX_LENGTH + ' символов';
 			} else {
-				if ( !loginAndPassword_pattern.test(login) ){
+				if ( !loginAndPasswordPattern.test(login) ){
 					errorLogin.innerHTML='Данное поле должно содержать только символы A-z, 0-9 и _';
 				} else {
 					this.error.errorLogin = false;
@@ -75,7 +75,7 @@ class Data {
 			if (password.length > MAX_LENGTH){
 				errorPassword.innerHTML='Поле должно содержать меньше ' + MAX_LENGTH + ' символов';
 			} else {
-				if (!loginAndPassword_pattern.test(password)) {
+				if (!loginAndPasswordPattern.test(password)) {
 					errorPassword.innerHTML='Данное поле должно содержать только символы A-z, 0-9 и _';
 				} else {
 					this.error.errorPass = false;
@@ -108,7 +108,7 @@ class Data {
 			if (email.length > MAX_LENGTH){
 				errorEmail.innerHTML='Поле должно содержать меньше ' + MAX_LENGTH + ' символов';
 			} else {
-				if ( !email_pattern.test(email) ){
+				if ( !emailPattern.test(email) ){
 					errorEmail.innerHTML='Данное поле не является валидным email';
 				} else {
 					this.error.errorEmail = false;
