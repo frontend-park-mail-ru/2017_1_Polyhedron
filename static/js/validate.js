@@ -37,9 +37,9 @@ class Data {
 	}
 
 	if(!result){
-		submitForm.disabled = 0;
+		submitForm.disabled = false;
 	} else {
-		submitForm.disabled = 1;
+		submitForm.disabled = true;
 	}
   }
 
@@ -93,7 +93,6 @@ class Data {
 	errorPassword2.innerHTML='Пароли должны совпадать';
    } else {
 	this.error.errorPass2 = false;
-	submitForm.disabled = 0;
    }
    this.checkSubmitButton();
   }
