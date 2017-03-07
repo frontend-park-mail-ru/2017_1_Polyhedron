@@ -134,13 +134,8 @@ class Platform extends SolidBody {
             localBallPosition[0], localBallPosition[1] - ball.radius
         ];
 
-        let result = true;
-        result = result && this.leftBorder <= checkPoint[0];
-        result = result && checkPoint[0] <= this.rightBorder;
-        result = result && this.lowerBorder <= checkPoint[1];
-        result = result && checkPoint[1] <= this.upperBorder;
-
-        return result;
+        return (this.leftBorder <= checkPoint[0]) && (checkPoint[0] <= this.rightBorder) &&
+            (this.lowerBorder <= checkPoint[1]) && (checkPoint[1] <= this.upperBorder);
     }
 
     draw(canvas) {

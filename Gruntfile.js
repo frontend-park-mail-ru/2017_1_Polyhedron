@@ -37,16 +37,16 @@ module.exports = function(grunt) {
                     ]
                 },
 
-                plugins: [
-                    new webpack.optimize.UglifyJsPlugin({minimize: true})
-                ]
+                //plugins: [
+                //    new webpack.optimize.UglifyJsPlugin({minimize: true})
+                //]
             },
         },
 
         watch: {
             js: {
                 files: [
-                    './core/*/*.js'
+                    './core/*.js'
                 ],
                 tasks: ['webpack']
             }
@@ -74,8 +74,16 @@ module.exports = function(grunt) {
             test: {
                 src: ['tests/test.js']
             }
-        }
+        },
 
+        concurrent: {
+            watch: {
+                tasks: ['watch'],
+                options: {
+                    logConcurrentOutput: true
+                }
+            }
+        }
 
     });
 
@@ -83,13 +91,15 @@ module.exports = function(grunt) {
     grunt.loadNpmTasks('grunt-contrib-watch');
     grunt.loadNpmTasks('grunt-contrib-jshint');
     grunt.loadNpmTasks('grunt-mocha-test');
+    grunt.loadNpmTasks('grunt-concurrent');
 
     grunt.registerTask('jshintStarted', () => {console.log('*** Static analysis ***');});
     grunt.registerTask('mochaStarted', () => {console.log('*** Testing ***');});
     grunt.registerTask('webpackStarted', () => {console.log('*** Minification ***');});
+    grunt.registerTask('startServer', () => {require('./main');});
 
     grunt.registerTask('postinstall', [
-        'webpackStarted', 'webpack'
+        'webpackStarted', 'webpack', 'concurrent:watch'
     ]);
 
     grunt.registerTask('test', [
@@ -100,9 +110,9 @@ module.exports = function(grunt) {
     grunt.registerTask('default', [
         'jshintStarted', 'jshint',
         'mochaStarted', 'mochaTest',
-        'webpackStarted', 'webpack', 'watch'
+        'webpackStarted', 'webpack', 'concurrent:watch'
     ]);
 
-    grunt.registerTask('dev', ['webpackStarted', 'webpack', 'watch'])
+    grunt.registerTask('dev', ['webpackStarted', 'webpack', 'concurrent:watch']);
 };
 
