@@ -6,7 +6,7 @@ const GameWorld = require('./game_world');
 const KEY_LEFT = 39;
 const KEY_RIGHT = 37;
 
-const DEFAULT_PLAYER_NUM = 4;
+const DEFAULT_PLAYERS_NUM = 4;
 const DEFAULT_FRAME_RATE = 60;
 const DEFAULT_FILL_FACTOR = 0.8;
 const DEFAULT_BALL_RELATIVE_RADIUS = 0.05;
@@ -19,11 +19,11 @@ const MILLISECONDS_PER_SECOND = 1000;
 
 
 class Game {
-    constructor(canvas, playerNum, frameRate, fillFactor, ballRelativeRadius,
+    constructor(canvas, playersNum, frameRate, fillFactor, ballRelativeRadius,
                 initialRelativeBallOffset, initialRelativeBallVelocity) {
         this._canvas = canvas;
         this._context = canvas.getContext("2d");
-        this._playerNum = playerNum || DEFAULT_PLAYER_NUM;
+        this._playersNum = playersNum || DEFAULT_PLAYERS_NUM;
         this._frameRate = frameRate || DEFAULT_FRAME_RATE;
         this._fillFactor = fillFactor || DEFAULT_FILL_FACTOR;
         this._initialRelativeBallOffset = initialRelativeBallOffset || DEFAULT_RELATIVE_BALL_OFFSET;
@@ -57,16 +57,16 @@ class Game {
         this._setIntervalID = setInterval(() => this._makeIteration(time), time);
     }
 
-    get _playerItemsId() {
-        return Math.floor(this._playerNum / 2);
+    get _playerItemsIndex() {
+        return Math.floor(this._playersNum / 2);
     }
 
     get _activePlatform() {
-        return this._world._platforms[this._playerItemsId];
+        return this._world._platforms[this._playerItemsIndex];
     }
 
     get _activeSector() {
-        return this._world.userSectors[this._playerItemsId];
+        return this._world.userSectors[this._playerItemsIndex];
     }
 
     _initWorld() {
@@ -76,7 +76,7 @@ class Game {
         let ballPosition = math.add(worldPosition, math.multiply(this._initialRelativeBallOffset, sectorHeight));
         let ballVelocity = math.multiply(this._initialRelativeBallVelocity, sectorHeight / this._frameRate);
 
-        this._world = new GameWorld(this._playerNum, sectorHeight, ballRadius, worldPosition);
+        this._world = new GameWorld(this._playersNum, sectorHeight, ballRadius, worldPosition);
         this._world.ball.moveTo(ballPosition);   // TODO remove. Now it just moves ball from center
         this._world.ball.velocity = ballVelocity;
 
@@ -207,7 +207,7 @@ class Game {
     _handleDefeatEvent(event) {
         // TODO сделать что-нибудь поинтереснее
         let sectorId = event.detail;
-        if (sectorId == this._playerItemsId) {
+        if (sectorId == this._playerItemsIndex) {
             alert("You lose");
         } else {
             alert("You win");

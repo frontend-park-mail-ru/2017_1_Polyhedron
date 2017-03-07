@@ -46,45 +46,44 @@ module.exports = function(grunt) {
         watch: {
             js: {
                 files: [
-                    './core/*/*.js'
+                    './core/*.js'
                 ],
                 tasks: ['webpack']
             }
         },
 
-        jshint: {
-            all: ['core/*.js'],
+        eslint: {
+
             options: {
-                "esversion": 6,
-
-                "node": true,
-                "mocha": true,
-                "qunit": true,
-
-                "browser": true,
-
-                "indent": 4,
-                "varstmt": true,
-                "unused": true,
-                "camelcase": true
-            }
+                configFile: '.eslintrc.js'
+            },
+            src: ['core/*.js']
         },
 
         mochaTest: {
             test: {
                 src: ['tests/test.js']
             }
-        }
+        },
 
+        concurrent: {
+            watch: {
+                tasks: ['watch'],
+                options: {
+                    logConcurrentOutput: true
+                }
+            }
+        }
 
     });
 
     grunt.loadNpmTasks('grunt-webpack');
     grunt.loadNpmTasks('grunt-contrib-watch');
-    grunt.loadNpmTasks('grunt-contrib-jshint');
     grunt.loadNpmTasks('grunt-mocha-test');
+    grunt.loadNpmTasks('grunt-concurrent');
+    grunt.loadNpmTasks("grunt-eslint");
 
-    grunt.registerTask('jshintStarted', () => {console.log('*** Static analysis ***');});
+    grunt.registerTask('eslintStarted', () => {console.log('*** Static analysis ***');});
     grunt.registerTask('mochaStarted', () => {console.log('*** Testing ***');});
     grunt.registerTask('webpackStarted', () => {console.log('*** Minification ***');});
 
@@ -93,16 +92,16 @@ module.exports = function(grunt) {
     ]);
 
     grunt.registerTask('test', [
-        'jshintStarted', 'jshint',
+        'eslintStarted', 'eslint',
         'mochaStarted', 'mochaTest'
     ]);
 
     grunt.registerTask('default', [
-        'jshintStarted', 'jshint',
+        'eslintStarted', 'eslint',
         'mochaStarted', 'mochaTest',
-        'webpackStarted', 'webpack', 'watch'
+        'webpackStarted', 'webpack', 'concurrent:watch'
     ]);
 
-    grunt.registerTask('dev', ['webpackStarted', 'webpack', 'watch'])
+    grunt.registerTask('dev', ['webpackStarted', 'webpack', 'concurrent:watch']);
 };
 
