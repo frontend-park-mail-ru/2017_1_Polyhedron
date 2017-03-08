@@ -1,4 +1,5 @@
-const loginAndPasswordPattern = /^[a-z][a-z0-9]*?([_][a-z0-9]+){0,2}$/i;
+const loginPattern = /^[a-z][a-z0-9]*?([_][a-z0-9]+){0,2}$/i;
+const passwordPattern = /[_a-zA-Z0-9]$/i;
 const emailPattern = /^(([^<>()\[\]\.,;:\s@\"]+(\.[^<>()\[\]\.,;:\s@\"]+)*)|(\".+\"))@(([^<>()[\]\.,;:\s@\"]+\.)+[^<>()[\]\.,;:\s@\"]{2,})$/i;
 const errorLogin = document.getElementById('errorLogin');
 const errorPassword = document.getElementById('errorPassword');
@@ -30,16 +31,14 @@ class Data {
 		}
 	}
 
-	checkSubmitButton(){
+	checkToSend(){
 		let result = false;
 		for (let key in this.error) {
 			result +=  this.error[key];
 		}
 
-		if(result == false){
-			submitForm.disabled = false;
-		} else {
-			submitForm.disabled = true;
+		if (result == false){
+			this.sendData();
 		}
 	}
 
@@ -50,18 +49,13 @@ class Data {
 
 		if (login.length == 0){
 			errorLogin.innerHTML='Данное поле обязательно для заполнения';
-		} else {
-			if (login.length > MAX_LENGTH){
-				errorLogin.innerHTML = 'Поле должно содержать меньше ' + MAX_LENGTH + ' символов';
-			} else {
-				if ( !loginAndPasswordPattern.test(login) ){
-					errorLogin.innerHTML='Данное поле должно содержать только символы A-z, 0-9 и _';
-				} else {
-					this.error.errorLogin = false;
-				}
-			}
-		}
-		this.checkSubmitButton();						
+		} else if (login.length > MAX_LENGTH){
+					errorLogin.innerHTML = 'Поле должно содержать меньше ' + MAX_LENGTH + ' символов';
+				} else if ( !loginPattern.test(login) ){
+						errorLogin.innerHTML='Поле должно содержать только символы A-z, 0-9 и _';
+						} else {
+							this.error.errorLogin = false;
+						}					
 	}
 
 	validatePassword(){    
@@ -75,14 +69,13 @@ class Data {
 			if (password.length > MAX_LENGTH){
 				errorPassword.innerHTML='Поле должно содержать меньше ' + MAX_LENGTH + ' символов';
 			} else {
-				if (!loginAndPasswordPattern.test(password)) {
-					errorPassword.innerHTML='Данное поле должно содержать только символы A-z, 0-9 и _';
+				if (!passwordPattern.test(password)) {
+					errorPassword.innerHTML='Поле должно содержать только символы A-z, 0-9 и _';
 				} else {
 					this.error.errorPass = false;
 				}
 			}
 		}
-		this.checkSubmitButton();
 	}
 
 	validatePassword2(){    
@@ -94,7 +87,6 @@ class Data {
 		} else {
 			this.error.errorPass2 = false;
 		}
-		this.checkSubmitButton();
 	}
 
 	validateEmail(){    
@@ -109,13 +101,12 @@ class Data {
 				errorEmail.innerHTML='Поле должно содержать меньше ' + MAX_LENGTH + ' символов';
 			} else {
 				if ( !emailPattern.test(email) ){
-					errorEmail.innerHTML='Данное поле не является валидным email';
+					errorEmail.innerHTML='Поле не является валидным email';
 				} else {
 					this.error.errorEmail = false;
 				}
 			}
-		}
-		this.checkSubmitButton();			
+		}			
 	}
 
 	sendData(){
@@ -153,24 +144,28 @@ class Data {
 		this.password = "";
 		this.error = {};
 
+		if(submitForm != null){
+			submitForm.addEventListener("click", () => this.checkToSend());
+		}
 		if(elems.login != null){
 		    	elems.login.addEventListener("change", () => this.validateLogin());
 		    	this.error.errorLogin = true;
+		    	submitForm.addEventListener("click", () => this.validateLogin());
 		}
 		if(elems.email != null){
 		    	elems.email.addEventListener("change", () => this.validateEmail());
 		    	this.error.errorEmail = true;
+		    	submitForm.addEventListener("click", () => this.validateEmail());
 		}
 		if(elems.password != null){
 		    	elems.password.addEventListener("change", () => this.validatePassword());
 		    	this.error.errorPass = true;
+		    	submitForm.addEventListener("click", () => this.validatePassword());
 		}
-	    	if(elems.password2 != null){
-	    		elems.password2.addEventListener("change", () => this.validatePassword2());
+	    if(elems.password2 != null){
+	    	elems.password2.addEventListener("change", () => this.validatePassword2());
 			this.error.errorPass2 = true;
-		}
-	    	if(submitForm != null){
-			submitForm.addEventListener("click", () => this.sendData());
+			submitForm.addEventListener("click", () => this.validatePassword2());
 		}
 	}
 };
