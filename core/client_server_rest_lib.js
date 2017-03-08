@@ -6,7 +6,8 @@ const URL_ALIASES = {
     logout: 'logout',
     register: 'register',
     getUser: 'getUser',
-    update: 'update'
+    update: 'update',
+    leaders: 'leaders'
 };
 
 const URL_MAP = {
@@ -35,6 +36,11 @@ const URL_MAP = {
             name: URL_ALIASES.update,
             url: '/api/user/update',
             method: 'POST'
+        },
+        {
+            name: URL_ALIASES.leaders,
+            url: '/api/leaders',
+            method: 'GET'
         }
     ])
 };
@@ -62,6 +68,12 @@ class ClientServerAPI {
 
     logout() {
         return this._fetchCORS(URL_ALIASES.logout);
+    }
+
+    getLeaders(leaderNum) {
+        return this._fetchCORS(URL_ALIASES.leaders, {
+            'leaderNum': leaderNum
+        });
     }
 
 
