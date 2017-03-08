@@ -1,12 +1,12 @@
 @font-face {
     font-family: 'Roboto Slab';
-    src: url('../fonts/RobotoSlab-Regular.ttf');
+    src: url('/static/fonts/RobotoSlab-Regular.ttf');
 }
 
 @font-face {
     font-family: 'Roboto Slab';
     font-weight: bold;
-    src: url('../fonts/RobotoSlab-Bold.ttf');
+    src: url('/static/fonts/RobotoSlab-Bold.ttf');
 }
 
 * {
@@ -20,7 +20,7 @@ html {
     overflow-x: hidden;
     padding: 0;
     margin: 0;
-    background: black url('../images/background.gif') 50% 50%;
+    background: black url('/static/images/background.gif') 50% 50%;
     color: white;
     font-family: 'Roboto Slab', serif;
     text-align: center;
@@ -33,7 +33,7 @@ html {
 body {
     height: 100%;
     margin: 0;
-    background: url('../images/emblem.gif') no-repeat 60vw 50%;
+    background: url('/static/images/emblem.gif') no-repeat 60vw 50%;
 }
 
 .top {
