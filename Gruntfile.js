@@ -37,9 +37,9 @@ module.exports = function(grunt) {
                     ]
                 },
 
-                plugins: [
-                    new webpack.optimize.UglifyJsPlugin({minimize: true})
-                ]
+                //plugins: [
+                //    new webpack.optimize.UglifyJsPlugin({minimize: true})
+                //]
             },
         },
 
@@ -49,6 +49,12 @@ module.exports = function(grunt) {
                     './core/*.js'
                 ],
                 tasks: ['webpack']
+            },
+            pug: {
+                files: [
+                    './static/js/templates/*.pug'
+                ],
+                tasks: ['exec:compile_pug']
             }
         },
 
@@ -73,7 +79,11 @@ module.exports = function(grunt) {
                     logConcurrentOutput: true
                 }
             }
-        }
+        },
+
+        exec: {
+            compile_pug: 'node .pug_compiler.js',
+        },
 
     });
 
@@ -82,6 +92,7 @@ module.exports = function(grunt) {
     grunt.loadNpmTasks('grunt-mocha-test');
     grunt.loadNpmTasks('grunt-concurrent');
     grunt.loadNpmTasks("grunt-eslint");
+    grunt.loadNpmTasks('grunt-exec');
 
     grunt.registerTask('eslintStarted', () => {console.log('*** Static analysis ***');});
     grunt.registerTask('mochaStarted', () => {console.log('*** Testing ***');});
