@@ -66,17 +66,21 @@ class ClientServerAPI {
 
 
     _fetchCORS(urlAlias, requestBody) {
-        requestBody = requestBody || '';
         const url = this._urlPack.getAbsURL(urlAlias);
 
-        requestBody.method = this._urlPack.getMethod(urlAlias);
-        requestBody.mode = 'cors';
-        return fetch(url, requestBody);
+
+        let options = {
+            body: requestBody ? JSON.stringify(requestBody) : '',
+            method: this._urlPack.getMethod(urlAlias),
+            mode: 'cors',
+            credentials: 'include',
+            headers: new Headers({
+                'Content-type': 'application/json'
+            })
+        };
+
+        return fetch(url,options);
     }
 }
-
-(function () {
-    new ClientServerAPI().login('email', 'login', 'password');
-})();
 
 module.exports = ClientServerAPI;
