@@ -1,5 +1,6 @@
 
 const URLPack = require('./url_pack');
+const fetch = require('node-fetch');
 
 const URL_ALIASES = {
     login: 'login',
@@ -7,7 +8,9 @@ const URL_ALIASES = {
     register: 'register',
     getUser: 'getUser',
     update: 'update',
-    leaders: 'leaders'
+    leaders: 'leaders',
+    isLoggedIn: 'isLoggedIn',
+    flush: 'flush'
 };
 
 const URL_MAP = {
@@ -40,6 +43,16 @@ const URL_MAP = {
         {
             name: URL_ALIASES.leaders,
             url: '/api/leaders',
+            method: 'GET'
+        },
+        {
+            name: URL_ALIASES.isLoggedIn,
+            url: '/api/user/is_logged_in',
+            method: 'GET'
+        },
+        {
+            name: URL_ALIASES.flush,
+            url: '/api/user/flush',
             method: 'GET'
         }
     ])
@@ -76,6 +89,14 @@ class ClientServerAPI {
         });
     }
 
+    isLoggedIn() {
+        return this._fetchCORS(URL_ALIASES.isLoggedIn);
+    }
+
+    flush() {
+        return this._fetchCORS(URL_ALIASES.flush);
+    }
+
 
     _fetchCORS(urlAlias, requestBody) {
         const url = this._urlPack.getAbsURL(urlAlias);
@@ -86,9 +107,9 @@ class ClientServerAPI {
             method: this._urlPack.getMethod(urlAlias),
             mode: 'cors',
             credentials: 'include',
-            headers: new Headers({
+            headers: {
                 'Content-type': 'application/json'
-            })
+            }
         };
 
         return fetch(url,options);
