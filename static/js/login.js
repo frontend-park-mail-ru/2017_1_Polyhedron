@@ -1,16 +1,13 @@
-(function () {
-    'use strict';
 
-    class Login {
-        constructor (options) {
-            this.options = options;
-        };
+'use strict';
 
-        render () {
-            window.subheader.innerHTML = "Вход в игру";
-            window.content.innerHTML = window.render_login(this.options);
-        };
-    }
+const BasePage = require('./base');
 
-    window.Login = Login;
-})();
+class Login extends BasePage {
+    render () {
+        window.subheader.innerHTML = "Вход в игру";
+        window.content.innerHTML = window.render_login(this.options);
+    };
+}
+
+module.exports = Login;

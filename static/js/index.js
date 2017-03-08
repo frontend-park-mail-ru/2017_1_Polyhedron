@@ -1,16 +1,13 @@
-(function () {
-    'use strict';
 
-    class Index {
-        constructor (options) {
-            this.options = options;
-        };
+'use strict';
 
-        render () {
-            window.subheader.innerHTML = "Многопользовательский пинг-понг";
-            window.content.innerHTML = window.render_index(this.options);
-        };
-    }
+const BasePage = require('./base');
 
-    window.Index = Index;
-})();
+class Index extends BasePage {
+    render () {
+        window.subheader.innerHTML = "Многопользовательский пинг-понг";
+        window.content.innerHTML = window.render_index(this.options);
+    };
+}
+
+module.exports = Index;
