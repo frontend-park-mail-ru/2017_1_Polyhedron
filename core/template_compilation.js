@@ -57,7 +57,7 @@ function compileAll(templateDir, resultDir) {
                     let resultPath = path.join(resultDir, resultFileName);
                     compileImportable(templatePath, resultPath);
                 }
-            })
+            });
         })
         .catch(err => console.error(err));
 }

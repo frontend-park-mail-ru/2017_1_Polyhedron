@@ -5,7 +5,7 @@ const URL_ALIASES = {
     login: 'login',
     logout: 'logout',
     register: 'register',
-    get_user: 'get_user',
+    getUser: 'getUser',
     update: 'update'
 };
 
@@ -27,7 +27,7 @@ const URL_MAP = {
             method: 'POST'
         },
         {
-            name: URL_ALIASES.get_user,
+            name: URL_ALIASES.getUser,
             url: '/api/user/getuser',
             method: 'GET'
         },
