@@ -35,11 +35,39 @@ module.exports = function(grunt) {
                             }
                         },
                     ]
+                }
+            },
+
+            build_heroku: {
+                progress: true,
+                entry: "./core/game_start.js",
+                output: {
+                    path: './dist',
+                    filename: 'bundle.js'
                 },
 
-                //plugins: [
-                //    new webpack.optimize.UglifyJsPlugin({minimize: true})
-                //]
+                module: {
+                    loaders: [
+                        {
+                            loader: "babel-loader",
+
+                            include: [
+                                path.resolve(__dirname, "core"),
+                            ],
+
+                            test: /\.js$/,
+
+                            query: {
+                                plugins: ['transform-runtime'],
+                                presets: ['es2015'],
+                            }
+                        },
+                    ]
+                },
+
+                plugins: [
+                    new webpack.optimize.UglifyJsPlugin({minimize: true})
+                ]
             },
         },
 
@@ -99,7 +127,7 @@ module.exports = function(grunt) {
     grunt.registerTask('webpackStarted', () => {console.log('*** Minification ***');});
 
     grunt.registerTask('postinstall', [
-        'webpackStarted', 'webpack'
+        'webpackStarted', 'exec:compile_pug', 'webpack:build_heroku'
     ]);
 
     grunt.registerTask('test', [
@@ -107,12 +135,6 @@ module.exports = function(grunt) {
         'mochaStarted', 'mochaTest'
     ]);
 
-    grunt.registerTask('default', [
-        'eslintStarted', 'eslint',
-        'mochaStarted', 'mochaTest',
-        'webpackStarted', 'webpack', 'concurrent:watch'
-    ]);
-
-    grunt.registerTask('dev', ['webpackStarted', 'webpack', 'concurrent:watch']);
+    grunt.registerTask('dev', ['webpackStarted', 'webpack:build', 'concurrent:watch']);
 };
 
