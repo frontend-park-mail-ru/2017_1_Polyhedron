@@ -47,8 +47,8 @@ class Form{
         for (let key in  this.fields) {
         	let nameField = this.fields[key].name;
         	if (nameField in elems){
-				elems[nameField].onchange = () => this.validate(nameField);
-				submitFormButton.onclick = () => this.validate(nameField);
+				elems[nameField].addEventListener("change", () => this.validate(nameField));
+				submitFormButton.addEventListener("click", () => this.validate(nameField));
 			}
 		}
     }
@@ -63,7 +63,7 @@ class Form{
 		this.fields[nameField].value = valueField; 
 		this.resetError(nameField);
 
-		if (valueField.length == 0 && valueField != undefined){
+		if (valueField.length == 0){
 			error[nameField].innerHTML='Данное поле обязательно для заполнения';
 		} else if (valueField.length > MAX_LENGTH){
 					error[nameField].innerHTML = 'Поле должно содержать меньше ' + MAX_LENGTH + ' символов';
@@ -103,7 +103,9 @@ class SignUpForm extends Form{
 
 	sendData(){
 		let session = new ClientServerAPI('/api/user/registration');
-		session.register(this.fields['email'].value, this.fields['login'].value, this.fields['password'].value);
+		session.register(this.fields['email'].value, 
+						 this.fields['login'].value, 
+						 this.fields['password'].value);
 	}
 };
 
