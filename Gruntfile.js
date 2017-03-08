@@ -41,6 +41,38 @@ module.exports = function(grunt) {
                     new webpack.optimize.UglifyJsPlugin({minimize: true})
                 ]
             },
+
+            build_spa_js: {
+                progress: true,
+                entry: "./static/js/main.js",
+                output: {
+                    path: './dist',
+                    filename: 'spa_bundle.js'
+                },
+
+                module: {
+                    loaders: [
+                        {
+                            loader: "babel-loader",
+
+                            include: [
+                                path.resolve(__dirname, 'static/js'),
+                            ],
+
+                            test: /\.js$/,
+
+                            query: {
+                                plugins: ['transform-runtime'],
+                                presets: ['es2015'],
+                            }
+                        },
+                    ]
+                },
+
+                plugins: [
+                    new webpack.optimize.UglifyJsPlugin({minimize: true})
+                ]
+            },
         },
 
         watch: {
@@ -48,7 +80,14 @@ module.exports = function(grunt) {
                 files: [
                     './core/*.js'
                 ],
-                tasks: ['webpack']
+                tasks: ['webpack:build']
+            },
+
+            static_js: {
+                files: [
+                    './static/js/*.js'
+                ],
+                tasks: ['webpack:build_spa_js']
             }
         },
 
