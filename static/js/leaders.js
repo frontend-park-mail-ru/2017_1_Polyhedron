@@ -1,4 +1,3 @@
-
 'use strict';
 
 const BasePage = require('./base');

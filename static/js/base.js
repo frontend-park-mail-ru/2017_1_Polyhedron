@@ -1,5 +1,3 @@
-
-
 class BasePage {
     constructor (template, options) {
         this._options = options;
