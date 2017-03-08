@@ -1,7 +1,7 @@
-
-
 class BasePage {
-    constructor (options) {
+    constructor (subheader, content, options) {
+        this.subheader = subheader;
+        this.content = content;
         this.options = options;
     };
 
