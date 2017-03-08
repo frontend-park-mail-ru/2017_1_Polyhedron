@@ -1,5 +1,12 @@
 'use strict';
 
+const About = require('./about');
+const Game = require('./base');
+const Index = require('./game');
+const Leaders = require('./leaders');
+const Login = require('./login');
+const Signup = require('./signup');
+
 (function () {
     window.content = document.querySelector(".content");
     window.subheader = document.querySelector(".subheader");
@@ -8,12 +15,12 @@
     // window.user = {name: 'Player 2', score: '197'};
 
     let pages = {};
-    pages.index = new window.Index();
-    pages.about = new window.About();
-    pages.game = new window.Game();
-    pages.leaders = new window.Leaders();
-    pages.login = new window.Login();
-    pages.signup = new window.Signup();
+    pages.index = new Index();
+    pages.about = new About();
+    pages.game = new Game();
+    pages.leaders = new Leaders();
+    pages.login = new Login();
+    pages.signup = new Signup();
 
     window.userpanel.innerHTML = window.render_top();
 

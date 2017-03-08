@@ -1,16 +1,12 @@
-(function () {
-    'use strict';
+'use strict';
 
-    class Game {
-        constructor (options) {
-            this.options = options;
-        };
+const BasePage = require('./base');
 
-        render () {
-            window.subheader.innerHTML = "Игра";
-            window.content.innerHTML = window.render_game(this.options);
-        };
-    }
+class Game extends BasePage {
+    render () {
+        window.subheader.innerHTML = "Игра";
+        window.content.innerHTML = window.render_game(this.options);
+    };
+}
 
-    window.Game = Game;
-})();
+module.exports = Game;
