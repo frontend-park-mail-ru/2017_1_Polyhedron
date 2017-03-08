@@ -1,40 +1,99 @@
-const loginPattern = /^[a-z][a-z0-9]*?([_][a-z0-9]+){0,2}$/i;
-const passwordPattern = /[_a-zA-Z0-9]$/i;
-const emailPattern = /^(([^<>()\[\]\.,;:\s@\"]+(\.[^<>()\[\]\.,;:\s@\"]+)*)|(\".+\"))@(([^<>()[\]\.,;:\s@\"]+\.)+[^<>()[\]\.,;:\s@\"]{2,})$/i;
-const errorLogin = document.getElementById('errorLogin');
-const errorPassword = document.getElementById('errorPassword');
-const errorPassword2 = document.getElementById('errorPassword2');
-const errorEmail = document.getElementById('errorEmail');
-const submitForm = document.getElementById('submitForm');
+const patterns = {
+	loginPattern: /^[a-z][a-z0-9]*?([_][a-z0-9]+){0,2}$/i,
+	passwordPattern: /[_a-zA-Z0-9]$/i,
+	password2Pattern: /[_a-zA-Z0-9]$/i,
+	emailPattern: /^(([^<>()\[\]\.,;:\s@\"]+(\.[^<>()\[\]\.,;:\s@\"]+)*)|(\".+\"))@(([^<>()[\]\.,;:\s@\"]+\.)+[^<>()[\]\.,;:\s@\"]{2,})$/i
+}
+const error = {
+	login: document.getElementById('errorLogin'),
+	password: document.getElementById('errorPassword'),
+	password2: document.getElementById('errorPassword2'),
+	email: document.getElementById('errorEmail')
+}
+const submitFormButton = document.getElementById('submitFormButton');
 const MAX_LENGTH = 14;
 
 
-class Data {
-	resetError(key){
-		switch(key){
-			case 'login':
-			errorLogin.innerHTML='';
-			this.error.errorLogin = true;
-			break;
-			case 'password':
-			errorPassword.innerHTML='';
-			this.error.errorPass = true;		
-			break;
-			case 'password2':
-			errorPassword2.innerHTML='';
-			this.error.errorPass2 = true;	
-			break;
-			case 'email':
-			errorEmail.innerHTML='';
-			this.error.errorEmail = true;	
-			break;
+class Form{
+	constructor(form) {
+        this.fields = {
+        	'login': {
+        		name: "login",
+        		value: false,
+        		error: true
+        	}, 
+         	'email': {
+         		name: "email",
+        		value: false,
+        		error: true
+        	},
+         	'password': {
+         		name: "password",
+        		value: false,
+        		error: true
+        	},
+         	'password2': {
+         		name: "password2",
+        		value: false,
+        		error: true
+        	}
+        };
+
+        if(submitFormButton != null){
+			submitFormButton.addEventListener("click", () => this.checkToSend());
 		}
+
+        let elems = form.elements;
+        for (let key in  this.fields) {
+        	let nameField = this.fields[key].name;
+        	if (nameField in elems){
+				elems[nameField].onchange = () => this.validate(nameField);
+				submitFormButton.onclick = () => this.validate(nameField);
+			}
+		}
+    }
+
+    resetError(key){
+		error[key].innerHTML='';
+		this.fields[key].error = true;	
 	}
 
+    validate(nameField){
+		let valueField = document.getElementById(nameField).value;
+		this.fields[nameField].value = valueField; 
+		this.resetError(nameField);
+
+		if (valueField.length == 0 && valueField != undefined){
+			error[nameField].innerHTML='Данное поле обязательно для заполнения';
+		} else if (valueField.length > MAX_LENGTH){
+					error[nameField].innerHTML = 'Поле должно содержать меньше ' + MAX_LENGTH + ' символов';
+				} else if ( !patterns[nameField + 'Pattern'].test(valueField) ){
+							if (nameField == 'email') {
+								error[nameField].innerHTML='Поле не является валидным e-mail';
+							} else {
+								error[nameField].innerHTML='Поле должно содержать только символы A-z, 0-9 и _';
+							}
+						} else {
+							this.fields[nameField].error = false;
+						}
+    }
+
+	checkToSend(){
+		//need to override
+		console.log("Need to override 'checkToSend()' method");
+	}
+
+	sendData(){
+		//need to override
+		console.log("Need to override 'sendData()' method");
+	}
+};
+
+class SignUpForm extends Form{
 	checkToSend(){
 		let result = false;
-		for (let key in this.error) {
-			result +=  this.error[key];
+		for (let key in this.fields) {
+			result +=  this.fields[key].error;
 		}
 
 		if (result == false){
@@ -42,140 +101,50 @@ class Data {
 		}
 	}
 
-	validateLogin(){    
-		let login = document.getElementById('username').value;
-		this.login = login; 
-		this.resetError('login');
-
-		if (login.length == 0){
-			errorLogin.innerHTML='Данное поле обязательно для заполнения';
-		} else if (login.length > MAX_LENGTH){
-					errorLogin.innerHTML = 'Поле должно содержать меньше ' + MAX_LENGTH + ' символов';
-				} else if ( !loginPattern.test(login) ){
-						errorLogin.innerHTML='Поле должно содержать только символы A-z, 0-9 и _';
-						} else {
-							this.error.errorLogin = false;
-						}					
-	}
-
-	validatePassword(){    
-		let password = document.getElementById('password').value;
-		this.password = password;
-		this.resetError('password');
-
-		if (password.length == 0){
-			errorPassword.innerHTML='Данное поле обязательно для заполнения';
-		} else {
-			if (password.length > MAX_LENGTH){
-				errorPassword.innerHTML='Поле должно содержать меньше ' + MAX_LENGTH + ' символов';
-			} else {
-				if (!passwordPattern.test(password)) {
-					errorPassword.innerHTML='Поле должно содержать только символы A-z, 0-9 и _';
-				} else {
-					this.error.errorPass = false;
-				}
-			}
-		}
-	}
-
-	validatePassword2(){    
-		let password2 = document.getElementById('password2').value;
-		this.resetError('password2');
-
-		if (this.password != password2) {
-			errorPassword2.innerHTML='Пароли должны совпадать';
-		} else {
-			this.error.errorPass2 = false;
-		}
-	}
-
-	validateEmail(){    
-		let email = document.getElementById('email').value;
-		this.email = email;
-		this.resetError('email');
-
-		if (email.length == 0){
-			errorEmail.innerHTML='Данное поле обязательно для заполнения';
-		} else {
-			if (email.length > MAX_LENGTH){
-				errorEmail.innerHTML='Поле должно содержать меньше ' + MAX_LENGTH + ' символов';
-			} else {
-				if ( !emailPattern.test(email) ){
-					errorEmail.innerHTML='Поле не является валидным email';
-				} else {
-					this.error.errorEmail = false;
-				}
-			}
-		}			
-	}
-
 	sendData(){
-		let xhr = new XMLHttpRequest();
-
-		let json;
-		if(this.email.length == 0) {
-			json = JSON.stringify({
-				login: this.login,
-				password: this.password,	
-			});
-			xhr.open("POST", '/api/user/login', true);
-		} else {
-			json = JSON.stringify({
-				email: this.email,
-				login: this.login,
-				password: this.password,	
-			});
-			xhr.open("POST", '/api/user/registr', true);
-		}
-
-		xhr.setRequestHeader('Content-type', 'application/json; charset=utf-8');
-		xhr.onreadystatechange = function () {
-			if(xhr.readyState === XMLHttpRequest.DONE && xhr.status === 200) {
-				console.log("Successful sending");
-			};
-		};
-		xhr.send(json);
-	}
-
-	constructor(form) {
-		let elems = form.elements;
-		this.login = "";
-		this.email = "";
-		this.password = "";
-		this.error = {};
-
-		if(submitForm != null){
-			submitForm.addEventListener("click", () => this.checkToSend());
-		}
-		if(elems.login != null){
-		    	elems.login.addEventListener("change", () => this.validateLogin());
-		    	this.error.errorLogin = true;
-		    	submitForm.addEventListener("click", () => this.validateLogin());
-		}
-		if(elems.email != null){
-		    	elems.email.addEventListener("change", () => this.validateEmail());
-		    	this.error.errorEmail = true;
-		    	submitForm.addEventListener("click", () => this.validateEmail());
-		}
-		if(elems.password != null){
-		    	elems.password.addEventListener("change", () => this.validatePassword());
-		    	this.error.errorPass = true;
-		    	submitForm.addEventListener("click", () => this.validatePassword());
-		}
-	    if(elems.password2 != null){
-	    	elems.password2.addEventListener("change", () => this.validatePassword2());
-			this.error.errorPass2 = true;
-			submitForm.addEventListener("click", () => this.validatePassword2());
-		}
+		let session = new ClientServerAPI('/api/user/registration');
+		session.register(this.fields['email'].value, this.fields['login'].value, this.fields['password'].value);
 	}
 };
 
+class SignInForm extends Form{
+	checkToSend(){
+		let result = this.fields['email'].error || this.fields['password'].error;
+
+		if (result == false){
+			this.sendData();
+		}
+	}
+
+	sendData(){
+		let session = new ClientServerAPI('/api/user/login');
+		session.login(this.fields['login'].value, this.fields['password'].value);
+	}
+};
+
+
 (function(){
-	let form = document.getElementById("form");
-	if(form == null){
+	let signInForm = document.getElementById("signInForm");
+	let signUpForm = document.getElementById("signUpForm");
+
+	if(signUpForm == null && signInForm == null){
 		console.log("Error, form not found");
 	} else {
-		let data = new Data(form);
-		document.body.userData = data; //Добавим в DOM
+		if(signInForm != null){
+			// Переписать блок при помощи модулей и require.js
+			let dataSignInForm = new SignInForm(signInForm);
+			document.body.userData = dataSignInForm; //Добавим в DOM
+		} else {
+			// Переписать блок при помощи модулей и require.js
+			let dataSignUpForm = new SignUpForm(signUpForm);
+			document.body.userData = dataSignUpForm; //Добавим в DOM
+		}
 	}
+	/*let signInForm = document.getElementById("signInForm");
+	if(signInForm == null){
+		console.log("Error, form not found");
+	} else {
+			let dataSignInForm = new Form(signInForm);
+			document.body.userData = dataSignInForm; //Добавим в DOM
+	}*/
 })();
