@@ -13,7 +13,7 @@ class Leaders extends BasePage {
             {name: "Player 3", score: 200},
         ];
         locals.user = window.user || {};
-        window.content.innerHTML = window.render_leaders(locals);
+        window.content.innerHTML = this._template(locals);
     };
 }
 

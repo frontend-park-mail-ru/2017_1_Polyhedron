@@ -86,7 +86,7 @@
             /**
              * math.js factory function. Creates a new instance of math.js
              *
-             * @param {Object} [config] Available configuration options:
+             * @param {Object} [config] Available configuration _options:
              *                            {number} epsilon
              *                              Minimum relative difference between two
              *                              compared values, used by all comparison functions.
@@ -141,7 +141,7 @@
 
             /**
              * Math.js core. Creates a new, empty math.js instance
-             * @param {Object} [options] Available options:
+             * @param {Object} [options] Available _options:
              *                            {number} epsilon
              *                              Minimum relative difference between two
              *                              compared values, used by all comparison functions.
@@ -187,7 +187,7 @@
                 // create a new typed instance
                 math.typed = typedFactory.create(math.type);
 
-                // create configuration options. These are private
+                // create configuration _options. These are private
                 var _config = {
                     // minimum relative difference between two compared values,
                     // used by all comparison functions
@@ -249,7 +249,7 @@
                 math['import'] = load(importFactory);
                 math['config'] = load(configFactory);
 
-                // apply options
+                // apply _options
                 if (options) {
                     math.config(options);
                 }
@@ -2192,14 +2192,14 @@
              * Syntax:
              *
              *    format(value)
-             *    format(value, options)
+             *    format(value, _options)
              *    format(value, precision)
              *    format(value, fn)
              *
              * Where:
              *
              *    {number} value   The value to be formatted
-             *    {Object} options An object with formatting options. Available options:
+             *    {Object} _options An object with formatting _options. Available _options:
              *                     {string} notation
              *                         Number notation. Choose from:
              *                         'fixed'          Always use regular number notation.
@@ -2270,17 +2270,17 @@
                     return 'NaN';
                 }
 
-                // default values for options
+                // default values for _options
                 var notation = 'auto';
                 var precision = undefined;
 
                 if (options) {
-                    // determine notation from options
+                    // determine notation from _options
                     if (options.notation) {
                         notation = options.notation;
                     }
 
-                    // determine precision from options
+                    // determine precision from _options
                     if (exports.isNumber(options)) {
                         precision = options;
                     }
@@ -2801,13 +2801,13 @@
                  * Syntax:
                  *
                  *    math.import(object)
-                 *    math.import(object, options)
+                 *    math.import(object, _options)
                  *
                  * Where:
                  *
                  * - `object: Object`
                  *   An object with functions to be imported.
-                 * - `options: Object` An object with import options. Available options:
+                 * - `_options: Object` An object with import _options. Available _options:
                  *   - `override: boolean`
                  *     If true, existing functions will be overwritten. False by default.
                  *   - `silent: boolean`
@@ -2840,7 +2840,7 @@
                  *    math.fibonacci(7); // returns 13
                  *
                  * @param {Object | Array} object   Object with functions to be imported.
-                 * @param {Object} [options]        Import options.
+                 * @param {Object} [options]        Import _options.
                  */
                 function math_import(object, options) {
                     var num = arguments.length;
@@ -2889,7 +2889,7 @@
                  * Add a property to the math namespace and create a chain proxy for it.
                  * @param {string} name
                  * @param {*} value
-                 * @param {Object} options  See import for a description of the options
+                 * @param {Object} options  See import for a description of the _options
                  * @private
                  */
                 function _import(name, value, options) {
@@ -2963,7 +2963,7 @@
                 /**
                  * Import an instance of a factory into math.js
                  * @param {{factory: Function, name: string, path: string, math: boolean}} factory
-                 * @param {Object} options  See import for a description of the options
+                 * @param {Object} options  See import for a description of the _options
                  * @private
                  */
                 function _importFactory(factory, options) {
@@ -3107,7 +3107,7 @@
                 var NUMBER = ['number', 'BigNumber', 'Fraction'];   // valid values for option number
 
                 /**
-                 * Set configuration options for math.js, and get current options.
+                 * Set configuration _options for math.js, and get current _options.
                  * Will emit a 'config' event, with arguments (curr, prev).
                  *
                  * Syntax:
@@ -3121,7 +3121,7 @@
                  *     math.config({number: 'Fraction'});
                  *     math.eval('0.4');                    // outputs Fraction 2/5
                  *
-                 * @param {Object} [options] Available options:
+                 * @param {Object} [options] Available _options:
                  *                            {number} epsilon
                  *                              Minimum relative difference between two
                  *                              compared values, used by all comparison functions.
@@ -3141,11 +3141,11 @@
                     if (options) {
                         var prev = object.clone(config);
 
-                        // validate some of the options
+                        // validate some of the _options
                         validateOption(options, 'matrix', MATRIX);
                         validateOption(options, 'number', NUMBER);
 
-                        // merge options
+                        // merge _options
                         object.deepExtend(config, options);
 
                         var curr = object.clone(config);
@@ -3160,7 +3160,7 @@
                     }
                 }
 
-                // attach the valid options to the function so they can be extended
+                // attach the valid _options to the function so they can be extended
                 _config.MATRIX = MATRIX;
                 _config.NUMBER = NUMBER;
 
@@ -3193,7 +3193,7 @@
 
             /**
              * Validate an option
-             * @param {Object} options         Object with options
+             * @param {Object} options         Object with _options
              * @param {string} name            Name of the option to validate
              * @param {Array.<string>} values  Array with valid values for this option
              */
@@ -3209,7 +3209,7 @@
                     }
                     else {
                         // unknown value
-                        console.warn('Warning: Unknown value "' + options[name] + '" for configuration option "' + name + '". Available options: ' + values.map(JSON.stringify).join(', ') + '.');
+                        console.warn('Warning: Unknown value "' + options[name] + '" for configuration option "' + name + '". Available _options: ' + values.map(JSON.stringify).join(', ') + '.');
                     }
                 }
             }
@@ -8762,7 +8762,7 @@
              * When `value` is an Object:
              *
              * - When the object contains a property `format` being a function, this
-             *   function is invoked as `value.format(options)` and the result is returned.
+             *   function is invoked as `value.format(_options)` and the result is returned.
              * - When the object has its own `toString` method, this method is invoked
              *   and the result is returned.
              * - In other cases the function will loop over all object properties and
@@ -8775,10 +8775,10 @@
              *     math.format('hello');            // '"hello"'
              *
              * @param {*} value             Value to be stringified
-             * @param {Object | number | Function} [options]  Formatting options. See
+             * @param {Object | number | Function} [options]  Formatting _options. See
              *                                                _lib/utils/number:format for a
              *                                                description of the available
-             *                                                options.
+             *                                                _options.
              * @return {string} str
              */
             exports.format = function(value, options) {
@@ -8841,10 +8841,10 @@
              * Recursively format an n-dimensional matrix
              * Example output: "[[1, 2], [3, 4]]"
              * @param {Array} array
-             * @param {Object | number | Function} [options]  Formatting options. See
+             * @param {Object | number | Function} [options]  Formatting _options. See
              *                                                _lib/utils/number:format for a
              *                                                description of the available
-             *                                                options.
+             *                                                _options.
              * @returns {string} str
              */
             function formatArray (array, options) {
@@ -8876,14 +8876,14 @@
              * Syntax:
              *
              *    format(value)
-             *    format(value, options)
+             *    format(value, _options)
              *    format(value, precision)
              *    format(value, fn)
              *
              * Where:
              *
              *    {number} value   The value to be formatted
-             *    {Object} options An object with formatting options. Available options:
+             *    {Object} _options An object with formatting _options. Available _options:
              *                     {string} notation
              *                         Number notation. Choose from:
              *                         'fixed'          Always use regular number notation.
@@ -8945,17 +8945,17 @@
                     return value.isNaN() ? 'NaN' : (value.gt(0) ? 'Infinity' : '-Infinity');
                 }
 
-                // default values for options
+                // default values for _options
                 var notation = 'auto';
                 var precision = undefined;
 
                 if (options !== undefined) {
-                    // determine notation from options
+                    // determine notation from _options
                     if (options.notation) {
                         notation = options.notation;
                     }
 
-                    // determine precision from options
+                    // determine precision from _options
                     if (typeof options === 'number') {
                         precision = options;
                     }
@@ -9169,11 +9169,11 @@
 
                 /**
                  * Get a string representation of the complex number,
-                 * with optional formatting options.
-                 * @param {Object | number | Function} [options]  Formatting options. See
+                 * with optional formatting _options.
+                 * @param {Object | number | Function} [options]  Formatting _options. See
                  *                                                _lib/utils/number:format for a
                  *                                                description of the available
-                 *                                                options.
+                 *                                                _options.
                  * @return {string} str
                  */
                 Complex.prototype.format = function (options) {
@@ -11901,11 +11901,11 @@
                 };
 
                 /**
-                 * Get a string representation of the matrix, with optional formatting options.
-                 * @param {Object | number | Function} [options]  Formatting options. See
+                 * Get a string representation of the matrix, with optional formatting _options.
+                 * @param {Object | number | Function} [options]  Formatting _options. See
                  *                                                _lib/utils/number:format for a
                  *                                                description of the available
-                 *                                                options.
+                 *                                                _options.
                  * @returns {string} str
                  */
                 Matrix.prototype.format = function (options) {
@@ -13086,12 +13086,12 @@
                 };
 
                 /**
-                 * Get a string representation of the matrix, with optional formatting options.
+                 * Get a string representation of the matrix, with optional formatting _options.
                  * @memberof DenseMatrix
-                 * @param {Object | number | Function} [options]  Formatting options. See
+                 * @param {Object | number | Function} [options]  Formatting _options. See
                  *                                                _lib/utils/number:format for a
                  *                                                description of the available
-                 *                                                options.
+                 *                                                _options.
                  * @returns {string} str
                  */
                 DenseMatrix.prototype.format = function (options) {
@@ -14324,12 +14324,12 @@
                 };
 
                 /**
-                 * Get a string representation of the matrix, with optional formatting options.
+                 * Get a string representation of the matrix, with optional formatting _options.
                  * @memberof SparseMatrix
-                 * @param {Object | number | Function} [options]  Formatting options. See
+                 * @param {Object | number | Function} [options]  Formatting _options. See
                  *                                                _lib/utils/number:format for a
                  *                                                description of the available
-                 *                                                options.
+                 *                                                _options.
                  * @returns {string} str
                  */
                 SparseMatrix.prototype.format = function (options) {
@@ -17813,13 +17813,13 @@
                 };
 
                 /**
-                 * Get a string representation of the range, with optional formatting options.
+                 * Get a string representation of the range, with optional formatting _options.
                  * Output is formatted as 'start:step:end', for example '2:6' or '0:0.2:11'
                  * @memberof Range
-                 * @param {Object | number | function} [options]  Formatting options. See
+                 * @param {Object | number | function} [options]  Formatting _options. See
                  *                                                _lib/utils/number:format for a
                  *                                                description of the available
-                 *                                                options.
+                 *                                                _options.
                  * @returns {string} str
                  */
                 Range.prototype.format = function (options) {
@@ -19342,12 +19342,12 @@
                 };
 
                 /**
-                 * Get a string representation of the Unit, with optional formatting options.
+                 * Get a string representation of the Unit, with optional formatting _options.
                  * @memberof Unit
-                 * @param {Object | number | Function} [options]  Formatting options. See
+                 * @param {Object | number | Function} [options]  Formatting _options. See
                  *                                                _lib/utils/number:format for a
                  *                                                description of the available
-                 *                                                options.
+                 *                                                _options.
                  * @return {string}
                  */
                 Unit.prototype.format = function (options) {
@@ -23967,7 +23967,7 @@
                  * Syntax:
                  *
                  *    math.format(value)
-                 *    math.format(value, options)
+                 *    math.format(value, _options)
                  *    math.format(value, precision)
                  *    math.format(value, callback)
                  *
@@ -23975,8 +23975,8 @@
                  *
                  *  - `value: *`
                  *    The value to be formatted
-                 *  - `options: Object`
-                 *    An object with formatting options. Available options:
+                 *  - `_options: Object`
+                 *    An object with formatting _options. Available _options:
                  *    - `notation: string`
                  *      Number notation. Choose from:
                  *      - 'fixed'
@@ -24017,7 +24017,7 @@
                  * When `value` is an Object:
                  *
                  * - When the object contains a property `format` being a function, this function
-                 *   is invoked as `value.format(options)` and the result is returned.
+                 *   is invoked as `value.format(_options)` and the result is returned.
                  * - When the object has its own `toString` method, this method is invoked
                  *   and the result is returned.
                  * - In other cases the function will loop over all object properties and
@@ -24055,7 +24055,7 @@
                  *    print
                  *
                  * @param {*} value                               Value to be stringified
-                 * @param {Object | Function | number} [options]  Formatting options
+                 * @param {Object | Function | number} [_options]  Formatting _options
                  * @return {string} The formatted value
                  */
                 var format = typed('format', {
@@ -24274,12 +24274,12 @@
                  */
                 var createUnit = typed('createUnit', {
 
-                    // General function signature. First parameter is an object where each property is the definition of a new unit. The object keys are the unit names and the values are the definitions. The values can be objects, strings, or Units. If a property is an empty object or an empty string, a new base unit is created. The second parameter is the options.
+                    // General function signature. First parameter is an object where each property is the definition of a new unit. The object keys are the unit names and the values are the definitions. The values can be objects, strings, or Units. If a property is an empty object or an empty string, a new base unit is created. The second parameter is the _options.
                     'Object, Object': function(obj, options) {
                         return type.Unit.createUnit(obj, options);
                     },
 
-                    // Same as above but without the options.
+                    // Same as above but without the _options.
                     'Object': function(obj) {
                         return type.Unit.createUnit(obj, {});
                     },
@@ -24291,7 +24291,7 @@
                         return type.Unit.createUnit(obj, options);
                     },
 
-                    // Same as above but without the options.
+                    // Same as above but without the _options.
                     'string, Unit | string | Object': function (name, def) {
                         var obj = {};
                         obj[name] = def;
@@ -26593,7 +26593,7 @@
                 'category': 'Core',
                 'syntax': [
                     'config()',
-                    'config(options)'
+                    'config(_options)'
                 ],
                 'description': 'Get configuration or change configuration.',
                 'examples': [
@@ -26615,7 +26615,7 @@
                 'category': 'Core',
                 'syntax': [
                     'import(functions)',
-                    'import(functions, options)'
+                    'import(functions, _options)'
                 ],
                 'description': 'Import functions or constants from an object.',
                 'examples': [
@@ -29147,9 +29147,9 @@
                  * Syntax:
                  *
                  *     parse(expr)
-                 *     parse(expr, options)
+                 *     parse(expr, _options)
                  *     parse([expr1, expr2, expr3, ...])
-                 *     parse([expr1, expr2, expr3, ...], options)
+                 *     parse([expr1, expr2, expr3, ...], _options)
                  *
                  * Example:
                  *
@@ -29167,7 +29167,7 @@
                  *     nodes[2].compile(math).eval(); // 12
                  *
                  * @param {string | string[] | Matrix} expr
-                 * @param {{nodes: Object<string, Node>}} [options]  Available options:
+                 * @param {{nodes: Object<string, Node>}} [options]  Available _options:
                  *                                                   - `nodes` a set of custom nodes
                  * @return {Node | Node[]} node
                  * @throws {Error}
@@ -31095,7 +31095,7 @@
                  * This function can get an object of the following form:
                  * {
 	   *    handler: //This can be a callback function of the form
-	   *             // "function callback(node, options)"or
+	   *             // "function callback(node, _options)"or
 	   *             // a map that maps function names (used in FunctionNodes)
 	   *             // to callbacks
 	   *    parenthesis: "keep" //the parenthesis option (This is optional)
@@ -31143,7 +31143,7 @@
                  * This function can get an object of the following form:
                  * {
 	   *    handler: //This can be a callback function of the form
-	   *             // "function callback(node, options)"or
+	   *             // "function callback(node, _options)"or
 	   *             // a map that maps function names (used in FunctionNodes)
 	   *             // to callbacks
 	   *    parenthesis: "keep" //the parenthesis option (This is optional)
@@ -33472,7 +33472,7 @@
 
                 /**
                  * Get LaTeX representation
-                 * @params {Object} options
+                 * @params {Object} _options
                  * @return {string} str
                  */
                 RangeNode.prototype._toTex = function (options) {
@@ -34535,7 +34535,7 @@
                  *
                  * @param {string} template
                  * @param {Node} node
-                 * @param {Object} options
+                 * @param {Object} _options
                  * @private
                  **/
                 function expandTemplate(template, node, options) {
@@ -34968,9 +34968,9 @@
                  * Syntax:
                  *
                  *     math.parse(expr)
-                 *     math.parse(expr, options)
+                 *     math.parse(expr, _options)
                  *     math.parse([expr1, expr2, expr3, ...])
-                 *     math.parse([expr1, expr2, expr3, ...], options)
+                 *     math.parse([expr1, expr2, expr3, ...], _options)
                  *
                  * Example:
                  *
@@ -34992,7 +34992,7 @@
                  *     eval, compile
                  *
                  * @param {string | string[] | Matrix} expr          Expression to be parsed
-                 * @param {{nodes: Object<string, Node>}} [options]  Available options:
+                 * @param {{nodes: Object<string, Node>}} [_options]  Available _options:
                  *                                                   - `nodes` a set of custom nodes
                  * @return {Node | Node[]} node
                  * @throws {Error}
@@ -37671,7 +37671,7 @@
                  * Syntax:
                  *
                  *     derivative(expr, variable)
-                 *     derivative(expr, variable, options)
+                 *     derivative(expr, variable, _options)
                  *
                  * Examples:
                  *
@@ -37690,7 +37690,7 @@
 	   *
                  * @param  {Node | string} expr           The expression to differentiate
                  * @param  {SymbolNode | string} variable The variable over which to differentiate
-                 * @param  {{simplify: boolean}} [options]
+                 * @param  {{simplify: boolean}} [_options]
                  *                         There is one option available, `simplify`, which
                  *                         is true by default. When false, output will not
                  *                         be simplified.
@@ -53830,7 +53830,7 @@
                  * @param {Array, Matrix} data                A single matrix or Array
                  * @param {Number, BigNumber, Array} probOrN  prob is the order of the quantile, while N is
                  *                                            the amount of evenly distributed steps of
-                 *                                            probabilities; only one of these options can
+                 *                                            probabilities; only one of these _options can
                  *                                            be provided
                  * @param {Boolean} sorted=false              is data sorted in ascending order
                  * @return {Number, BigNumber, Unit, Array}   Quantile(s)
@@ -54288,7 +54288,7 @@
                  *
                  *     math.print(template, values)
                  *     math.print(template, values, precision)
-                 *     math.print(template, values, options)
+                 *     math.print(template, values, _options)
                  *
                  * Example usage:
                  *
@@ -54313,10 +54313,10 @@
                  * @param {string} template     A string containing variable placeholders.
                  * @param {Object} values       An object containing variables which will
                  *                              be filled in in the template.
-                 * @param {number | Object} [options]  Formatting options,
+                 * @param {number | Object} [_options]  Formatting _options,
                  *                              or the number of digits to format numbers.
                  *                              See function math.format for a description
-                 *                              of all options.
+                 *                              of all _options.
                  * @return {string} Interpolated string
                  */
                 var print = typed ('print', {

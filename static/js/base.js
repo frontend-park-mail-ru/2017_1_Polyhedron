@@ -1,8 +1,9 @@
 
 
 class BasePage {
-    constructor (options) {
-        this.options = options;
+    constructor (template, options) {
+        this._options = options;
+        this._template = template;
     };
 
     render() {

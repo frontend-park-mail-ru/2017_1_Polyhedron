@@ -35,6 +35,34 @@ module.exports = function(grunt) {
                             }
                         },
                     ]
+                }
+            },
+
+            build_heroku: {
+                progress: true,
+                entry: "./core/game_start.js",
+                output: {
+                    path: './dist',
+                    filename: 'bundle.js'
+                },
+
+                module: {
+                    loaders: [
+                        {
+                            loader: "babel-loader",
+
+                            include: [
+                                path.resolve(__dirname, "core"),
+                            ],
+
+                            test: /\.js$/,
+
+                            query: {
+                                plugins: ['transform-runtime'],
+                                presets: ['es2015'],
+                            }
+                        },
+                    ]
                 },
 
                 plugins: [
@@ -57,6 +85,7 @@ module.exports = function(grunt) {
 
                             include: [
                                 path.resolve(__dirname, 'static/js'),
+                                path.resolve(__dirname, 'static/js/templates'),
                             ],
 
                             test: /\.js$/,
@@ -78,70 +107,78 @@ module.exports = function(grunt) {
         watch: {
             js: {
                 files: [
-                    './core/*/*.js'
+                    './core/*.js'
                 ],
-                tasks: ['webpack:build']
+                tasks: ['webpack']
+            },
+
+            pug: {
+                files: [
+                    './static/js/templates/*.pug'
+                ],
+                tasks: ['exec:compile_pug']
             },
 
             static_js: {
                 files: [
-                    './static/js/*.js'
+                    './static/js/*.js',
+                    './static/js/templates/*.js'
                 ],
                 tasks: ['webpack:build_spa_js']
             }
         },
 
-        jshint: {
-            all: ['core/*.js'],
+        eslint: {
+
             options: {
-                "esversion": 6,
-
-                "node": true,
-                "mocha": true,
-                "qunit": true,
-
-                "browser": true,
-
-                "indent": 4,
-                "varstmt": true,
-                "unused": true,
-                "camelcase": true
-            }
+                configFile: '.eslintrc.js'
+            },
+            src: ['core/*.js']
         },
 
         mochaTest: {
             test: {
                 src: ['tests/test.js']
             }
-        }
+        },
 
+        concurrent: {
+            watch: {
+                tasks: ['watch'],
+                options: {
+                    logConcurrentOutput: true
+                }
+            }
+        },
+
+        exec: {
+            compile_pug: 'node .pug_compiler.js',
+        },
 
     });
 
     grunt.loadNpmTasks('grunt-webpack');
     grunt.loadNpmTasks('grunt-contrib-watch');
-    grunt.loadNpmTasks('grunt-contrib-jshint');
     grunt.loadNpmTasks('grunt-mocha-test');
+    grunt.loadNpmTasks('grunt-concurrent');
+    grunt.loadNpmTasks("grunt-eslint");
+    grunt.loadNpmTasks('grunt-exec');
 
-    grunt.registerTask('jshintStarted', () => {console.log('*** Static analysis ***');});
+    grunt.registerTask('eslintStarted', () => {console.log('*** Static analysis ***');});
     grunt.registerTask('mochaStarted', () => {console.log('*** Testing ***');});
     grunt.registerTask('webpackStarted', () => {console.log('*** Minification ***');});
 
     grunt.registerTask('postinstall', [
-        'webpackStarted', 'webpack'
+        'webpackStarted', 'exec:compile_pug', 'webpack:build_heroku'
     ]);
 
     grunt.registerTask('test', [
-        'jshintStarted', 'jshint',
+        'eslintStarted', 'eslint',
         'mochaStarted', 'mochaTest'
     ]);
 
-    grunt.registerTask('default', [
-        'jshintStarted', 'jshint',
-        'mochaStarted', 'mochaTest',
-        'webpackStarted', 'webpack', 'watch'
-    ]);
-
-    grunt.registerTask('dev', ['webpackStarted', 'webpack', 'watch'])
+    grunt.registerTask('dev', ['webpackStarted', 'webpack:build', 'webpack:build_spa_js',
+        'exec:compile_pug', 'concurrent:watch']);
 };
+
 
