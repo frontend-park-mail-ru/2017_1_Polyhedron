@@ -15,6 +15,12 @@ const render_leaders = require('./templates/render_leaders');
 const render_login = require('./templates/render_login');
 const render_signup = require('./templates/render_signup');
 const render_top = require('./templates/render_top');
+const pugRuntime = require('../../node_modules/pug-runtime/index');
+
+for (let key in pugRuntime) {
+    console.log(key);
+    window['pug_' + key] = pugRuntime[key];  // TODO get rid of setting to window (temporary solution).
+}
 
 
 (function () {
