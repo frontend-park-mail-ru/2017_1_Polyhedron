@@ -10,72 +10,13 @@ module.exports = function(grunt) {
         pkg: grunt.file.readJSON('package.json'),
 
         webpack: {
-            build: {
-                progress: true,
-                entry: "./core/game_start.js",
-                output: {
-                    path: './dist',
-                    filename: 'bundle.js'
-                },
 
-                module: {
-                    loaders: [
-                        {
-                            loader: "babel-loader",
-
-                            include: [
-                                path.resolve(__dirname, "core"),
-                            ],
-
-                            test: /\.js$/,
-
-                            query: {
-                                plugins: ['transform-runtime'],
-                                presets: ['es2015'],
-                            }
-                        },
-                    ]
-                }
-            },
-
-            build_heroku: {
-                progress: true,
-                entry: "./core/game_start.js",
-                output: {
-                    path: './dist',
-                    filename: 'bundle.js'
-                },
-
-                module: {
-                    loaders: [
-                        {
-                            loader: "babel-loader",
-
-                            include: [
-                                path.resolve(__dirname, "core"),
-                            ],
-
-                            test: /\.js$/,
-
-                            query: {
-                                plugins: ['transform-runtime'],
-                                presets: ['es2015'],
-                            }
-                        },
-                    ]
-                },
-
-                plugins: [
-                    new webpack.optimize.UglifyJsPlugin({minimize: true})
-                ]
-            },
-
-            build_spa_js: {
+            build_index: {
                 progress: true,
                 entry: "./static/js/main.js",
                 output: {
                     path: './dist',
-                    filename: 'spa_bundle.js'
+                    filename: 'index_bundle.js'
                 },
 
                 module: {
@@ -86,6 +27,8 @@ module.exports = function(grunt) {
                             include: [
                                 path.resolve(__dirname, 'static/js'),
                                 path.resolve(__dirname, 'static/js/templates'),
+                                path.resolve(__dirname, 'core'),
+                                path.resolve(__dirname, 'core/_lib'),
                             ],
 
                             test: /\.js$/,
@@ -101,13 +44,15 @@ module.exports = function(grunt) {
                 //plugins: [
                 //    new webpack.optimize.UglifyJsPlugin({minimize: true})
                 //]
-            },
+            }
         },
 
         watch: {
             js: {
                 files: [
-                    './core/*.js'
+                    './core/*.js',
+                    './static/js/*.js',
+                    './static/js/templates/*.js'
                 ],
                 tasks: ['webpack']
             },
@@ -116,15 +61,7 @@ module.exports = function(grunt) {
                 files: [
                     './templates/*.pug'
                 ],
-                tasks: ['exec:compile_pug']
-            },
-
-            static_js: {
-                files: [
-                    './static/js/*.js',
-                    './static/js/templates/*.js'
-                ],
-                tasks: ['webpack:build_spa_js']
+                tasks: ['exec:compile_pug', 'webpack']
             }
         },
 

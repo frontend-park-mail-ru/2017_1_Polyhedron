@@ -1,6 +1,8 @@
 'use strict';
 
 const BasePage = require('./base');
+const createGame = require('../../../core/game_start');
+createGame('game');
 
 class Game extends BasePage {
     render () {
