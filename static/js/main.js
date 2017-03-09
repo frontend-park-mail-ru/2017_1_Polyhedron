@@ -2,7 +2,7 @@
 
 (function () {
     //window.user = {name: 'Player 2', score: '197'};
-    const pages = require('./pages/pages');
+    const pages = require('./pages/main');
     const userpanel = document.querySelector(".js-top");
 
     userpanel.innerHTML = pages.render_top();
