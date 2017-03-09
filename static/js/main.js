@@ -11,7 +11,7 @@
 
     document.body.addEventListener('click', event => {
         let target = event.target;
-        if (target.nodeName == "A" && target.dataset.page) {
+        if (target.nodeName === "A" && target.dataset.page) {
             event.preventDefault();
             pages.switch_page(target.dataset.page);
         }
