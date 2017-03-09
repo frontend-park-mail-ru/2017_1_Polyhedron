@@ -69,6 +69,39 @@ module.exports = function(grunt) {
                     new webpack.optimize.UglifyJsPlugin({minimize: true})
                 ]
             },
+
+            build_spa_js: {
+                progress: true,
+                entry: "./static/js/main.js",
+                output: {
+                    path: './dist',
+                    filename: 'spa_bundle.js'
+                },
+
+                module: {
+                    loaders: [
+                        {
+                            loader: "babel-loader",
+
+                            include: [
+                                path.resolve(__dirname, 'static/js'),
+                                path.resolve(__dirname, 'static/js/templates'),
+                            ],
+
+                            test: /\.js$/,
+
+                            query: {
+                                plugins: ['transform-runtime'],
+                                presets: ['es2015'],
+                            }
+                        },
+                    ]
+                },
+
+                //plugins: [
+                //    new webpack.optimize.UglifyJsPlugin({minimize: true})
+                //]
+            },
         },
 
         watch: {
@@ -78,11 +111,20 @@ module.exports = function(grunt) {
                 ],
                 tasks: ['webpack']
             },
+
             pug: {
                 files: [
-                    './static/js/templates/*.pug'
+                    './templates/*.pug'
                 ],
                 tasks: ['exec:compile_pug']
+            },
+
+            static_js: {
+                files: [
+                    './static/js/*.js',
+                    './static/js/templates/*.js'
+                ],
+                tasks: ['webpack:build_spa_js']
             }
         },
 
@@ -91,7 +133,7 @@ module.exports = function(grunt) {
             options: {
                 configFile: '.eslintrc.js'
             },
-            src: ['core/*.js', 'static/js/*.js']
+            src: ['core/*.js', 'static/js/*.js', 'static/js/pages/*.js']
         },
 
         mochaTest: {
@@ -119,22 +161,18 @@ module.exports = function(grunt) {
     grunt.loadNpmTasks('grunt-contrib-watch');
     grunt.loadNpmTasks('grunt-mocha-test');
     grunt.loadNpmTasks('grunt-concurrent');
-    grunt.loadNpmTasks("grunt-eslint");
+    grunt.loadNpmTasks('grunt-eslint');
     grunt.loadNpmTasks('grunt-exec');
 
-    grunt.registerTask('eslintStarted', () => {console.log('*** Static analysis ***');});
-    grunt.registerTask('mochaStarted', () => {console.log('*** Testing ***');});
-    grunt.registerTask('webpackStarted', () => {console.log('*** Minification ***');});
-
     grunt.registerTask('postinstall', [
-        'webpackStarted', 'exec:compile_pug', 'webpack:build_heroku'
+        'exec:compile_pug', 'webpack:build_heroku'
     ]);
 
     grunt.registerTask('test', [
-        'eslintStarted', 'eslint',
-        'mochaStarted', 'mochaTest'
+        'eslint', 'mochaTest'
     ]);
 
-    grunt.registerTask('dev', ['webpackStarted', 'webpack:build', 'concurrent:watch']);
+    grunt.registerTask('dev', ['exec:compile_pug', 'webpack:build_spa_js', 'webpack:build', 'concurrent:watch']);
 };
+
 

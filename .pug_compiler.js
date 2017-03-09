@@ -1,8 +1,8 @@
 
-const TEMPLATE_DIR = './static/js/templates';
-const RESULT_DIR = './templates';
+const TEMPLATE_DIR = './templates';
+const RESULT_DIR = './static/js/templates';
 const compileAll = require('./core/template_compilation');
 
 (function () {
-    compileAll('./static/js/templates', './templates');
+    compileAll(TEMPLATE_DIR, RESULT_DIR);
 })();
