@@ -4,8 +4,8 @@ const BasePage = require('./base');
 
 class Signup extends BasePage {
     render () {
-        window.subheader.innerHTML = "Регистрация";
-        window.content.innerHTML = window.render_signup(this._options);
+        this._heading.innerHTML = "Регистрация";
+        this._content.innerHTML = this._template(this._options);
     };
 }
 

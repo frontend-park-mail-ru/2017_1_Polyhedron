@@ -4,8 +4,8 @@ const BasePage = require('./base');
 
 class Game extends BasePage {
     render () {
-        window.subheader.innerHTML = "Игра";
-        window.content.innerHTML = this._template(this._options);
+        this._heading.innerHTML = "Игра";
+        this._content.innerHTML = this._template(this._options);
     };
 }
 
