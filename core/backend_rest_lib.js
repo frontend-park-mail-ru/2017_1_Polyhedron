@@ -42,12 +42,12 @@ const URL_MAP = {
         },
         {
             name: URL_ALIASES.leaders,
-            url: '/api/leaders',
+            url: '/api/use/leaders',
             method: 'GET'
         },
         {
             name: URL_ALIASES.isLoggedIn,
-            url: '/api/user/is_logged_in',
+            url: '/api/user/islogin',
             method: 'GET'
         },
         {
@@ -59,7 +59,7 @@ const URL_MAP = {
 };
 
 
-class ClientServerAPI {
+class BackendAPI {
     constructor(urlPack) {
         this._urlPack = urlPack || URL_MAP.polyhedron;
     }
@@ -83,9 +83,9 @@ class ClientServerAPI {
         return this._fetchCORS(URL_ALIASES.logout);
     }
 
-    getLeaders(leaderNum) {
+    getLeaders(leadersCountLimit) {
         return this._fetchCORS(URL_ALIASES.leaders, {
-            'leaderNum': leaderNum
+            'leaderNum': leadersCountLimit
         });
     }
 
@@ -116,4 +116,4 @@ class ClientServerAPI {
     }
 }
 
-module.exports = ClientServerAPI;
+module.exports = BackendAPI;
