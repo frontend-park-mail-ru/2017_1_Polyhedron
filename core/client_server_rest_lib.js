@@ -1,6 +1,6 @@
 
 const URLPack = require('./url_pack');
-const fetch = require('node-fetch');
+const fetch = require('fetch-cookie')(require('node-fetch'));
 
 const URL_ALIASES = {
     login: 'login',

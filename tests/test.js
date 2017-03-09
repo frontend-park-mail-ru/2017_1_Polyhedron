@@ -166,7 +166,7 @@ describe('Backend testing', () => {
                 .catch(e => {
                     if (e) {
                         err = e;
-                    };
+                    }
                 });
 
             if (err) {
