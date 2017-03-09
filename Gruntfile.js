@@ -102,14 +102,14 @@ module.exports = function(grunt) {
     grunt.loadNpmTasks('grunt-exec');
 
     grunt.registerTask('postinstall', [
-        'exec:compile_pug', 'webpack:build_heroku'
+        'exec:compile_pug', 'webpack'
     ]);
 
     grunt.registerTask('test', [
         'eslint', 'mochaTest'
     ]);
 
-    grunt.registerTask('dev', ['exec:compile_pug', 'webpack:build_spa_js', 'webpack:build', 'concurrent:watch']);
+    grunt.registerTask('dev', ['exec:compile_pug', 'webpack', 'concurrent:watch']);
 };
 
 
