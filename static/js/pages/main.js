@@ -46,6 +46,6 @@ function switchPage(page) {
     }
 }
 
-pages.switcPage = switchPage;
+pages.switchPage = switchPage;
 
 module.exports = pages;
