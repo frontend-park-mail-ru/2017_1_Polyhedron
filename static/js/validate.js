@@ -123,7 +123,7 @@ class SignUpForm extends Form{
 		session.register(this.fields['email'].value, 
 						 this.fields['login'].value, 
 						 this.fields['password'].value).
-		then(data => {}).catch(err => {}); //then - succses, err - fail
+		then(data => {}).catch(err => {}); //then - success, err - fail
         // TODO write promise
 	}
 };
@@ -140,7 +140,7 @@ class SignInForm extends Form{
 	sendData(){
 		let session = new ClientServerAPI();
 		session.login(this.fields['email'].value, this.fields['password'].value)
-		.then(data => {}).catch(err => {}); //then - succses, err - fail
+		.then(data => {}).catch(err => {}); //then - success, err - fail
         // TODO write promise
 	}
 };
