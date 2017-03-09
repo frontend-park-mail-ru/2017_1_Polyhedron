@@ -52,7 +52,7 @@ module.exports = function(grunt) {
                 files: [
                     './core/*.js',
                     './static/js/*.js',
-                    './static/js/templates/*.js'
+                    './static/js/*/*.js'
                 ],
                 tasks: ['webpack']
             },
@@ -76,6 +76,10 @@ module.exports = function(grunt) {
         mochaTest: {
             test: {
                 src: ['tests/test.js']
+            },
+
+            backend_test: {
+                src: ['tests/backend_test.js']
             }
         },
 
