@@ -16,26 +16,29 @@
         <h1 class="header">Polyhedron</h1>
         <h2 class="subheader">Регистрация</h2>
         <div class="items">
-            <form class="registration" action="" autocomplete="off">
+            <form id="signUpForm" autocomplete="off">
                 <p>
-                    <!-- <label for="username">Логин:</label> -->
-                    <label for="username" class="error">Такой логин уже занят!</label>
-                    <input type="text" id="username" autofocus placeholder="Введите логин" required>
+                    <label>Логин:</label>
+                    <input name="login" type="text" id="login" autofocus placeholder="Введите логин">
+                    <label id="errorLogin" class="error"></label>
                 </p>
                 <p>
-                    <label for="password">Пароль:</label>
-                    <input type="password" id="password" placeholder="Введите пароль" required>
+                    <label>Пароль:</label>
+                    <input name="password" type="password" id="password" placeholder="Введите пароль">
+                    <label id="errorPassword" class="error"></label>
                 </p>
                 <p>
-                    <label for="password2">Еще раз пароль:</label>
-                    <input type="password" id="password2" placeholder="Повторите пароль" required>
+                    <label>Еще раз пароль:</label>
+                    <input name="password2" type="password" id="password2" placeholder="Повторите пароль">
+                    <label id="errorPassword2" class="error"></label>
                 </p>
                 <p>
-                    <label for="email">E-mail:</label>
-                    <input type="email" id="email" placeholder="example@example.com" required>
+                    <label>E-mail:</label>
+                    <input name="email" type="text" id="email" placeholder="example@example.com">
+                    <label id="errorEmail" class="error"></label>
                 </p>
                 <p>
-                    <input class="submit" type="submit" value="Зарегистрироваться">
+                    <input id="submitSignUpButton" type="button" class="submit" value="Зарегистрироваться">
                 </p>
 
                 <br>
@@ -45,5 +48,8 @@
         </div>
     </div>
 </div>
+
+<script type="text/javascript" src="validate.js"></script>
+
 </body>
 </html>
