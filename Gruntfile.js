@@ -114,7 +114,7 @@ module.exports = function(grunt) {
 
             pug: {
                 files: [
-                    './static/js/templates/*.pug'
+                    './templates/*.pug'
                 ],
                 tasks: ['exec:compile_pug']
             },
