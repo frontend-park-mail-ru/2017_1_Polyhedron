@@ -34,7 +34,7 @@ pages.error = new Error(heading, content, renderError404);
 pages.leaders = new Leaders(heading, content, renderLeaders);
 pages.login = new Login(heading, content, renderLogin);
 pages.signup = new Signup(heading, content, renderSignup);
-pages.render_top = renderTop;
+pages.renderTop = renderTop;
 
 
 function switchPage(page) {
@@ -46,6 +46,6 @@ function switchPage(page) {
     }
 }
 
-pages.switch_page = switchPage;
+pages.switcPage = switchPage;
 
 module.exports = pages;

@@ -5,7 +5,7 @@
     const pages = require('./pages/main');
     const userpanel = document.querySelector(".js-top");
 
-    userpanel.innerHTML = pages.render_top();
+    userpanel.innerHTML = pages.renderTop();
 
     pages.index.render();
 
@@ -13,9 +13,8 @@
         let target = event.target;
         if (target.nodeName === "A" && target.dataset.page) {
             event.preventDefault();
-            pages.switch_page(target.dataset.page);
+            pages.switchPage(target.dataset.page);
         }
     });
 
 })();
-
