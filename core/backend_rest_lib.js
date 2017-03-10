@@ -73,6 +73,7 @@ class BackendAPI {
     }
 
     login(email, password) {
+        console.log(email, password);
         return this._fetchCORS(URL_ALIASES.login, {
             'email': email,
             'password': password

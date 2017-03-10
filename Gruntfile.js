@@ -110,7 +110,7 @@ module.exports = function(grunt) {
     ]);
 
     grunt.registerTask('test', [
-        'eslint', 'mochaTest'
+        'eslint', 'mochaTest:test'
     ]);
 
     grunt.registerTask('dev', ['exec:compile_pug', 'webpack', 'concurrent:watch']);

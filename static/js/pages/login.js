@@ -1,7 +1,6 @@
 'use strict';
 
 const BasePage = require('./base');
-//const SignInForm = require('../validate').SignInForm;
 const SignInForm = require('../new_validate').SignInForm;
 
 class Login extends BasePage {
