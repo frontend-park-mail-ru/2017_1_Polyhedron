@@ -70,6 +70,10 @@ class TextField extends Field {
         this._messages = messages;
     }
 
+    getValue() {
+        return this._DOMElement.value;
+    }
+
     getErrors() {
         const fieldValue = this._DOMElement.value;
 
@@ -238,12 +242,22 @@ class SignInForm extends Form {
 
     sendData() {
         let backendAPI = new BackendAPI();
-        backendAPI.login(this._fields.email.value, this._fields.password.value)
-            .then((response) => {console.log(response);})
-            .catch((err) => {console.log('Failed to log', err);});
+
+        backendAPI.login(this._fields.email.getValue(), this._fields.password.getValue())
+            .then(response => {
+                if (response.status === 200) {
+                    alert('Logged in successfully');
+                } else {
+                    alert('failed to login');
+                }
+                console.log(response);
+            })
+            .catch(err => {
+                alert('Connection failed');
+                console.log(err);
+            });
     }
 }
-
 
 
 const REGISTER_SELECTORS = {
@@ -297,6 +311,28 @@ class SignUpForm extends Form {
             password: passwordField,
             passwordRepeat: passwordRepeatField,
         }, submitter);
+    }
+
+    sendData() {
+        let backendAPI = new BackendAPI();
+
+        backendAPI.register(
+            this._fields.email.getValue(),
+            this._fields.login.getValue(),
+            this._fields.password.getValue()
+        )
+            .then(response => {
+                if (response.status === 200) {
+                    alert('Signed up successfully');
+                } else {
+                    alert('failed to sign up');
+                }
+                console.log(response);
+            })
+            .catch(err => {
+                alert('Connection failed');
+                console.log(err);
+            });
     }
 }
 

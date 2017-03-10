@@ -8,7 +8,10 @@ let backendApi = require('../core/backend_rest_lib');
 class StatusCodeTestGenerator {
     constructor(logicFunc, thenFunc) {
         this._logicFunc = logicFunc;
-        this._thenFunc = thenFunc || () => {};
+
+        if (!thenFunc) {
+            thenFunc = () => {};
+        }
     }
 
 
