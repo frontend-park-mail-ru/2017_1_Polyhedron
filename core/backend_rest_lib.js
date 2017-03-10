@@ -42,8 +42,8 @@ const URL_MAP = {
         },
         {
             name: URL_ALIASES.leaders,
-            url: '/api/use/leaders',
-            method: 'GET'
+            url: '/api/user/leaders',
+            method: 'POST'
         },
         {
             name: URL_ALIASES.isLoggedIn,
@@ -85,7 +85,7 @@ class BackendAPI {
 
     getLeaders(leadersCountLimit) {
         return this._fetchCORS(URL_ALIASES.leaders, {
-            'leaderNum': leadersCountLimit
+            'count': leadersCountLimit
         });
     }
 
