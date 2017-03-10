@@ -1,25 +1,33 @@
-<!doctype html>
+<!DOCTYPE html>
 <html lang="ru">
 <head>
     <title>Polyhedron - многопользовательский пинг-понг</title>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <link rel="stylesheet" href="styles.css">
+    <link rel="stylesheet" href="/static/css/main.css">
+    <link rel="stylesheet" href="/static/css/index.css">
+    <link rel="stylesheet" href="/static/css/leaders.css">
+    <link rel="stylesheet" href="/static/css/forms.css">
 </head>
 <body>
-<div class="top">
-    <a href="/login">Войти</a> / <a href="/register">Зарегистрироваться</a>
+<div class="top js-top">
+    <a data-page="index" href="#">Меню</a>
+    <span class="divider-dot">·</span>
+    <a data-page="login" href="#">Войти</a>
+    <span class="divider-dot">·</span>
+    <a data-page="signup" href="#">Зарегистрироваться</a>
 </div>
 <div class="container">
     <div class="container-inner">
-        <h1 class="header">Polyhedron</h1>
-        <h2 class="subheader">Многопользовательский пинг-понг</h2>
-        <nav class="items menu">
-            <a href="/game" class="play">Играть</a>
-            <a href="/leaders">Лидеры</a>
-            <a href="/about">Об игре</a>
-        </nav>
+        <h1 class="header"><a data-page="index" href="#">Polyhedron</a></h1>
+        <h2 class="subheader js-subheader">Многопользовательский пинг-понг</h2>
+        <div class="content js-content">
+            <p>Не получается загрузить игру.</p>
+            <p>Требуется корректно работающий JavaScript в Вашем браузере.</p>
+            <p>Пожалуйста, проверьте настройки!</p>
+        </div>
     </div>
 </div>
+<script src="/dist/index_bundle.js"></script>
 </body>
 </html>

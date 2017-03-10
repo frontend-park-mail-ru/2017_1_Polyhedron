@@ -10,12 +10,13 @@ module.exports = function(grunt) {
         pkg: grunt.file.readJSON('package.json'),
 
         webpack: {
-            build: {
+
+            build_index: {
                 progress: true,
-                entry: "./core/game_start.js",
+                entry: "./static/js/main.js",
                 output: {
                     path: './dist',
-                    filename: 'bundle.js'
+                    filename: 'index_bundle.js'
                 },
 
                 module: {
@@ -24,7 +25,10 @@ module.exports = function(grunt) {
                             loader: "babel-loader",
 
                             include: [
-                                path.resolve(__dirname, "core"),
+                                path.resolve(__dirname, 'static/js'),
+                                path.resolve(__dirname, 'static/js/templates'),
+                                path.resolve(__dirname, 'core'),
+                                path.resolve(__dirname, 'core/_lib'),
                             ],
 
                             test: /\.js$/,
@@ -39,16 +43,25 @@ module.exports = function(grunt) {
 
                 plugins: [
                     new webpack.optimize.UglifyJsPlugin({minimize: true})
-                ]
-            },
+                ],
+            }
         },
 
         watch: {
             js: {
                 files: [
-                    './core/*.js'
+                    './core/*.js',
+                    './static/js/*.js',
+                    './static/js/*/*.js'
                 ],
                 tasks: ['webpack']
+            },
+
+            pug: {
+                files: [
+                    './templates/*.pug'
+                ],
+                tasks: ['exec:compile_pug', 'webpack']
             }
         },
 
@@ -57,12 +70,16 @@ module.exports = function(grunt) {
             options: {
                 configFile: '.eslintrc.js'
             },
-            src: ['core/*.js']
+            src: ['core/*.js', 'static/js/*.js', 'static/js/pages/*.js', './tests/*.js', '.pug_compiler.js']
         },
 
         mochaTest: {
             test: {
                 src: ['tests/test.js']
+            },
+
+            backend_test: {
+                src: ['tests/backend_test.js']
             }
         },
 
@@ -73,7 +90,11 @@ module.exports = function(grunt) {
                     logConcurrentOutput: true
                 }
             }
-        }
+        },
+
+        exec: {
+            compile_pug: 'node pug_compiler.js',
+        },
 
     });
 
@@ -81,27 +102,18 @@ module.exports = function(grunt) {
     grunt.loadNpmTasks('grunt-contrib-watch');
     grunt.loadNpmTasks('grunt-mocha-test');
     grunt.loadNpmTasks('grunt-concurrent');
-    grunt.loadNpmTasks("grunt-eslint");
-
-    grunt.registerTask('eslintStarted', () => {console.log('*** Static analysis ***');});
-    grunt.registerTask('mochaStarted', () => {console.log('*** Testing ***');});
-    grunt.registerTask('webpackStarted', () => {console.log('*** Minification ***');});
+    grunt.loadNpmTasks('grunt-eslint');
+    grunt.loadNpmTasks('grunt-exec');
 
     grunt.registerTask('postinstall', [
-        'webpackStarted', 'webpack'
+        'exec:compile_pug', 'webpack'
     ]);
 
     grunt.registerTask('test', [
-        'eslintStarted', 'eslint',
-        'mochaStarted', 'mochaTest'
+        'eslint', 'mochaTest:test'
     ]);
 
-    grunt.registerTask('default', [
-        'eslintStarted', 'eslint',
-        'mochaStarted', 'mochaTest',
-        'webpackStarted', 'webpack', 'concurrent:watch'
-    ]);
-
-    grunt.registerTask('dev', ['webpackStarted', 'webpack', 'concurrent:watch']);
+    grunt.registerTask('dev', ['exec:compile_pug', 'webpack', 'concurrent:watch']);
 };
+
 

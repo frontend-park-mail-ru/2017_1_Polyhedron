@@ -1,0 +1,12 @@
+if locals.leaders.length
+    table
+        each item, index in locals.leaders
+            if user
+                tr(class= (item.login === user.login) ? 'you' : '')
+            else
+                tr
+                td.place= index + 1
+                td.login= item.login
+                td.score= item.score
+else
+    p Лидеров пока нет

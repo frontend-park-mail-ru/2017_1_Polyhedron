@@ -1,0 +1,12 @@
+form#signInForm(autocomplete="off")
+    p
+        label(for="email") E-mail:
+        input#email(type="text" name="email" autofocus placeholder="Введите e-mail")
+        label#errorEmail.error(for="email")
+    p
+        label(for="password") Пароль:
+        input#password(type="password" name="password" placeholder="Введите пароль")
+        label#errorPassword.error(for="password")
+    p
+        input#submitSignInButton.submit(type="submit" value="Войти")
+    a(data-page="signup" href="#") Зарегистрироваться
