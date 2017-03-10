@@ -1,0 +1,18 @@
+.you {
+    font-weight: bold;
+    text-shadow: 1px 1px 2px black,
+        0 0 30px #aa0101,
+        0 0 10px red;
+}
+
+.content td.score, .content td.place {
+    width: 10%;
+}
+
+.content tr:hover td {
+    border-bottom: 1px dashed white;
+    text-shadow: 1px 1px 2px black,
+        0 0 30px #aa0101,
+        0 0 10px red;
+}
+
