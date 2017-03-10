@@ -1,6 +1,8 @@
 'use strict';
 
 (function () {
+    require('../js/new_validate');
+
     //window.user = {name: 'Player 2', score: '197'};
     const pages = require('./pages/main');
     const userpanel = document.querySelector(".js-top");

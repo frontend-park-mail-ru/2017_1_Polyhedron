@@ -1,18 +1,36 @@
 
 const BackendAPI = require('../../core/backend_rest_lib');
 
-const LOGIN_FIELDS = {
-    email: "email",
-    password: "password",
-    submitFormButton: "submitSignInButton"
+const LOGIN_FORM_INFO = {
+    fields: {
+        email: 'email',
+        password: 'password',
+    },
+
+    errorLabelIDs: {
+        email: 'errorEmail',
+        password: 'errorPassword'
+    },
+
+    submitID: 'submitSignInButton'
 };
 
-const REGISTRATION_FIELDS = {
-    email: "email",
-    login: "login",
-    password: "password",
-    password2: "password2",
-    submitFormButton: "submitSignUpButton"
+const REGISTRATION_FORM_INFO = {
+    fields: {
+        email: "email",
+        login: "login",
+        password: "password",
+        password2: "password2"
+    },
+
+    errorLabelIDs: {
+        email: 'errorEmail',
+        password: 'errorPassword',
+        password2: 'errorPassword2',
+        login: 'errorLogin'
+    },
+
+    submitID: "submitSignUpButton"
 };
 
 const PATTERNS = {
@@ -65,7 +83,7 @@ class Form{
     }
 
     validateBeforeSubmit(){
-        for (let key in  this.fields) {
+        for (let key in this.fields) {
             this.validate(key);
         }
 
@@ -114,7 +132,7 @@ class Form{
 
 class SignUpForm extends Form{
     constructor(form) {
-        super(form, REGISTRATION_FIELDS);
+        super(form, REGISTRATION_FORM_INFO);
     }
 
     checkToSend(){
@@ -140,7 +158,7 @@ class SignUpForm extends Form{
 
 class SignInForm extends Form{
     constructor(form) {
-        super(form, LOGIN_FIELDS);
+        super(form, LOGIN_FORM_INFO);
     }
 
     checkToSend(){
@@ -173,10 +191,10 @@ module.exports.SignUpForm = SignUpForm;
     } else {
         if(signInForm != null){
             // TODO Переписать блок при помощи модулей и require.js
-            document.body.userData = new SignInForm(signInForm, LOGIN_FIELDS); //Добавим в DOM
+            document.body.userData = new SignInForm(signInForm, LOGIN_FORM_INFO); //Добавим в DOM
         } else {
             // TODO Переписать блок при помощи модулей и require.js
-            document.body.userData = new SignUpForm(signUpForm, REGISTRATION_FIELDS); //Добавим в DOM
+            document.body.userData = new SignUpForm(signUpForm, REGISTRATION_FORM_INFO); //Добавим в DOM
         }
     }
 })();
