@@ -49,14 +49,8 @@ class Field {
         this._errorOutput = DOMElement;
         this._DOMElement.addEventListener('change', () => {
 
-            let errors = this.getErrors();
-            if (errors.length === 0) {
-                this._errorOutput.innerHTML = '';
-            } else {
-
-            }
-            this._errorOutput.innerHTML = errors.toString();
-        })
+            this._errorOutput.innerHTML = this.getErrors().toString();
+        });
     }
 
     setChangeCallBack(callback) {
@@ -86,7 +80,7 @@ class TextField extends Field {
             errors.push(this._messages.long);
         }
         if (!fieldValue.match(this._pattern)) {
-            errors.push(this._messages.incorrect)
+            errors.push(this._messages.incorrect);
         }
 
         return errors;
@@ -152,13 +146,7 @@ class PasswordRepeatField extends Field {
         this._errorOutput = DOMElement;
         let callback = () => {
 
-            let errors = this.getErrors();
-            if (errors.length === 0) {
-                this._errorOutput.innerHTML = '';
-            } else {
-
-            }
-            this._errorOutput.innerHTML = errors.toString();
+            this._errorOutput.innerHTML = this.getErrors().toString();
         };
 
         this._DOMElement.addEventListener('change', callback);
@@ -202,7 +190,7 @@ class Form {
     }
 
     globalFormLogic(changeEvent) {
-        alert('worked');
+        alert(changeEvent);
     }
 }
 
