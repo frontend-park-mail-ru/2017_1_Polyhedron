@@ -247,6 +247,7 @@ class SignInForm extends Form {
             .then(response => {
                 if (response.status === 200) {
                     alert('Logged in successfully');
+                    window.location.replace("/");
                 } else {
                     alert('failed to login');
                 }
@@ -324,6 +325,7 @@ class SignUpForm extends Form {
             .then(response => {
                 if (response.status === 200) {
                     alert('Signed up successfully');
+                    window.location.replace("/");
                 } else {
                     alert('failed to sign up');
                 }
