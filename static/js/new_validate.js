@@ -24,10 +24,9 @@ const DEFAULT_PARAMETERS = {
 const DEFAULT_TEXT_MESSAGES = {
     short: 'Too short',
     long: 'Too long',
-    incorrect: 'Incorrect value'
+    incorrect: 'Incorrect value',
+    match: 'Not match'
 };
-
-const DEFAULT_REPEAT_MESSAGE = 'Not match';
 
 
 class Field {
@@ -131,7 +130,7 @@ class PasswordRepeatField extends Field {
     constructor(DOMElement, options, message) {
         super(DOMElement, options);
         this._referenceField = options['referenceField'];
-        this._message = message || DEFAULT_REPEAT_MESSAGE;
+        this._message = message || DEFAULT_TEXT_MESSAGES.match;
     }
 
     getErrors() {
@@ -160,21 +159,24 @@ class Form {
         this._fields = fields;
         this._submitter = submitter;
         this._setFieldsHook();
+
+        this._submitter.addEventListener('click', (event) => {
+            event.preventDefault();
+            this.validateAndSubmit();
+        });
     }
 
     _setFieldsHook() {
-        this._fields.forEach(
-            field => {
-                field.setChangeCallBack(event => this.globalFormLogic(event));
-            }
-        );
+        for (let fieldName in this._fields) {
+            this._fields[fieldName].setChangeCallBack(event => this.globalFormLogic(event));
+        }
     }
 
     isValid() {
         let isValid = true;
-        this._fields.forEach(field => {
-            isValid = isValid && field.isValid();
-        });
+        for (let fieldName in this._fields) {
+            isValid = isValid && this._fields[fieldName].isValid();
+        }
 
         return isValid;
     }
@@ -186,11 +188,11 @@ class Form {
     }
 
     sendData(){
-        //need to override
+        console.log('Tried to send data');
     }
 
     globalFormLogic(changeEvent) {
-        alert(changeEvent);
+        console.log('Called global form logic');
     }
 }
 
@@ -203,25 +205,100 @@ const LOGIN_SELECTORS = {
         password: '#password'
     },
 
+    errors: {
+        email: '#errorEmail',
+        password: '#errorPassword'
+    },
+
     submitter: '#submitSignInButton'
 };
 
-class LoginForm extends Form {
+class SignInForm extends Form {
     constructor() {
         let form = document.querySelector(LOGIN_SELECTORS.form);
+
         let email = form.querySelector(LOGIN_SELECTORS.fields.email);
         let password = form.querySelector(LOGIN_SELECTORS.fields.password);
+
         let submitter = form.querySelector(LOGIN_SELECTORS.submitter);
 
+        let emailField = new EmailField(email);
+        emailField.setErrorOutput(form.querySelector(LOGIN_SELECTORS.errors.email));
 
-        console.log(email);
-        console.log(password);
+        let passwordField = new PasswordField(password);
+        passwordField.setErrorOutput(form.querySelector(LOGIN_SELECTORS.errors.password));
 
-        super([
-            new EmailField(email), new PasswordField(password)
-        ], submitter);
+        super({
+            email: emailField,
+            password: passwordField
+        }, submitter);
+    }
+
+    sendData() {
+        let backendAPI = new BackendAPI();
+        backendAPI.login(this._fields.email.value, this._fields.password.value)
+            .then((response) => {console.log('Successfully logged in')})
+            .catch((err) => {console.log('Failed to log')});
     }
 }
+
+
+
+const REGISTER_SELECTORS = {
+    form: '#signUpForm',
+
+    fields: {
+        login: '#login',
+        email: '#email',
+        password: '#password',
+        passwordRepeat: '#password2',
+    },
+
+    errors: {
+        email: '#errorEmail',
+        password: '#errorPassword',
+        login: '#errorLogin',
+        passwordRepeat: '#errorPassword2',
+    },
+
+    submitter: '#submitSignUpButton'
+};
+
+class SignUpForm extends Form {
+    constructor() {
+        let form = document.querySelector(REGISTER_SELECTORS.form);
+
+        let email = form.querySelector(REGISTER_SELECTORS.fields.email);
+        let login = form.querySelector(REGISTER_SELECTORS.fields.login);
+        let password = form.querySelector(REGISTER_SELECTORS.fields.password);
+        let passwordRepeat = form.querySelector(REGISTER_SELECTORS.fields.passwordRepeat);
+
+        let submitter = form.querySelector(REGISTER_SELECTORS.submitter);
+
+        let emailField = new EmailField(email);
+        emailField.setErrorOutput(form.querySelector(REGISTER_SELECTORS.errors.email));
+
+        let loginField = new LoginField(login);
+        loginField.setErrorOutput(form.querySelector(REGISTER_SELECTORS.errors.login));
+
+        let passwordField = new PasswordField(password);
+        passwordField.setErrorOutput(form.querySelector(REGISTER_SELECTORS.errors.password));
+
+        let passwordRepeatField = new PasswordRepeatField(passwordRepeat, {
+            referenceField: password
+        });
+        passwordRepeatField.setErrorOutput(form.querySelector(REGISTER_SELECTORS.errors.passwordRepeat));
+
+        super({
+            email: emailField,
+            login: loginField,
+            password: passwordField,
+            passwordRepeat: passwordRepeatField,
+        }, submitter);
+    }
+}
+
+
 
 
 function testEmail() {
@@ -266,7 +343,11 @@ function testPasswordRepeat() {
 }
 
 function testLoginForm() {
-    window.loginForm = new LoginForm();
+    window.loginForm = new SignInForm();
+}
+
+function testRegisterForm() {
+    window.registerForm = new SignUpForm();
 }
 
 (function () {
@@ -280,6 +361,7 @@ function testLoginForm() {
     window.testPassword = testPassword;
     window.testPasswordRepeat = testPasswordRepeat;
     window.testLoginForm = testLoginForm;
+    window.testRegisterForm = testRegisterForm;
     console.log('ok');
 })();
 
