@@ -1,4 +1,6 @@
 
+const BackendAPI = require('../../core/backend_rest_lib');
+
 
 const DEFAULT_PARAMETERS = {
     email: {
@@ -191,7 +193,7 @@ class Form {
         console.log('Tried to send data');
     }
 
-    globalFormLogic(changeEvent) {
+    globalFormLogic() {
         console.log('Called global form logic');
     }
 }
@@ -237,8 +239,8 @@ class SignInForm extends Form {
     sendData() {
         let backendAPI = new BackendAPI();
         backendAPI.login(this._fields.email.value, this._fields.password.value)
-            .then((response) => {console.log('Successfully logged in')})
-            .catch((err) => {console.log('Failed to log')});
+            .then((response) => {console.log(response);})
+            .catch((err) => {console.log('Failed to log', err);});
     }
 }
 
@@ -299,69 +301,6 @@ class SignUpForm extends Form {
 }
 
 
-
-
-function testEmail() {
-    let dom = document.getElementById('email');
-    let domErr = document.getElementById('errorEmail');
-
-    let field = new EmailField(dom);
-    field.setErrorOutput(domErr);
-
-    window.emailField = field;
-}
-
-function testLogin() {
-    let dom = document.getElementById('login');
-    let domErr = document.getElementById('errorLogin');
-
-    let field = new LoginField(dom);
-    field.setErrorOutput(domErr);
-
-    window.loginField = field;
-}
-
-function testPassword() {
-    let dom = document.getElementById('password');
-    let domErr = document.getElementById('errorPassword');
-
-    let field = new PasswordField(dom);
-    field.setErrorOutput(domErr);
-
-    window.passwordField = field;
-}
-
-function testPasswordRepeat() {
-    let dom = document.getElementById('password');
-    let ref = document.getElementById('password2');
-    let domErr = document.getElementById('errorPassword2');
-
-    let field = new PasswordRepeatField(dom, {referenceField: ref});
-    field.setErrorOutput(domErr);
-
-    window.passwordRepeatField = field;
-}
-
-function testLoginForm() {
-    window.loginForm = new SignInForm();
-}
-
-function testRegisterForm() {
-    window.registerForm = new SignUpForm();
-}
-
-(function () {
-    window.EmailField = EmailField;
-    window.LoginField = LoginField;
-    window.PasswordField = PasswordField;
-    window.PasswordRepeatField = PasswordRepeatField;
-    window.Form = Form;
-    window.testEmail = testEmail;
-    window.testLogin = testLogin;
-    window.testPassword = testPassword;
-    window.testPasswordRepeat = testPasswordRepeat;
-    window.testLoginForm = testLoginForm;
-    window.testRegisterForm = testRegisterForm;
-    console.log('ok');
-})();
+module.exports.SignInForm = SignInForm;
+module.exports.SignUpForm = SignUpForm;
 
