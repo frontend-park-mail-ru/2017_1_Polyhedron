@@ -109,8 +109,8 @@ describe('Backend testing', () => {
     });
 
 
-    describe('/api/user/logout second time', () => {
-        it('should return 403', getLeadersTest(registeredUser, 200));
+    describe('/api/user/leaders second time', () => {
+        it('should return 200', getLeadersTest(registeredUser, 200));
     });
 
 

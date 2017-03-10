@@ -14,7 +14,7 @@ const URL_ALIASES = {
 };
 
 const URL_MAP = {
-    polyhedron: new URLPack('http://polyhedron-backend.herokuapp.com', [
+    polyhedron: new URLPack('https://polyhedron-backend.herokuapp.com', [
         {
             name: URL_ALIASES.register,
             url: '/api/user/registration',
