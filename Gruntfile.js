@@ -41,9 +41,9 @@ module.exports = function(grunt) {
                     ]
                 },
 
-                //plugins: [
-                //    new webpack.optimize.UglifyJsPlugin({minimize: true})
-                //]
+                plugins: [
+                    new webpack.optimize.UglifyJsPlugin({minimize: true})
+                ],
             }
         },
 
@@ -70,7 +70,7 @@ module.exports = function(grunt) {
             options: {
                 configFile: '.eslintrc.js'
             },
-            src: ['core/*.js', 'static/js/*.js', 'static/js/pages/*.js']
+            src: ['core/*.js', 'static/js/*.js', 'static/js/pages/*.js', './tests/*.js', '.pug_compiler.js']
         },
 
         mochaTest: {
@@ -93,7 +93,7 @@ module.exports = function(grunt) {
         },
 
         exec: {
-            compile_pug: 'node .pug_compiler.js',
+            compile_pug: 'node pug_compiler.js',
         },
 
     });

@@ -13,8 +13,10 @@ const URL_ALIASES = {
     flush: 'flush'
 };
 
+const API_URL = 'https://polyhedron-backend.herokuapp.com';
+
 const URL_MAP = {
-    polyhedron: new URLPack('https://polyhedron-backend.herokuapp.com', [
+    polyhedron: new URLPack(API_URL, [
         {
             name: URL_ALIASES.register,
             url: '/api/user/registration',

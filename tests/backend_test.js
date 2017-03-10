@@ -1,21 +1,12 @@
 'use strict';
 
 let assert = require('assert');
-let http = require('http');
-let backendApi = require('../core/backend_rest_lib');
+let backendApi = require('../core/backend_api');
 
-
-class StatusCodeTestGenerator {
-    constructor(logicFunc, thenFunc) {
-        this._logicFunc = logicFunc;
-
-        if (!thenFunc) {
-            thenFunc = () => {};
-        }
-    }
-
-
-}
+const HTTP_OK = 200;
+const HTTP_CONFLICT = 409;
+const HTTP_BAD_REQUEST = 400;
+const HTTP_NOT_ALLOWED = 403;
 
 
 describe('Backend testing', () => {
@@ -40,16 +31,11 @@ describe('Backend testing', () => {
             return (done) => {
                 logicFunc(user)
                     .then(result => {
-                        try {
-                            if (extraThenFunc) {
-                                extraThenFunc(result);
-                            }
-
-                            assert.equal(result.status, responseCode);
-                            done();
-                        } catch (e) {
-                            err = e;
+                        if (extraThenFunc) {
+                            extraThenFunc(result);
                         }
+                        assert.equal(result.status, responseCode);
+                        done();
                     })
                     .catch(e => {
                         if (e) {
@@ -60,8 +46,8 @@ describe('Backend testing', () => {
                 if (err) {
                     throw err;
                 }
-            }
-        }
+            };
+        };
     };
 
     let getRegisterTest = getStatusCodeTestGenerator((user) => {
@@ -78,48 +64,46 @@ describe('Backend testing', () => {
 
     let getLeadersTest = getStatusCodeTestGenerator(() => {
         return fetchInterface.getLeaders();
-    }, (result) => {
-        console.log(result.status);
     });
 
 
     describe('/api/user/register for registeredUser', () => {
-        it('should return 200', getRegisterTest(registeredUser, 200));
+        it('should return 200', getRegisterTest(registeredUser, HTTP_OK));
     });
 
     describe('/api/user/register for registeredUser again', () => {
-        it('should return 409', getRegisterTest(registeredUser, 409));
+        it('should return 409', getRegisterTest(registeredUser, HTTP_CONFLICT));
     });
 
     describe('/api/user/register for incompleteUser', () => {
-        it('should return 400', getRegisterTest(incompleteUser, 400));
+        it('should return 400', getRegisterTest(incompleteUser, HTTP_BAD_REQUEST));
     });
 
 
     describe('/api/user/login for registeredUser', () => {
-        it('should return 200', getLoginTest(registeredUser, 200));
+        it('should return 200', getLoginTest(registeredUser, HTTP_OK));
     });
 
     describe('/api/user/login for notRegisteredUser', () => {
-        it('should return 403', getLoginTest(notRegisteredUser, 403));
+        it('should return 403', getLoginTest(notRegisteredUser, HTTP_NOT_ALLOWED));
     });
 
     describe('/api/user/login for incomplete user', () => {
-        it('should return 400', getLoginTest(incompleteUser, 400));
+        it('should return 400', getLoginTest(incompleteUser, HTTP_BAD_REQUEST));
     });
 
 
     describe('/api/user/leaders second time', () => {
-        it('should return 200', getLeadersTest(registeredUser, 200));
+        it('should return 200', getLeadersTest(registeredUser, HTTP_OK));
     });
 
 
     describe('/api/user/logout loggedIn user', () => {
-        it('should return 200', getLogoutTest(registeredUser, 200));
+        it('should return 200', getLogoutTest(registeredUser, HTTP_OK));
     });
 
     describe('/api/user/logout second time', () => {
-        it('should return 403', getLogoutTest(registeredUser, 403));
+        it('should return 403', getLogoutTest(registeredUser, HTTP_NOT_ALLOWED));
     });
 
 });

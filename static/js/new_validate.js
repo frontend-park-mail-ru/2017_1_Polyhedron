@@ -1,5 +1,5 @@
 
-const BackendAPI = require('../../core/backend_rest_lib');
+const BackendAPI = require('../../core/backend_api');
 
 
 const DEFAULT_PARAMETERS = {
@@ -39,7 +39,7 @@ class Field {
     }
 
     getErrors() {
-        // override this method
+        throw 'override this method';
     }
 
     isValid() {

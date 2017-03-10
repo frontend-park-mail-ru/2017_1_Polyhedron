@@ -38717,7 +38717,7 @@
                 function mergeMatch(match1, match2) {
                     var res = {placeholders:{}};
 
-                    // Some matches may not have placeholders; this is OK
+                    // Some matches may not have placeholders; this is HTTP_OK
                     if (!match1.placeholders && !match2.placeholders) {
                         return res;
                     }

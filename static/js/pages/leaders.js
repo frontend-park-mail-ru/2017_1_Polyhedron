@@ -1,7 +1,7 @@
 'use strict';
 
 const BasePage = require('./base');
-const BackendAPI = require('../../../core/backend_rest_lib');
+const BackendAPI = require('../../../core/backend_api');
 
 class Leaders extends BasePage {
     render() {
