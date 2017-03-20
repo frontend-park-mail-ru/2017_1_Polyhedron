@@ -1,4 +1,5 @@
-class BasePage {
+
+export class BasePage {
     constructor (heading, container, template, options) {
         this._heading = heading;
         this._content = container;
@@ -10,5 +11,3 @@ class BasePage {
         //override this method
     }
 }
-
-module.exports = BasePage;

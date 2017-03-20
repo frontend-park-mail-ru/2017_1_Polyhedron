@@ -1,7 +1,9 @@
 
-const math = require('./_lib/math');
-const events = require('./events');
-const GameWorld = require('./game_world');
+import * as math from '../../_lib/math';
+import * as events from './events';
+import {GameWorld} from './game_world';
+
+window.elib = events;
 
 const KEY_LEFT = 39;
 const KEY_RIGHT = 37;
@@ -18,7 +20,7 @@ const PLATFORM_TOLERANCE = 5;
 const MILLISECONDS_PER_SECOND = 1000;
 
 
-class Game {
+export class Game {
     constructor(canvas, playersNum, frameRate, fillFactor, ballRelativeRadius,
                 initialRelativeBallOffset, initialRelativeBallVelocity) {
         this._canvas = canvas;
@@ -228,7 +230,4 @@ class Game {
         this._world.draw(this._canvas);
     }
 }
-
-
-module.exports = Game;
 

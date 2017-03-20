@@ -1,14 +1,15 @@
 
-const math = require('./_lib/math');
-const shapes = require('./geometry_shapes');
-const SolidBody = require('./solid_body');
+import * as math from './../../_lib/math';
+import * as shapes from './geometry_shapes';
+import {SolidBody} from './solid_body';
+
 
 const DEFAULT_RELATIVE_DISTANCE = 0.05;
 const DEFAULT_RELATIVE_LENGTH = 0.3;
 const DEFAULT_WIDTH = 5;
 
 
-class Ball extends SolidBody {
+export class Ball extends SolidBody {
     constructor(radius) {
         super();
         this._circle = new shapes.Circle(radius);
@@ -49,7 +50,7 @@ class Ball extends SolidBody {
 }
 
 
-class Platform extends SolidBody {
+export class Platform extends SolidBody {
     constructor(length, width, isActive) {
         super();
         this._length = length;
@@ -157,7 +158,7 @@ class Platform extends SolidBody {
 }
 
 
-class TriangleField extends SolidBody {
+export class TriangleField extends SolidBody {
     constructor(height, sectorAngle, isNeutral) {
         super();
         this._triangle = new shapes.Triangle(height, sectorAngle);
@@ -245,7 +246,3 @@ class TriangleField extends SolidBody {
     }
 }
 
-
-module.exports.Platform = Platform;
-module.exports.TriangleField = TriangleField;
-module.exports.Ball = Ball;

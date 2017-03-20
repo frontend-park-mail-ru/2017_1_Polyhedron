@@ -37,7 +37,7 @@ function compileImportable(templateFile, resultFile) {
             let compiledCode = pug.compileClient(pugSrc, {
                 externalRuntime: true
             });
-            fs.writeFile(resultFile, wrap(compiledCode) + "\nmodule.exports = template;", err => {
+            fs.writeFile(resultFile, "export " + wrap(compiledCode), err => {
                 if (err) {
                     console.error(err);
                 }

@@ -1,9 +1,9 @@
 'use strict';
 
-const BasePage = require('./base');
-const BackendAPI = require('../../../core/backend_api');
+import {BasePage} from './base';
+import {BackendAPI} from '../../../core/client_side/site_service/backend_api';
 
-class Leaders extends BasePage {
+export class Leaders extends BasePage {
     render() {
         this._heading.innerHTML = "Топ-10";
         let locals = {};
@@ -20,5 +20,3 @@ class Leaders extends BasePage {
             });
     }
 }
-
-module.exports = Leaders;

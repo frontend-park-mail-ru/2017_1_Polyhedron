@@ -1,7 +1,7 @@
 'use strict';
 
 let assert = require('assert');
-let backendApi = require('../core/backend_api');
+let backendApi = require('../core/client_side/site_service/backend_api');
 
 const HTTP_OK = 200;
 const HTTP_CONFLICT = 409;

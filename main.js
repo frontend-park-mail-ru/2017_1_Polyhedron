@@ -1,5 +1,5 @@
 "use strict";
-let lib = require("./core/server");
+let lib = require("./core/server_side/static_server/server");
 
 const DEFAULT_PORT = 3000;
 

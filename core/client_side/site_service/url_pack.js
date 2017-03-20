@@ -1,7 +1,7 @@
 
 const DEFAULT_METHOD = 'GET';
 
-class URLPack {
+export class URLPack {
     constructor(root, relativeURLs) {
         this.root = root;
         this.relativeURLs = this._getURLObject(relativeURLs);
@@ -24,5 +24,3 @@ class URLPack {
         return this.relativeURLs[urlAlias].method || DEFAULT_METHOD;
     }
 }
-
-module.exports = URLPack;

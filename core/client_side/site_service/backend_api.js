@@ -1,5 +1,6 @@
 
-const URLPack = require('./url_pack');
+import {URLPack} from './url_pack';
+
 const fetch = require('fetch-cookie')(require('node-fetch'));
 
 const URL_ALIASES = {
@@ -61,7 +62,7 @@ const URL_MAP = {
 };
 
 
-class BackendAPI {
+export class BackendAPI {
     constructor(urlPack) {
         this._urlPack = urlPack || URL_MAP.polyhedron;
     }
@@ -117,5 +118,3 @@ class BackendAPI {
         return fetch(url,options);
     }
 }
-
-module.exports = BackendAPI;

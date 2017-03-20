@@ -1,5 +1,5 @@
 
-const BackendAPI = require('../../core/backend_api');
+import {BackendAPI} from '../../core/client_side/site_service/backend_api';
 
 
 const DEFAULT_PARAMETERS = {
@@ -219,7 +219,7 @@ const LOGIN_SELECTORS = {
     submitter: '#submitSignInButton'
 };
 
-class SignInForm extends Form {
+export class SignInForm extends Form {
     constructor() {
         let form = document.querySelector(LOGIN_SELECTORS.form);
 
@@ -281,7 +281,7 @@ const REGISTER_SELECTORS = {
     submitter: '#submitSignUpButton'
 };
 
-class SignUpForm extends Form {
+export class SignUpForm extends Form {
     constructor() {
         let form = document.querySelector(REGISTER_SELECTORS.form);
 
@@ -338,7 +338,4 @@ class SignUpForm extends Form {
     }
 }
 
-
-module.exports.SignInForm = SignInForm;
-module.exports.SignUpForm = SignUpForm;
 

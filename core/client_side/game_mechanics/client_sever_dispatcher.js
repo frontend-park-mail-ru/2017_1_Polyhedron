@@ -1,8 +1,8 @@
 
-const events = require('./events');
+import * as events from './events';
 
 
-class ClientServerDispatcher {
+export class ClientServerDispatcher {
     constructor() {
         this._setListeners();
     }
@@ -24,5 +24,3 @@ class ClientServerDispatcher {
         console.log("Offset: ", event.detail);
     }
 }
-
-module.exports = ClientServerDispatcher;

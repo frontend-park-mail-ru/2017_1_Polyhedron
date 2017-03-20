@@ -1,14 +1,12 @@
 'use strict';
 
-const BasePage = require('./base');
-const SignUpForm = require('../new_validate').SignUpForm;
+import {BasePage} from './base';
+import {SignUpForm} from '../new_validate';
 
-class Signup extends BasePage {
+export class Signup extends BasePage {
     render () {
         this._heading.innerHTML = "Регистрация";
         this._content.innerHTML = this._template(this._options);
         this._validator = new SignUpForm();
     }
 }
-
-module.exports = Signup;

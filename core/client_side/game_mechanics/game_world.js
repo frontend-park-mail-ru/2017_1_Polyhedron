@@ -1,8 +1,7 @@
-const TriangleField = require('./game_components').TriangleField;
-const Ball = require('./game_components').Ball;
-const Platform = require('./game_components').Platform;
 
-class GameWorld {
+import {TriangleField, Ball, Platform} from './game_components';
+
+export class GameWorld {
     constructor(userNum, sectorHeight, ballRadius, position) {
         this._userNum = userNum;
         this._sectorAngle = Math.PI / userNum;
@@ -68,5 +67,3 @@ class GameWorld {
         this._ball.draw(canvas);
     }
 }
-
-module.exports = GameWorld;
