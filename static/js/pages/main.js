@@ -15,37 +15,26 @@ import * as renderIndex from '../templates/render_index';
 import * as renderLeaders from '../templates/render_leaders';
 import * as renderLogin from '../templates/render_login';
 import * as renderSignup from '../templates/render_signup';
-import * as renderTop from '../templates/render_top';
 import * as pugRuntime from '../../../node_modules/pug-runtime/index';
+
+import {Router} from '../../../core/client_side/site_service/router';
 
 
 const content = document.querySelector(".js-content");
 const heading = document.querySelector(".js-subheader");
 
 for (let key in pugRuntime) {
-    //console.log(key);
     window['pug_' + key] = pugRuntime[key];  // TODO get rid of setting to window (temporary solution).
 }
 
-export let pages = {};
-pages.index = new Index(heading, content, renderIndex.template);
-pages.about = new About(heading, content, renderAbout.template);
-pages.game = new Game(heading, content, renderGame.template);
-pages.error = new Error(heading, content, renderError404.template);
-pages.leaders = new Leaders(heading, content, renderLeaders.template, {count: 10});
-pages.login = new Login(heading, content, renderLogin.template);
-pages.signup = new Signup(heading, content, renderSignup.template);
-pages.renderTop = renderTop.template;
+export let router = new Router({
+    '^/?$': new Index(heading, content, renderIndex.template),
 
-
-export function switchPage(page) {
-    if (typeof (pages[page]) !== 'undefined') {
-        pages[page].render();
-    }
-    else {
-        pages['error'].render();
-    }
-}
-
-//pages.switchPage = switchPage;
-
+    '^/?index$': new Index(heading, content, renderIndex.template),
+    '^/?about$': new About(heading, content, renderAbout.template),
+    '^/?game$': new Game(heading, content, renderGame.template),
+    '^/?error$': new Error(heading, content, renderError404.template),
+    '^/?leaders$': new Leaders(heading, content, renderLeaders.template, {count: 10}),
+    '^/?login$': new Login(heading, content, renderLogin.template),
+    '^/?signup$': new Signup(heading, content, renderSignup.template)
+});

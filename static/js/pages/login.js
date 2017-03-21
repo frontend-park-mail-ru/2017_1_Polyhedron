@@ -1,7 +1,7 @@
 'use strict';
 
 import {BasePage} from './base';
-import {SignInForm} from '../new_validate';
+import {SignInForm} from '../../../core/client_side/site_service/new_validate';
 
 
 export class Login extends BasePage {

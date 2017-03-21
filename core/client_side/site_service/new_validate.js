@@ -1,5 +1,5 @@
 
-import {BackendAPI} from '../../core/client_side/site_service/backend_api';
+import {BackendAPI} from './backend_api';
 
 
 const DEFAULT_PARAMETERS = {

@@ -1,19 +1,25 @@
 'use strict';
-import {pages, switchPage} from './pages/main';
+import {router} from './pages/main';
 
 (function () {
-    const userpanel = document.querySelector(".js-top");
+    //const userpanel = document.querySelector(".js-top");
 
-    userpanel.innerHTML = pages.renderTop();
+    //userpanel.innerHTML = pages.renderTop();
 
-    pages.index.render();
+
+    router.renderAndSave(window.location.pathname);
+    console.log(window.location.pathname);
 
     document.body.addEventListener('click', event => {
         let target = event.target;
         if (target.nodeName === "A" && target.dataset.page) {
             event.preventDefault();
-            switchPage(target.dataset.page);
+            router.renderAndSave(target.dataset.page);
         }
+    });
+
+    window.addEventListener('popstate', event => {
+        router.render(event.state.url, event.state);
     });
 
 })();
