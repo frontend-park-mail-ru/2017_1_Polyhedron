@@ -5,9 +5,8 @@ import {BackendAPI} from '../../../core/client_side/site_service/backend_api';
 
 export class Leaders extends BasePage {
     render() {
-        //let locals = {};
-
         this._heading.innerHTML = "Жду список лидеров";
+        this._content.innerHTML = "";
 
         let backendAPI = new BackendAPI();
         backendAPI.getLeaders(10)
