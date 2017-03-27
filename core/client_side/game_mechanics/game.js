@@ -3,8 +3,6 @@ import * as math from '../../_lib/math';
 import * as events from './events';
 import {GameWorld} from './game_world';
 
-window.elib = events;
-
 const KEY_LEFT = 39;
 const KEY_RIGHT = 37;
 
