@@ -15,7 +15,7 @@ module.exports = function(grunt) {
                 progress: true,
                 entry: "./static/js/main.js",
                 output: {
-                    path: path.relative(__dirname, 'dist'),
+                    path: path.resolve(__dirname, 'dist'),
                     filename: 'index_bundle.js'
                 },
 
