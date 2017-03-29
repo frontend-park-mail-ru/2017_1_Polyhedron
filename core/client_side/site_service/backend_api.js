@@ -17,58 +17,30 @@ const URL_ALIASES = {
 const API_URL = 'https://polyhedron-backend.herokuapp.com';
 
 const URL_MAP = {
-    polyhedron: new URLPack(API_URL, [
-        {
-            name: URL_ALIASES.register,
-            url: '/api/user/registration',
-            method: 'POST'
-        },
-        {
-            name: URL_ALIASES.login,
-            url: '/api/user/login',
-            method: 'POST'
-        },
-        {
-            name: URL_ALIASES.logout,
-            url: '/api/user/logout',
-            method: 'POST'
-        },
-        {
-            name: URL_ALIASES.getUser,
-            url: '/api/user/getuser',
-            method: 'GET'
-        },
-        {
-            name: URL_ALIASES.update,
-            url: '/api/user/update',
-            method: 'POST'
-        },
-        {
-            name: URL_ALIASES.leaders,
-            url: '/api/user/leaders',
-            method: 'POST'
-        },
-        {
-            name: URL_ALIASES.isLoggedIn,
-            url: '/api/user/islogin',
-            method: 'GET'
-        },
-        {
-            name: URL_ALIASES.flush,
-            url: '/api/user/flush',
-            method: 'GET'
-        }
-    ])
+    register: '/api/user/registration',
+    login: '/api/user/login',
+    logout: '/api/user/logout',
+    getUser: '/api/user/getuser',
+    update: '/api/user/update',
+    leaders: '/api/user/leaders/',
+    isLoggedIn: '/api/user/islogin',
+    flush: '/api/user/flush'
+};
+
+const METHOD_MAP = {
+    GET: "GET",
+    POST: "POST"
 };
 
 
 export class BackendAPI {
-    constructor(urlPack) {
-        this._urlPack = urlPack || URL_MAP.polyhedron;
+    constructor(rootURL, urlMap) {
+        this._rootURL = rootURL || API_URL;
+        this._urlMap = urlMap || URL_MAP;
     }
 
     register(email, login, password) {
-        return this._fetchCORS(URL_ALIASES.register, {
+        return this._fetchCORS(this._urlMap.register, METHOD_MAP.POST, {
             'email': email,
             'login': login,
             'password': password
@@ -76,38 +48,36 @@ export class BackendAPI {
     }
 
     login(email, password) {
-        return this._fetchCORS(URL_ALIASES.login, {
+        return this._fetchCORS(this._urlMap.login, METHOD_MAP.POST, {
             'email': email,
             'password': password
         });
     }
 
     logout() {
-        return this._fetchCORS(URL_ALIASES.logout);
+        return this._fetchCORS(this._urlMap.logout, METHOD_MAP.GET);
     }
 
     getLeaders(leadersCountLimit) {
-        return this._fetchCORS(URL_ALIASES.leaders, {
-            'count': leadersCountLimit
-        });
+        return this._fetchCORS(this._urlMap.leaders + leadersCountLimit, METHOD_MAP.GET);
     }
 
     isLoggedIn() {
-        return this._fetchCORS(URL_ALIASES.isLoggedIn);
+        return this._fetchCORS(this._urlMap.isLoggedIn, METHOD_MAP.POST);
     }
 
     flush() {
-        return this._fetchCORS(URL_ALIASES.flush);
+        return this._fetchCORS(this._urlMap.flush, METHOD_MAP.POST);
     }
 
 
-    _fetchCORS(urlAlias, requestBody) {
-        const url = this._urlPack.getAbsURL(urlAlias);
+    _fetchCORS(url, method, requestBody) {
+        const absURL = this._rootURL + url;
 
 
         let options = {
             body: requestBody ? JSON.stringify(requestBody) : '',
-            method: this._urlPack.getMethod(urlAlias),
+            method: method,
             mode: 'cors',
             credentials: 'include',
             headers: {
@@ -115,6 +85,6 @@ export class BackendAPI {
             }
         };
 
-        return fetch(url,options);
+        return fetch(absURL,options);
     }
 }

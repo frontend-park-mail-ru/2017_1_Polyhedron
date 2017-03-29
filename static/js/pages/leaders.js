@@ -17,7 +17,7 @@ export class Leaders extends BasePage {
                 console.log(responseJSON);
                 //locals.leaders = responseJSON.leaders;
                 this._content.innerHTML = this._template({
-                    'leaders': responseJSON.leaders
+                    'leaders': responseJSON.data
                 });
                 this._heading.innerHTML = "Топ-10";
             });

@@ -17,7 +17,20 @@ export class URLPack {
     }
 
     getAbsURL(urlAlias) {
-        return this.root + this.relativeURLs[urlAlias].url;
+        let relativeURL = this.relativeURLs[urlAlias].url;
+        if (!relativeURL) {
+            for (let urlCandidate in this.relativeURLs) {
+                if (urlCandidate.match(relativeURL)) {
+                    relativeURL = urlCandidate;
+                }
+            }
+        }
+
+        if (relativeURL) {
+            return this.root + relativeURL;
+        }
+
+        throw new URIError('URL not found');
     }
 
     getMethod(urlAlias) {
