@@ -50,7 +50,7 @@ class Field {
         this._errorOutput = DOMElement;
         this._DOMElement.addEventListener('change', () => {
 
-            this._errorOutput.innerHTML = this.getErrors().toString();
+            this._errorOutput.innerHTML = this.getErrors().join('<br>').toString();
         });
     }
 
@@ -190,6 +190,8 @@ class Form {
     validateAndSubmit() {
         if (this.isValid()) {
             this.sendData();
+        } else {
+            alert('Input valid data, please')
         }
     }
 
