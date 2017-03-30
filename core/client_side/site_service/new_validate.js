@@ -249,11 +249,15 @@ export class SignInForm extends Form {
             .then(response => {
                 if (response.status === 200) {
                     alert('Logged in successfully');
-                    window.location.replace("/");
+                    return response.json();
                 } else {
                     alert('failed to login');
                 }
                 console.log(response);
+            })
+            .then(responseJson => {
+                console.log(responseJson);
+                window.location.replace("/");
             })
             .catch(err => {
                 alert('Connection failed');

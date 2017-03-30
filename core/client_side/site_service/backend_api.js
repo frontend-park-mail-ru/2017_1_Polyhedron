@@ -1,18 +1,6 @@
 
-import {URLPack} from './url_pack';
 
 const fetch = require('fetch-cookie')(require('node-fetch'));
-
-const URL_ALIASES = {
-    login: 'login',
-    logout: 'logout',
-    register: 'register',
-    getUser: 'getUser',
-    update: 'update',
-    leaders: 'leaders',
-    isLoggedIn: 'isLoggedIn',
-    flush: 'flush'
-};
 
 const API_URL = 'https://polyhedron-backend.herokuapp.com';
 
@@ -52,6 +40,10 @@ export class BackendAPI {
             'email': email,
             'password': password
         });
+    }
+
+    getuser() {
+        return this._fetchCORS(this._urlMap.getUser, METHOD_MAP.GET);
     }
 
     logout() {

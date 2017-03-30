@@ -8,7 +8,6 @@ import * as renderTop from './templates/render_top';
 
 
     router.renderAndSave(window.location.pathname);
-    console.log(window.location.pathname);
 
     document.body.addEventListener('click', event => {
         let target = event.target;

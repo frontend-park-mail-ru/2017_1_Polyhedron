@@ -14,8 +14,6 @@ export class Leaders extends BasePage {
                 return response.json();
             })
             .then( responseJSON => {
-                console.log(responseJSON);
-                //locals.leaders = responseJSON.leaders;
                 this._content.innerHTML = this._template({
                     'leaders': responseJSON.data
                 });
