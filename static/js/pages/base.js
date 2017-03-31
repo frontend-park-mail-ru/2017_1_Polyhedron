@@ -1,7 +1,5 @@
 
-//import * as renderTop from '../templates/render_top'
-
-//const USER_PANEL = document.querySelector(".js-top");
+import * as renderTop from '../templates/render_top';
 import {BackendAPI} from '../../../core/client_side/site_service/backend_api';
 
 export class BasePage {
@@ -10,9 +8,6 @@ export class BasePage {
         this._content = container;
         this._options = options;
         this._template = template;
-
-
-        //USER_PANEL.innerHTML = renderTop.template();
     }
 
     renderTop() {       // TODO Remove (method added cos component approach is not realized yet)
@@ -22,7 +17,10 @@ export class BasePage {
                 return response.json();
             })
             .then(responseJSON => {
-                console.log(responseJSON);
+                window.user = responseJSON.data;
+                const userpanel = document.querySelector(".js-top");
+                userpanel.innerHTML = renderTop.template();
+                renderTop.template();
             });
     }
 

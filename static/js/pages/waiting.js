@@ -2,6 +2,7 @@
 
 import {BasePage} from './base';
 
+
 export class Waiting extends BasePage {
     render () {
         this._heading.innerHTML = "Подготовка партии";

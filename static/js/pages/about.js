@@ -1,6 +1,7 @@
 'use strict';
 import {BasePage} from './base';
 
+
 export class About extends BasePage {
     render () {
         this._heading.innerHTML = "Об игре";

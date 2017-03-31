@@ -2,6 +2,7 @@
 
 import {BasePage} from './base';
 
+
 export class Choice extends BasePage {
     render () {
         this._heading.innerHTML = "Выбор режима";

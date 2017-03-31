@@ -3,6 +3,7 @@
 import {BasePage} from './base';
 import {BackendAPI} from '../../../core/client_side/site_service/backend_api';
 
+
 export class Leaders extends BasePage {
     render() {
         this._heading.innerHTML = "Жду список лидеров";
