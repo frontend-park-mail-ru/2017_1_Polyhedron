@@ -138,14 +138,6 @@ paths:
           schema:
             $ref: '#/definitions/IsLoggedIn'
 
-  /api/user/flush:
-    post:
-      description: Очистить всю базу
-      responses:
-        200:
-          description: База успешно очищена
-
-
 
 definitions:
 
