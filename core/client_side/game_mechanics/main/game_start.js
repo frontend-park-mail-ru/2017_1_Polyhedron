@@ -1,6 +1,12 @@
 
 import {Game} from './game';
 
+import {WSEndpoint} from '../network/endpoint'  //TODO remove
+import {ClientServerDispatcher} from '../network/game_event_dispatcher'   //TODO remove
+window.wse = new WSEndpoint();    //TODO remove
+window.disp = new ClientServerDispatcher(); //TODO remove
+
+
 //const CANVAS_ID = "game";
 const PLAYER_NUM = 4;
 const FRAME_RATE = 60;

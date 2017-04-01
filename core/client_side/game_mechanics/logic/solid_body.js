@@ -1,5 +1,5 @@
 
-const math = require('./../../_lib/math');
+const math = require('./../../../_lib/math');
 
 export class SolidBody {
     constructor(origin, angle, velocity, angularVelocity) {

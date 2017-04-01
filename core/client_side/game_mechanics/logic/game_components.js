@@ -1,5 +1,5 @@
 
-import * as math from './../../_lib/math';
+import * as math from '../../../_lib/math';
 import * as shapes from './geometry_shapes';
 import {SolidBody} from './solid_body';
 
