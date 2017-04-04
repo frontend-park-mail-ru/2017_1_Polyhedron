@@ -32,6 +32,9 @@ export class DefeatEvent extends BaseEvent {
 }
 
 
+export class ClientDefeatEvent extends BaseEvent {}
+
+
 export class EnemyPositionCorrectionEvent extends BaseEvent {
     static create(eventDetail) {
         let playerIndex = eventDetail.playerIndex;

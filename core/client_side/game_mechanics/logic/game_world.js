@@ -5,6 +5,8 @@ import {Ball} from './game_components/ball';
 import {Platform} from './game_components/platform';
 import {TriangleField} from './game_components/triangle_field';
 
+import * as events from '../common/events'
+
 
 export class GameWorld {
     constructor(userNum, sectorHeight, ballRadius, position) {
@@ -111,8 +113,7 @@ export class GameWorld {
 
     _handleUserSectorCollision(sector, ball) {
         if (sector != this._lastCollidedObject) {
-            ball.bounce(sector.getBottomNorm());
-            this._lastCollidedObject = sector;
+            window.dispatchEvent(events.ClientDefeatEvent.create(sector.id));
         }
     }
 

@@ -4,12 +4,22 @@ import * as shapes from '../geometry_shapes';
 import {SolidBody} from '../solid_body';
 
 
+const ID_GENERATOR = (function () {
+    let id = 0;
+    return () => {
+        return ++id;
+    }
+})();
+
+
 export class TriangleField extends SolidBody {
     constructor(height, sectorAngle, isNeutral) {
         super();
         this._triangle = new shapes.Triangle(height, sectorAngle);
         this._isNeutral = isNeutral;
         this._isLoser = false;
+
+        this._id = ID_GENERATOR();
     }
 
     get height() {
@@ -18,6 +28,10 @@ export class TriangleField extends SolidBody {
 
     get halfWidth() {
         return this._triangle.halfWidth;
+    }
+
+    get id() {
+        return this._id;
     }
 
     getPointArray() {

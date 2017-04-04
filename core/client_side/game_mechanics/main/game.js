@@ -113,6 +113,9 @@ export class Game {
         window.addEventListener(events.DefeatEvent.eventName,
             event => this._handleDefeatEvent(event));
 
+        window.addEventListener(events.ClientDefeatEvent.eventName,
+            event => this._handleClientDefeatEvent(event));
+
         window.addEventListener(events.BallPositionCorrectionEvent.eventName,
             event => this._handleBallPositionCorrectionEvent(event));
 
@@ -180,7 +183,7 @@ export class Game {
 
         let offset = localOffset[0];
         if (offset > 1) {
-            Game._throwPlatformMovedEvent(localOffset[0]);
+            this._throwPlatformMovedEvent(localOffset[0]);
         }
     }
 
@@ -202,6 +205,22 @@ export class Game {
         this._redraw();
         this.stop();
 
+    }
+
+    _handleClientDefeatEvent(event) {
+        let sectorId = event.detail;
+        let playerId = this._activeSector.id;
+
+        if (sectorId == playerId) {
+            alert("You lose");
+        } else {
+            alert("You win");
+        }
+
+        let relId = sectorId - playerId;
+        this._getUserSectorByIndex(relId).setLoser();
+        this._redraw();
+        this.stop();
     }
 
     _handleBallPositionCorrectionEvent(event) {
