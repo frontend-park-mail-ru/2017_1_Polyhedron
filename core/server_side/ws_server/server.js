@@ -17,13 +17,6 @@ server.on('connection', function(ws) {
         console.log('соединение закрыто ');
     });
 
-    let defeatMessage = {
-        type: "DefeatEvent",
-        data: {
-            playerIndex: 0,
-            looserIndex: Math.round(Math.random() * 4),
-        }
-    };
 
     let counter = 0;
 
@@ -32,6 +25,7 @@ server.on('connection', function(ws) {
         let ei = Math.round(Math.random() * 2 + 1);
         let offset = Math.random() * 10 - 5;
 
+        /*
         let enemyMoveMessage = {
             type: "EnemyPositionCorrectionEvent",
             data: {
@@ -42,24 +36,76 @@ server.on('connection', function(ws) {
         };
 
         ws.send(JSON.stringify(enemyMoveMessage));
+        */
 
         counter += 1;
         console.log(counter);
 
         if (counter % 10 === 0) {
-            const getCoord = () => Math.random() * 100 + 100;
+            //ws.send(getBallCorrection());
+            //console.log("Sent ball correction")
+        }
 
-            let ballCorrectionMessage = {
-                type: "BallPositionCorrectionEvent",
-                data: [getCoord(), getCoord()]
-            };
-            ws.send(JSON.stringify(ballCorrectionMessage));
-            console.log("Sent ball correction")
+        if (counter % 1 === 0) {
+            ws.send(getTotalUpdate());
+            console.log("Sent total update");
         }
 
         if (counter === 100) {
-            ws.send(JSON.stringify(defeatMessage));
-            console.log("Lose")
+            //ws.send(getDefeatMessage());
+            //console.log("Lose")
         }
-    }, 100);
+    }, 1000);
+
+    let getBallCorrection = () => {
+        const getCoord = () => Math.random() * 100 + 100;
+
+        return JSON.stringify({
+            type: "BallPositionCorrectionEvent",
+            data: [getCoord(), getCoord()]
+        });
+    };
+
+    let getTotalUpdate = () => {
+        let message = {data: {}};
+        message.type = 'WorldUpdateEvent';
+        message.data = {
+            playerIndex: 1,
+
+            platformsUpdate: [
+                {
+                    index: 0,
+                    position: [10, 0]
+                },
+                {
+                    index: 1,
+                    position: [10, 0]
+                },
+                {
+                    index: 2,
+                    position: [10, 0]
+                },
+                {
+                    index: 3,
+                    position: [10, 0]
+                }
+            ],
+
+            ballUpdate: {
+                position: [100, 150],
+                //velocity: [100, 100]
+            }
+        };
+        return JSON.stringify(message);
+    };
+
+    let getDefeatMessage = () => {
+        return JSON.stringify({
+            type: "DefeatEvent",
+            data: {
+                playerIndex: 0,
+                looserIndex: Math.round(Math.random() * 4),
+            }
+        });
+    };
 });

@@ -1,5 +1,10 @@
 
-import {TriangleField, Ball, Platform} from './game_components';
+import * as math from '../../../_lib/math';
+
+import {Ball} from './game_components/ball';
+import {Platform} from './game_components/platform';
+import {TriangleField} from './game_components/triangle_field';
+
 
 export class GameWorld {
     constructor(userNum, sectorHeight, ballRadius, position) {
@@ -58,6 +63,71 @@ export class GameWorld {
     _initBall() {
         this._ball = new Ball(this._ballRadius);
         this._ball.moveTo(this._position);
+    }
+
+    movePlatform(platform, localOffsetVector) {
+        let originalPosition = platform.optionalPositioningInfo.originalPosition;
+        let offsetVec = math.subtract(platform.position, originalPosition);
+
+        let globalOffset = platform.toGlobalsWithoutOffset(localOffsetVector);
+        let newOffsetVec = math.add(globalOffset, offsetVec);
+
+        if (math.norm(newOffsetVec) <= platform.optionalPositioningInfo.maxOffset) {
+            platform.moveBy(globalOffset);
+        }
+    }
+
+    updateBallState(position, velocity) {
+        if (position) {
+            this._ball.moveTo(position);
+        }
+
+        if (velocity) {
+            this._ball.velocity = velocity;
+        }
+    }
+
+    _makeIteration(time) {
+        this.ball.moveBy(math.multiply(this.ball.velocity, time));
+
+        this.userSectors.forEach(sector => {
+            if (sector.containsGlobalPoint(this.ball.position) && sector.reachesBottomLevel(this.ball)) {
+                this._handleUserSectorCollision(sector, this.ball);
+            }
+        });
+
+        this.neutralSectors.forEach(sector => {
+            if (sector.containsGlobalPoint(this.ball.position) && sector.reachesBottomLevel(this.ball)) {
+                this._handleNeutralSectorCollision(sector, this.ball);
+            }
+        });
+
+        this.platforms.forEach(platform => {
+            if (platform.inBounceZone(this.ball)) {
+                this._handlePlatformCollision(platform, this.ball);
+            }
+        });
+    }
+
+    _handleUserSectorCollision(sector, ball) {
+        if (sector != this._lastCollidedObject) {
+            ball.bounce(sector.getBottomNorm());
+            this._lastCollidedObject = sector;
+        }
+    }
+
+    _handleNeutralSectorCollision(sector, ball) {
+        if (sector != this._lastCollidedObject) {
+            ball.bounce(sector.getBottomNorm());
+            this._lastCollidedObject = sector;
+        }
+    }
+
+    _handlePlatformCollision(platform, ball) {
+        if (platform != this._lastCollidedObject) {
+            ball.bounce(platform.getNorm());
+            this._lastCollidedObject = platform;
+        }
     }
 
     draw(canvas) {

@@ -1,6 +1,7 @@
 
 const math = require('./../../../_lib/math');
 
+
 export class SolidBody {
     constructor(origin, angle, velocity, angularVelocity) {
         this._origin = origin ? math.matrix(origin) : math.matrix([0, 0]);

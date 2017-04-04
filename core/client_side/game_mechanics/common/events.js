@@ -48,6 +48,32 @@ export class EnemyPositionCorrectionEvent extends BaseEvent {
 }
 
 
+export class WorldUpdateEvent extends BaseEvent {
+    static create(eventDetail) {
+        let detail = {
+            platformsUpdate: [],
+
+            ballUpdate: {}
+        };
+
+        detail.platformsUpdate = eventDetail.platformsUpdate.map(
+            platformUpdate => {
+                return {
+                    index: platformUpdate.index - eventDetail.playerIndex,
+                    position: platformUpdate.position
+                }
+            }
+        );
+
+        detail.ballUpdate = eventDetail.ballUpdate;
+
+        return new CustomEvent(this.name, {
+            detail: detail
+        });
+    }
+}
+
+
 export class ServerMessageEvent extends BaseEvent {}
 
 

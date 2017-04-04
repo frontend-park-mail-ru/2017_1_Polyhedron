@@ -2,7 +2,7 @@
 import * as events from '../common/events';
 
 
-export class ClientServerDispatcher {
+export class GameEventDispatcher {
     constructor() {
         this._setListeners();
     }
@@ -11,9 +11,9 @@ export class ClientServerDispatcher {
         window.addEventListener(events.PlatformMovedEvent.eventName, event => this.handlePlatformMovedEvent(event));
 
         window.addEventListener(events.ServerMessageEvent.eventName, event => {
-            let details = event.detail;
-            let gameEventClass = details.type;
-            let data = details.data;
+            let detail = event.detail;
+            let gameEventClass = detail.type;
+            let data = detail.data;
 
             try {
                 window.dispatchEvent(events[gameEventClass].create(data));

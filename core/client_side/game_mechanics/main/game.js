@@ -65,8 +65,16 @@ export class Game {
         return this._world.userSectors[this._getItemIndex(index)];
     }
 
+    /**
+     *
+     * @param index {number}: index relative to player's one
+     * @returns {number} index of the entity which can be obtained cyclically iterating clockwise
+     * @private
+     */
     _getItemIndex(index) {
-        return (this._playerItemsIndex + index) % this._playersNum;
+        let result = (this._playerItemsIndex + index) % this._playersNum;
+
+        return result >= 0 ? result : result + this._playersNum;
     }
 
     get _playerItemsIndex() {
@@ -101,67 +109,28 @@ export class Game {
     _setListeners() {
         document.addEventListener("keydown", event => this._handleKeyDown(event));
         document.addEventListener("keyup", event => this._handleKeyUp(event));
+
         window.addEventListener(events.DefeatEvent.eventName,
             event => this._handleDefeatEvent(event));
+
         window.addEventListener(events.BallPositionCorrectionEvent.eventName,
             event => this._handleBallPositionCorrectionEvent(event));
+
         window.addEventListener(events.EnemyPositionCorrectionEvent.eventName,
             event => this._handleEnemyMovementEvent(event));
+
+        window.addEventListener(events.WorldUpdateEvent.eventName, event => this._handleWorldUpdateEvent(event))
     }
 
     _makeIteration(time) {
         this._redraw();
-
-        this._world.ball.moveBy(math.multiply(this._world.ball.velocity, time));
+        this._world._makeIteration(time);
         this._handleUserInput();
-
-        this._world.userSectors.forEach(sector => {
-            if (sector.containsGlobalPoint(this._world.ball.position) && sector.reachesBottomLevel(this._world.ball)) {
-                this._handleUserSectorCollision(sector, this._world.ball);
-            }
-        });
-
-        this._world.neutralSectors.forEach(sector => {
-            if (sector.containsGlobalPoint(this._world.ball.position) && sector.reachesBottomLevel(this._world.ball)) {
-                this._handleNeutralSectorCollision(sector, this._world.ball);
-            }
-        });
-
-        this._world.platforms.forEach(platform => {
-            if (platform.inBounceZone(this._world.ball)) {
-                this._handlePlatformCollision(platform, this._world.ball);
-            }
-        });
 
         let activePlatformOffset = math.subtract(this._activePlatform.position, this._lastPlatformPosition);
         if (math.norm(activePlatformOffset) > PLATFORM_TOLERANCE) {
             this._throwPlatformMovedEvent(activePlatformOffset);
             this._lastPlatformPosition = this._activePlatform.position;
-        }
-    }
-
-    _handleUserSectorCollision(sector, ball) {
-        if (sector != this._lastCollidedObject) {
-            //TODO maybe need to return back
-            ball.bounce(sector.getBottomNorm());
-            this._lastCollidedObject = sector;
-            //this.stop();
-            //sector.setLoser();
-            //this._redraw();
-        }
-    }
-
-    _handleNeutralSectorCollision(sector, ball) {
-        if (sector != this._lastCollidedObject) {
-            ball.bounce(sector.getBottomNorm());
-            this._lastCollidedObject = sector;
-        }
-    }
-
-    _handlePlatformCollision(platform, ball) {
-        if (platform != this._lastCollidedObject) {
-            ball.bounce(platform.getNorm());
-            this._lastCollidedObject = platform;
         }
     }
 
@@ -207,24 +176,11 @@ export class Game {
         */
         let platformVelocity = 0.5;
         let localOffset = math.multiply(this._platformVelocityDirection, platformVelocity);
-        this._movePlatform(this._getPlatformByIndex(0), localOffset);
+        this._world.movePlatform(this._getPlatformByIndex(0), localOffset);
 
         let offset = localOffset[0];
         if (offset > 1) {
-            this._throwPlatformMovedEvent(localOffset[0]);
-        }
-    }
-
-    _movePlatform(platform, localOffsetVector) {
-        // TODO refactor. Just testing
-        let originalPosition = platform.optionalPositioningInfo.originalPosition;
-        let offsetVec = math.subtract(platform.position, originalPosition);
-
-        let globalOffset = platform.toGlobalsWithoutOffset(localOffsetVector);
-        let newOffsetVec = math.add(globalOffset, offsetVec);
-
-        if (math.norm(newOffsetVec) <= platform.optionalPositioningInfo.maxOffset) {
-            platform.moveBy(globalOffset);
+            Game._throwPlatformMovedEvent(localOffset[0]);
         }
     }
 
@@ -253,12 +209,22 @@ export class Game {
         this._world.ball.moveTo(event.detail);
     }
 
+    _handleWorldUpdateEvent(event) {
+        let gameUpdate = event.detail;
+
+        gameUpdate.platformsUpdate.forEach(platformUpdate => {
+            this._getPlatformByIndex(platformUpdate.index).moveTo(platformUpdate.position)
+        });
+
+        this._world.updateBallState(gameUpdate.ballUpdate.position, gameUpdate.ballUpdate.velocity);
+    }
+
     _handleEnemyMovementEvent(event) {
         console.log("Enemy moved");
         let detail = event.detail;
 
         let platform = this._getPlatformByIndex(detail.index);
-        this._movePlatform(platform, math.multiply([1, 0], detail.offset));
+        this._world.movePlatform(platform, math.multiply([1, 0], detail.offset));
     }
 
     _redraw() {
