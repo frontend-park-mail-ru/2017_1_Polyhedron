@@ -42,3 +42,4 @@ jspm_packages
 .DS_Store
 dist
 static/js/templates/*.js
+/core/server_side/ws_server/
