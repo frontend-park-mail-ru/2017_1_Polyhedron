@@ -1,7 +1,7 @@
 
-const math = require('./_lib/math');
-const events = require('./events');
-const GameWorld = require('./game_world');
+import * as math from '../../../_lib/math';
+import * as events from '../common/events';
+import {GameWorld} from '../logic/game_world';
 
 const KEY_LEFT = 39;
 const KEY_RIGHT = 37;
@@ -18,7 +18,7 @@ const PLATFORM_TOLERANCE = 5;
 const MILLISECONDS_PER_SECOND = 1000;
 
 
-class Game {
+export class Game {
     constructor(canvas, playersNum, frameRate, fillFactor, ballRelativeRadius,
                 initialRelativeBallOffset, initialRelativeBallVelocity) {
         this._canvas = canvas;
@@ -57,6 +57,26 @@ class Game {
         this._setIntervalID = setInterval(() => this._makeIteration(time), time);
     }
 
+    _getPlatformByIndex(index) {
+        return this._world.platforms[this._getItemIndex(index)];
+    }
+
+    _getUserSectorByIndex(index) {
+        return this._world.userSectors[this._getItemIndex(index)];
+    }
+
+    /**
+     *
+     * @param index {number}: index relative to player's one
+     * @returns {number} index of the entity which can be obtained cyclically iterating clockwise
+     * @private
+     */
+    _getItemIndex(index) {
+        let result = (this._playerItemsIndex + index) % this._playersNum;
+
+        return result >= 0 ? result : result + this._playersNum;
+    }
+
     get _playerItemsIndex() {
         return Math.floor(this._playersNum / 2);
     }
@@ -89,63 +109,31 @@ class Game {
     _setListeners() {
         document.addEventListener("keydown", event => this._handleKeyDown(event));
         document.addEventListener("keyup", event => this._handleKeyUp(event));
-        window.addEventListener(events.DefeatEvent.eventName, event => this._handleDefeatEvent(event));
+
+        window.addEventListener(events.DefeatEvent.eventName,
+            event => this._handleDefeatEvent(event));
+
+        window.addEventListener(events.ClientDefeatEvent.eventName,
+            event => this._handleClientDefeatEvent(event));
+
         window.addEventListener(events.BallPositionCorrectionEvent.eventName,
             event => this._handleBallPositionCorrectionEvent(event));
+
+        window.addEventListener(events.EnemyPositionCorrectionEvent.eventName,
+            event => this._handleEnemyMovementEvent(event));
+
+        window.addEventListener(events.WorldUpdateEvent.eventName, event => this._handleWorldUpdateEvent(event));
     }
 
     _makeIteration(time) {
         this._redraw();
-
-        this._world.ball.moveBy(math.multiply(this._world.ball.velocity, time));
+        this._world._makeIteration(time);
         this._handleUserInput();
-
-        this._world.userSectors.forEach(sector => {
-            if (sector.containsGlobalPoint(this._world.ball.position) && sector.reachesBottomLevel(this._world.ball)) {
-                this._handleUserSectorCollision(sector);
-            }
-        });
-
-        this._world.neutralSectors.forEach(sector => {
-            if (sector.containsGlobalPoint(this._world.ball.position) && sector.reachesBottomLevel(this._world.ball)) {
-                this._handleNeutralSectorCollision(sector, this._world.ball);
-            }
-        });
-
-        this._world.platforms.forEach(platform => {
-            if (platform.inBounceZone(this._world.ball)) {
-                this._handlePlatformCollision(platform, this._world.ball);
-            }
-        });
 
         let activePlatformOffset = math.subtract(this._activePlatform.position, this._lastPlatformPosition);
         if (math.norm(activePlatformOffset) > PLATFORM_TOLERANCE) {
             this._throwPlatformMovedEvent(activePlatformOffset);
             this._lastPlatformPosition = this._activePlatform.position;
-        }
-    }
-
-
-
-    _handleUserSectorCollision(sector) {
-        if (sector != this._lastCollidedObject) {
-            this.stop();
-            sector.setLoser();
-            this._redraw();
-        }
-    }
-
-    _handleNeutralSectorCollision(sector, ball) {
-        if (sector != this._lastCollidedObject) {
-            ball.bounce(sector.getBottomNorm());
-            this._lastCollidedObject = sector;
-        }
-    }
-
-    _handlePlatformCollision(platform, ball) {
-        if (platform != this._lastCollidedObject) {
-            ball.bounce(platform.getNorm());
-            this._lastCollidedObject = platform;
         }
     }
 
@@ -181,32 +169,33 @@ class Game {
 
     _handleUserInput () {
         // TODO refactor. Just testing
+        /*
         this._world.platforms.forEach(platform => {
             let platformVelocity = 0.5;
+            let localOffset = math.multiply(this._platformVelocityDirection, platformVelocity);
 
-            let originalPosition = platform.optionalPositioningInfo.originalPosition;
-            let offsetVec = math.subtract(platform.position, originalPosition);
-
-            let localStep = math.multiply(this._platformVelocityDirection, platformVelocity);
-
-            let globalStep = platform.toGlobalsWithoutOffset(localStep);
-            let newOffsetVec = math.add(globalStep, offsetVec);
-
-            if (math.norm(newOffsetVec) <= platform.optionalPositioningInfo.maxOffset) {
-                platform.moveBy(globalStep);
-            }
+            this._movePlatform(platform, localOffset)
         });
+        */
+        let platformVelocity = 0.5;
+        let localOffset = math.multiply(this._platformVelocityDirection, platformVelocity);
+        this._world.movePlatform(this._getPlatformByIndex(0), localOffset);
+
+        let offset = localOffset[0];
+        if (offset > 1) {
+            this._throwPlatformMovedEvent(localOffset[0]);
+        }
     }
 
     _throwPlatformMovedEvent(platformOffset) {
-        document.dispatchEvent(
+        window.dispatchEvent(
             events.PlatformMovedEvent.create(platformOffset)
         );
     }
 
     _handleDefeatEvent(event) {
         // TODO сделать что-нибудь поинтереснее
-        let sectorId = event.detail;
+        let sectorId = this._getItemIndex(event.detail);
         if (sectorId == this._playerItemsIndex) {
             alert("You lose");
         } else {
@@ -218,9 +207,43 @@ class Game {
 
     }
 
+    _handleClientDefeatEvent(event) {
+        let sectorId = event.detail;
+        let playerId = this._activeSector.id;
+
+        if (sectorId == playerId) {
+            alert("You lose");
+        } else {
+            alert("You win");
+        }
+
+        let relId = sectorId - playerId;
+        this._getUserSectorByIndex(relId).setLoser();
+        this._redraw();
+        this.stop();
+    }
+
     _handleBallPositionCorrectionEvent(event) {
         console.log("Ball position corrected");
         this._world.ball.moveTo(event.detail);
+    }
+
+    _handleWorldUpdateEvent(event) {
+        let gameUpdate = event.detail;
+
+        gameUpdate.platformsUpdate.forEach(platformUpdate => {
+            this._getPlatformByIndex(platformUpdate.index).moveTo(platformUpdate.position);
+        });
+
+        this._world.updateBallState(gameUpdate.ballUpdate.position, gameUpdate.ballUpdate.velocity);
+    }
+
+    _handleEnemyMovementEvent(event) {
+        console.log("Enemy moved");
+        let detail = event.detail;
+
+        let platform = this._getPlatformByIndex(detail.index);
+        this._world.movePlatform(platform, math.multiply([1, 0], detail.offset));
     }
 
     _redraw() {
@@ -228,7 +251,4 @@ class Game {
         this._world.draw(this._canvas);
     }
 }
-
-
-module.exports = Game;
 

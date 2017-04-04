@@ -126,6 +126,7 @@ class Router {
         this._plainURLDict = {};
         this._regexpURLDict = {};
         this._prefixURLDict = {};
+        this._default = null;
     }
 
     addPlainURL(url, bind) {
@@ -140,6 +141,10 @@ class Router {
         this._prefixURLDict[url] = bind;
     }
 
+    setDefault(bind) {
+        this._default = bind;
+    }
+
     get getPlainURLDict() {
         return this._plainURLDict;
     }
@@ -150,6 +155,14 @@ class Router {
 
     get getPrefixURLDict() {
         return this._prefixURLDict;
+    }
+
+    getDefaultBind() {
+        return this._default;
+    }
+
+    hasDefaultBind() {
+        return Boolean(this._default);
     }
 }
 
@@ -205,7 +218,8 @@ function getStaticServer (router) {
         }
         console.log("Prefix match failed: ", request.url);
 
-        callback = _callbackTemplates.pageNotFound;
+        //callback = _callbackTemplates.pageNotFound;
+        callback = router.hasDefaultBind() ? router.getDefaultBind() : _callbackTemplates.pageNotFound;
         callback(request, response);
     });
 }

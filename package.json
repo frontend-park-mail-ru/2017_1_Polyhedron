@@ -6,7 +6,7 @@
   "scripts": {
     "test": "grunt test",
     "postinstall": "grunt postinstall",
-    "start": "node main.js"
+    "start": "node server_config.js"
   },
   "repository": {
     "type": "git",
@@ -38,6 +38,8 @@
     "webpack": "^2.2.1"
   },
   "dependencies": {
-    "babel-runtime": "^6.23.0"
+    "babel-runtime": "^6.23.0",
+    "es6-promise": "^4.1.0",
+    "isomorphic-fetch": "^2.2.1"
   }
 }

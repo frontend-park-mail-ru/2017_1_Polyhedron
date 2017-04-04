@@ -1,11 +1,10 @@
 'use strict';
-const BasePage = require('./base');
+import {BasePage} from './base';
 
-class Error extends BasePage {
+
+export class Error extends BasePage {
     render () {
         this._heading.innerHTML = "Ошибка";
         this._content.innerHTML = this._template(this._options);
     }
 }
-
-module.exports = Error;

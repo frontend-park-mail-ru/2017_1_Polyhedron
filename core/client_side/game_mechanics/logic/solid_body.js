@@ -1,7 +1,8 @@
 
-const math = require('./_lib/math');
+const math = require('./../../../_lib/math');
 
-class SolidBody {
+
+export class SolidBody {
     constructor(origin, angle, velocity, angularVelocity) {
         this._origin = origin ? math.matrix(origin) : math.matrix([0, 0]);
         this._angle = angle || 0;
@@ -79,5 +80,3 @@ class SolidBody {
         ]);
     }
 }
-
-module.exports = SolidBody;

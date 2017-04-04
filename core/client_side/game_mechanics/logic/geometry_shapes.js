@@ -1,5 +1,5 @@
 
-class Circle {
+export class Circle {
     constructor(radius) {
         this._radius = radius;
     }
@@ -10,7 +10,7 @@ class Circle {
 }
 
 
-class Triangle {
+export class Triangle {
     constructor(height, sectorAngle) {
         this._height = height;
         this._sectorAngle = sectorAngle;
@@ -55,7 +55,3 @@ class Triangle {
         return (y > 0) && (y <= this._height / this._halfWidth * x) && (y <= this._height * (2 - x / this._halfWidth));
     }
 }
-
-
-module.exports.Circle = Circle;
-module.exports.Triangle = Triangle;

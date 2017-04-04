@@ -15,7 +15,7 @@ module.exports = function(grunt) {
                 progress: true,
                 entry: "./static/js/main.js",
                 output: {
-                    path: './dist',
+                    path: path.resolve(__dirname, 'dist'),
                     filename: 'index_bundle.js'
                 },
 
@@ -41,16 +41,16 @@ module.exports = function(grunt) {
                     ]
                 },
 
-                plugins: [
-                    new webpack.optimize.UglifyJsPlugin({minimize: true})
-                ],
+                //plugins: [
+                //    new webpack.optimize.UglifyJsPlugin({minimize: true})
+                //],
             }
         },
 
         watch: {
             js: {
                 files: [
-                    './core/*.js',
+                    './core/**/*.js',
                     './static/js/*.js',
                     './static/js/*/*.js'
                 ],
@@ -70,7 +70,14 @@ module.exports = function(grunt) {
             options: {
                 configFile: '.eslintrc.js'
             },
-            src: ['core/*.js', 'static/js/*.js', 'static/js/pages/*.js', './tests/*.js', '.pug_compiler.js']
+            src: [
+                'core/client_side/**/*.js',
+                'core/server_side/**/*.js',
+                'static/js/pages/*.js',
+                './tests/*.js',
+                '.pug_compiler.js',
+                '!core/server_side/ws_server/server.js'
+            ]
         },
 
         mochaTest: {

@@ -1,11 +1,13 @@
 "use strict";
-let lib = require("./core/server");
+let lib = require("./core/server_side/static_server/server");
 
 const DEFAULT_PORT = 3000;
 
 let router = new lib.Router();
 
-router.addPlainURL("/", new lib.BindedFile("./html/index.html"));
+//router.addPlainURL("/", new lib.BindedFile("./html/index.html"));
+router.setDefault(new lib.BindedFile("./html/index.html"));
+router.addPlainURL("/api", new lib.BindedFile("./swagger.yml"));
 
 router.addRegexURL("^/lib/.*\.js$", new lib.BindedFolder("./static/_lib/js/", "/lib/"));
 router.addRegexURL("^/lib/.*\.css$", new lib.BindedFolder("./static/_lib/css/", "/lib/"));

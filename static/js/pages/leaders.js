@@ -1,12 +1,13 @@
 'use strict';
 
-const BasePage = require('./base');
-const BackendAPI = require('../../../core/backend_api');
+import {BasePage} from './base';
+import {BackendAPI} from '../../../core/client_side/site_service/backend_api';
 
-class Leaders extends BasePage {
+
+export class Leaders extends BasePage {
     render() {
-        this._heading.innerHTML = "Топ-10";
-        let locals = {};
+        this._heading.innerHTML = "Жду список лидеров";
+        this._content.innerHTML = "";
 
         let backendAPI = new BackendAPI();
         backendAPI.getLeaders(10)
@@ -14,11 +15,10 @@ class Leaders extends BasePage {
                 return response.json();
             })
             .then( responseJSON => {
-                console.log(responseJSON);
-                locals.leaders = responseJSON.leaders;
-                this._content.innerHTML = this._template(locals);
+                this._content.innerHTML = this._template({
+                    'leaders': responseJSON.data
+                });
+                this._heading.innerHTML = "Топ-10";
             });
     }
 }
-
-module.exports = Leaders;
