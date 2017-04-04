@@ -70,7 +70,14 @@ module.exports = function(grunt) {
             options: {
                 configFile: '.eslintrc.js'
             },
-            src: ['core/*.js', 'static/js/*.js', 'static/js/pages/*.js', './tests/*.js', '.pug_compiler.js']
+            src: [
+                'core/client_side/**/*.js',
+                'core/server_side/**/*.js',
+                'static/js/pages/*.js',
+                './tests/*.js',
+                '.pug_compiler.js',
+                '!core/server_side/ws_server/server.js'
+            ]
         },
 
         mochaTest: {

@@ -1,7 +1,8 @@
 
 export class Router {
-    constructor(viewMap) {
+    constructor(viewMap, defaultView) {
         this._viewMap = viewMap || {};
+        this._defaultView = defaultView;
     }
 
     register(url, view) {
@@ -10,7 +11,7 @@ export class Router {
 
     unregister(url) {
         let viewWrapper = this._viewMap[url];
-        this._viewMap[url] = undefined;
+        this._viewMap[url] = null;
         return viewWrapper;
     }
 
@@ -27,11 +28,11 @@ export class Router {
     }
 
     _getViewByURL(url) {
-        for (let urlPattern in this._viewMap) {
-            if (url.match(urlPattern)) {
-                return this._viewMap[urlPattern];
-            }
-        }
+        let view = this._viewMap[
+            Object.keys(this._viewMap).find(urlPattern => url.match(urlPattern))
+            ];
+
+        return view ? view : this._defaultView;
     }
 
     _saveChange(url, options) {

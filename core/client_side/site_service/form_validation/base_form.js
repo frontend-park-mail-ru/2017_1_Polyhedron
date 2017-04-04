@@ -28,13 +28,13 @@ export class Form {
 
     validateAndSubmit() {
         if (this.isValid()) {
-            this.sendData();
+            this._sendData();
         } else {
-            alert('Input valid data, please')
+            alert('Input valid data, please');
         }
     }
 
-    sendData(){
+    _sendData(){
         console.log('Tried to send data');
     }
 

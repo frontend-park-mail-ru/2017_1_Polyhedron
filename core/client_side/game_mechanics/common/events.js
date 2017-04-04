@@ -2,6 +2,10 @@
  * NEVER create instances of BaseEvent class with new. ALWAYS use classname.create(...).
  */
 class BaseEvent {
+    constructor() {
+        throw new Error('NEVER create instances of BaseEvent class with new. ALWAYS use classname.create(...).');
+    }
+
     static get eventName() {
         return this.name;
     }
@@ -64,7 +68,7 @@ export class WorldUpdateEvent extends BaseEvent {
                 return {
                     index: platformUpdate.index - eventDetail.playerIndex,
                     position: platformUpdate.position
-                }
+                };
             }
         );
 

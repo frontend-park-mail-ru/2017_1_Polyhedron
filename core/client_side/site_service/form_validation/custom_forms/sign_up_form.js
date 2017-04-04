@@ -58,7 +58,7 @@ export class SignUpForm extends Form {
         }, submitter);
     }
 
-    sendData() {
+    _sendData() {
         let backendAPI = new BackendAPI();
 
         backendAPI.register(

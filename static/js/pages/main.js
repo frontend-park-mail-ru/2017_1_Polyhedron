@@ -38,9 +38,8 @@ export let router = new Router({
     '^/?about$': new About(heading, content, renderAbout.template),
     '^/?choice$': new Choice(heading, content, renderChoice.template),
     '^/?game$': new Game(heading, content, renderGame.template),
-    '^/?error$': new Error(heading, content, renderError404.template),
     '^/?leaders$': new Leaders(heading, content, renderLeaders.template, {count: 10}),
     '^/?login$': new Login(heading, content, renderLogin.template),
     '^/?signup$': new Signup(heading, content, renderSignup.template),
     '^/?waiting$': new Waiting(heading, content, renderWaiting.template),
-});
+}, new Error(heading, content, renderError404.template));

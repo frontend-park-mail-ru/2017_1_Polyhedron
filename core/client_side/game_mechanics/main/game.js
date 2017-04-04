@@ -122,7 +122,7 @@ export class Game {
         window.addEventListener(events.EnemyPositionCorrectionEvent.eventName,
             event => this._handleEnemyMovementEvent(event));
 
-        window.addEventListener(events.WorldUpdateEvent.eventName, event => this._handleWorldUpdateEvent(event))
+        window.addEventListener(events.WorldUpdateEvent.eventName, event => this._handleWorldUpdateEvent(event));
     }
 
     _makeIteration(time) {
@@ -232,7 +232,7 @@ export class Game {
         let gameUpdate = event.detail;
 
         gameUpdate.platformsUpdate.forEach(platformUpdate => {
-            this._getPlatformByIndex(platformUpdate.index).moveTo(platformUpdate.position)
+            this._getPlatformByIndex(platformUpdate.index).moveTo(platformUpdate.position);
         });
 
         this._world.updateBallState(gameUpdate.ballUpdate.position, gameUpdate.ballUpdate.velocity);

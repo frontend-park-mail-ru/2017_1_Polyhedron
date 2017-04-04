@@ -5,7 +5,7 @@ import {Ball} from './game_components/ball';
 import {Platform} from './game_components/platform';
 import {TriangleField} from './game_components/triangle_field';
 
-import * as events from '../common/events'
+import * as events from '../common/events';
 
 
 export class GameWorld {
@@ -111,7 +111,7 @@ export class GameWorld {
         });
     }
 
-    _handleUserSectorCollision(sector, ball) {
+    _handleUserSectorCollision(sector) {
         if (sector != this._lastCollidedObject) {
             window.dispatchEvent(events.ClientDefeatEvent.create(sector.id));
         }

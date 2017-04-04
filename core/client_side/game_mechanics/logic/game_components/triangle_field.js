@@ -4,11 +4,11 @@ import * as shapes from '../geometry_shapes';
 import {SolidBody} from '../solid_body';
 
 
-const ID_GENERATOR = (function () {
+const generateId = (function () {
     let id = 0;
     return () => {
         return ++id;
-    }
+    };
 })();
 
 
@@ -19,7 +19,7 @@ export class TriangleField extends SolidBody {
         this._isNeutral = isNeutral;
         this._isLoser = false;
 
-        this._id = ID_GENERATOR();
+        this._id = generateId();
     }
 
     get height() {

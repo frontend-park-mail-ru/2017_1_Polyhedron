@@ -54,7 +54,7 @@ export class WSEndpoint {
         window.addEventListener(events.ClientMessageEvent.eventName, event => {
             let detail = event.detail;
             this.sendMessage(detail.type, detail.data);
-        })
+        });
     }
 
     _getRequestJson(type, data) {

@@ -13,7 +13,7 @@ const RELATIVE_URL_MAP = {
     isLoggedIn: '/api/user/islogin'
 };
 
-const METHOD_MAP = {
+const METHODS = {
     GET: "GET",
     POST: "POST"
 };
@@ -26,7 +26,7 @@ export class BackendAPI {
     }
 
     register(email, login, password) {
-        return this._fetchCORS(this._urlMap.register, METHOD_MAP.POST, {
+        return this._fetchCORS(this._urlMap.register, METHODS.POST, {
             'email': email,
             'login': login,
             'password': password
@@ -34,26 +34,26 @@ export class BackendAPI {
     }
 
     login(email, password) {
-        return this._fetchCORS(this._urlMap.login, METHOD_MAP.POST, {
+        return this._fetchCORS(this._urlMap.login, METHODS.POST, {
             'email': email,
             'password': password
         });
     }
 
     getuser() {
-        return this._fetchCORS(this._urlMap.getUser, METHOD_MAP.GET);
+        return this._fetchCORS(this._urlMap.getUser, METHODS.GET);
     }
 
     logout() {
-        return this._fetchCORS(this._urlMap.logout, METHOD_MAP.GET);
+        return this._fetchCORS(this._urlMap.logout, METHODS.GET);
     }
 
     getLeaders(leadersCountLimit) {
-        return this._fetchCORS(this._urlMap.leaders + leadersCountLimit, METHOD_MAP.GET);
+        return this._fetchCORS(this._urlMap.leaders + leadersCountLimit, METHODS.GET);
     }
 
     isLoggedIn() {
-        return this._fetchCORS(this._urlMap.isLoggedIn, METHOD_MAP.POST);
+        return this._fetchCORS(this._urlMap.isLoggedIn, METHODS.POST);
     }
 
     _fetchCORS(url, method, requestBody) {
@@ -67,7 +67,7 @@ export class BackendAPI {
                 'Content-type': 'application/json'
             }
         };
-        if (method === METHOD_MAP.POST) {
+        if (method === METHODS.POST) {
             options.body = requestBody ? JSON.stringify(requestBody) : '';
         }
 

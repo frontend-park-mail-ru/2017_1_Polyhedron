@@ -41,7 +41,7 @@ export class SignInForm extends Form {
         }, submitter);
     }
 
-    sendData() {
+    _sendData() {
         let backendAPI = new BackendAPI();
 
         backendAPI.login(this._fields.email.getValue(), this._fields.password.getValue())
