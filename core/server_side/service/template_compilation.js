@@ -1,4 +1,6 @@
 
+"use strict";
+
 const pug = require('pug');
 const wrap = require('pug-runtime/wrap');
 const fs = require('fs');
