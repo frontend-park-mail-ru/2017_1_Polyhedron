@@ -1,0 +1,12 @@
+form(autocomplete="off", id=locals.name)
+    each item, index in locals.inputs
+        p
+            label(for=item.name)= item.text + ':'
+            input(id=item.name type=item.type name=item.name placeholder=item.placeholder autofocus=(index===1))
+            label.error(id='error'+item.name for=item.name)
+    each item in locals.controls
+        if item.type !== 'link'
+            p
+                input(id=item.name type=item.type class=item.type value=item.text)
+        else
+            a(data-page=item.page href="#")= item.text

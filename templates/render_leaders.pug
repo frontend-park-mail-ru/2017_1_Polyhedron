@@ -1,6 +1,6 @@
-if locals.leaders.length
+if locals.items.length
     table
-        each item, index in locals.leaders
+        each item, index in locals.items
             if user
                 tr(class= (item.login === user.login) ? 'you' : '')
             else

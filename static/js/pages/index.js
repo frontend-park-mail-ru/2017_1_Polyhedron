@@ -1,12 +1,21 @@
 'use strict';
 
 import {BasePage} from './base';
+import {Menu} from '../components/menu/menu'
 
 
 export class Index extends BasePage {
     render () {
-        this.renderTop();   //TODO Remove (debug purpose only)
         this._heading.innerHTML = "Многопользовательский пинг-понг";
-        this._content.innerHTML = this._template(this._options);
+        window.userpanel.render();
+
+        this.menu = new Menu({
+            items: [
+                {text: 'Играть', page: 'choice', accented: true},
+                {text: 'Лидеры', page: 'leaders'},
+                {text: 'Об игре', page: 'about'}
+                ],
+            parent: this._content
+        }).render();
     }
 }

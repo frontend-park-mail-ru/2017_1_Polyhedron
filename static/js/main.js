@@ -1,10 +1,10 @@
 'use strict';
 import {router} from './pages/main';
-import * as renderTop from './templates/render_top';
+import {Top} from './components/top/top';
 
 (function () {
-    const userpanel = document.querySelector(".js-top");
-    userpanel.innerHTML = renderTop.template();
+    window.userpanel = new Top();
+    window.userpanel.render();
 
 
     router.renderAndSave(window.location.pathname);
@@ -22,3 +22,4 @@ import * as renderTop from './templates/render_top';
     });
 
 })();
+
