@@ -22,7 +22,7 @@ export class Platform extends SolidBody {
         let relativeLength = _relativeLength || DEFAULT_RELATIVE_LENGTH;
         let width = _width || DEFAULT_WIDTH;
 
-        let position = triangleField.toGlobals([0, triangleField.height * (relativeDistance - 1)]); // using such
+        let position = triangleField.toGlobals([0, -triangleField.height * (1 - relativeDistance)]); // using such
         // coordinates because triangleField coordinate system origin is in the topmost corner.
         let rotation = triangleField.rotation;
         let totalLength = triangleField.getWidthOnRelativeDistance(relativeDistance);
@@ -32,9 +32,21 @@ export class Platform extends SolidBody {
         platform.moveTo(position);
         platform.rotateTo(rotation);
 
+        const offsetValidator = (offsetVec) => {
+            const f1 = (x, y) => y < triangleField.height * (1 - relativeLength) + x * triangleField.height / triangleField.halfWidth;
+            const f2 = (x, y) => y < triangleField.height * (1 - relativeLength) - x * triangleField.height / triangleField.halfWidth;
+            const f3 = x => -triangleField.halfWidth * (1 - relativeLength) < x && x < triangleField.halfWidth * (1 - relativeLength);
+
+            let [offsetX, offsetY] = offsetVec;
+            offsetY *= -1;
+
+            return offsetY > 0 && f1(offsetX, offsetY) && f2(offsetX, offsetY) && f3(offsetX);
+        };
+
         platform.optionalPositioningInfo = {
             "originalPosition": platform.position.slice(),
-            "maxOffset": totalLength * (1 - relativeLength) / 2
+            "maxOffset": totalLength * (1 - relativeLength) / 2,
+            "offsetValidator": offsetValidator
         };
 
         return platform;

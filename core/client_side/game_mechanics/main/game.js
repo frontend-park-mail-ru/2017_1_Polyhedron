@@ -5,6 +5,8 @@ import {GameWorld} from '../logic/game_world';
 
 const KEY_LEFT = 39;
 const KEY_RIGHT = 37;
+const KEY_UP = 38;
+const KEY_DOWN = 40;
 
 const DEFAULT_PLAYERS_NUM = 4;
 const DEFAULT_FRAME_RATE = 60;
@@ -34,6 +36,8 @@ export class Game {
 
         this._leftPressed = false;
         this._rightPressed = false;
+        this._upPressed = false;
+        this._downPressed = false;
 
         this._platformVelocityDirection = [0, 0];
         this._setIntervalID = null;
@@ -142,7 +146,12 @@ export class Game {
             this._leftPressed = true;
         } else if (event.keyCode == KEY_RIGHT) {
             this._rightPressed = true;
+        } else if (event.keyCode == KEY_DOWN) {
+            this._downPressed = true;
+        } else if (event.keyCode == KEY_UP) {
+            this._upPressed = true;
         }
+
         this._updatePlatformVelocityDirection();
     }
 
@@ -151,19 +160,39 @@ export class Game {
             this._leftPressed = false;
         } else if (event.keyCode == KEY_RIGHT) {
             this._rightPressed = false;
+        } else if (event.keyCode == KEY_DOWN) {
+            this._downPressed = false;
+        } else if (event.keyCode == KEY_UP) {
+            this._upPressed = false;
         }
         this._updatePlatformVelocityDirection();
     }
 
     _updatePlatformVelocityDirection() {
+        return this._platformVelocityDirection = [this._getPlatformHorDirection(), this._getPlatformVertDirection()];
+    }
+
+    _getPlatformHorDirection() {
         if (!this._leftPressed && !this._rightPressed) {
-            this._platformVelocityDirection = [0, 0];
+            return 0;
         } else if (this._leftPressed && !this._rightPressed) {
-            this._platformVelocityDirection = [-1, 0];
+            return -1;
         } else if (!this._leftPressed && this._rightPressed) {
-            this._platformVelocityDirection = [1, 0];
+            return 1;
         } else {
-            this._platformVelocityDirection = [0, 0];
+            return 0;
+        }
+    }
+
+    _getPlatformVertDirection() {
+        if (!this._downPressed && !this._upPressed) {
+            return 0;
+        } else if (this._downPressed && !this._upPressed) {
+            return -1;
+        } else if (!this._downPressed && this._upPressed) {
+            return 1;
+        } else {
+            return 0;
         }
     }
 
@@ -217,8 +246,14 @@ export class Game {
             alert("You win");
         }
 
-        let relId = sectorId - playerId;
-        this._getUserSectorByIndex(relId).setLoser();
+        this._world.userSectors.forEach(sector => {
+            if (sector.id == sectorId) {
+                sector.setLoser();
+            }
+        });
+
+        //let relId = sectorId - playerId;
+        //this._getUserSectorByIndex(relId).setLoser();   // TODO remove +2
         this._redraw();
         this.stop();
     }

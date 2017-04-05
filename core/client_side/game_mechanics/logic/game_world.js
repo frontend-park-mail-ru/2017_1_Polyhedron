@@ -74,7 +74,11 @@ export class GameWorld {
         let globalOffset = platform.toGlobalsWithoutOffset(localOffsetVector);
         let newOffsetVec = math.add(globalOffset, offsetVec);
 
-        if (math.norm(newOffsetVec) <= platform.optionalPositioningInfo.maxOffset) {
+        //if (math.norm(newOffsetVec) <= platform.optionalPositioningInfo.maxOffset) {
+        //    platform.moveBy(globalOffset);
+        //}
+
+        if (platform.optionalPositioningInfo.offsetValidator(newOffsetVec)) {
             platform.moveBy(globalOffset);
         }
     }
