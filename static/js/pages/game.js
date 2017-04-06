@@ -16,4 +16,8 @@ export class Game extends BasePage {
         this._content.innerHTML = renderGame.template(this._options);
         startGame('game');
     }
+
+    reset () {
+        window.loop.stop();
+    }
 }

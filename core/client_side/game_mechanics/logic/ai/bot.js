@@ -22,7 +22,6 @@ export class Bot {
     _init() {
         this._setIntervalID = setInterval(() => {
             this._movePlatform(this._time);
-            console.log("Tried to move");
         }, this._time);
     }
 

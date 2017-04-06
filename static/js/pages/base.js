@@ -10,4 +10,6 @@ export class BasePage {
     render() {
         //override this method
     }
+
+    reset () {}
 }
