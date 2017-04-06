@@ -36,11 +36,6 @@ body {
     background: url('/static/images/emblem.gif') no-repeat 60vw 50%;
 }
 
-.top {
-    padding: .5rem;
-    border-bottom: 1px dashed gray;
-}
-
 .container {
     width: 100%;
     height: 90%;

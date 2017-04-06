@@ -1,12 +1,12 @@
 if locals.items.length
-    table
+    table.leaderboard
         each item, index in locals.items
             if user
-                tr(class= (item.login === user.login) ? 'you' : '')
+                tr.leaderboard__leader.leader(class= (item.login === user.login) ? 'leaderboard__leader_current' : '')
             else
-                tr
-                td.place= index + 1
-                td.login= item.login
-                td.score= item.score
+                tr.leaderboard__leader.leader
+                    td.leader__info.leader__info_place= index + 1
+                    td.leader__info.leader__info_login= item.login
+                    td.leader__info.leader__info_score= item.score
 else
-    p Лидеров пока нет
+    p.text-block Лидеров пока нет
