@@ -9,7 +9,7 @@ export class GameComponent extends SolidBody {
         this._anchor = anchor || [0, 0];
         this._positionValidator = positionValidator;
         if (!this._positionValidator) {
-            this._positionValidator = (x, y) => true;
+            this._positionValidator = () => true;
         }
     }
 
@@ -26,9 +26,18 @@ export class GameComponent extends SolidBody {
     }
 
     set positionValidator(value) {
-        //this._positionValidator = ([x, y]) => offsetValidator([x - this._anchor[0], y - this._anchor[1]]);
         this._positionValidator = value;
-        //this._positionValidator = ([x, y]) => offsetValidator([x - this.anchor[0], y - this.anchor[1]]);
     }
 
+    moveToWithConstraints(newPosition) {
+        if (this._positionValidator(newPosition)) {
+            this.moveTo(newPosition);
+        }
+    }
+
+    moveByWithConstraints(offsetVec) {
+        if (this._positionValidator(offsetVec)) {
+            this.moveBy(offsetVec);
+        }
+    }
 }

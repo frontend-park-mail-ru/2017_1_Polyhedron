@@ -22,6 +22,10 @@ export class TriangleField extends GameComponent {
         this._id = generateId();
     }
 
+    contains(point) {
+        return this._triangle.contains(this.toLocals(point));
+    }
+
     get height() {
         return this._triangle.height;
     }

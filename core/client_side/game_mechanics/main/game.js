@@ -2,6 +2,7 @@
 import * as math from '../../../_lib/math';
 import * as events from '../common/events';
 import {GameWorld} from '../logic/game_world';
+import {Bot} from '../logic/ai/bot';
 
 const KEY_LEFT = 39;
 const KEY_RIGHT = 37;
@@ -19,10 +20,17 @@ const PLATFORM_TOLERANCE = 5;
 
 const MILLISECONDS_PER_SECOND = 1000;
 
+const MODES = {
+    single: 'single',
+    multi: 'multi'
+};
+
+const DEFAULT_MODE = MODES.single;
+
 
 export class Game {
     constructor(canvas, playersNum, frameRate, fillFactor, ballRelativeRadius,
-                initialRelativeBallOffset, initialRelativeBallVelocity) {
+                initialRelativeBallOffset, initialRelativeBallVelocity, mode) {
         this._canvas = canvas;
         this._context = canvas.getContext("2d");
         this._playersNum = playersNum || DEFAULT_PLAYERS_NUM;
@@ -42,6 +50,7 @@ export class Game {
         this._platformVelocityDirection = [0, 0];
         this._setIntervalID = null;
         this._lastPlatformPosition = null;
+        this._mode = mode || DEFAULT_MODE;
     }
 
     start() {
@@ -50,6 +59,11 @@ export class Game {
 
         let time = MILLISECONDS_PER_SECOND / this._frameRate;
         this._setIntervalID = setInterval(() => this._makeIteration(time), time);
+
+        //TODO remove (temporary solution while multiplayer is unavailable)
+        if (this._mode === MODES.single) {
+            this._bots = [1, 2, 3].map(i => new Bot(this._getPlatformByIndex(i), this._world.ball, 0.07, time));
+        }
     }
 
     stop() {
@@ -252,8 +266,6 @@ export class Game {
             }
         });
 
-        //let relId = sectorId - playerId;
-        //this._getUserSectorByIndex(relId).setLoser();   // TODO remove +2
         this._redraw();
         this.stop();
     }

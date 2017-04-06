@@ -68,11 +68,8 @@ export class GameWorld {
     }
 
     movePlatform(platform, localOffsetVector) {
-        let newPosition = math.add(platform.position, platform.toGlobalsWithoutOffset(localOffsetVector));
-
-        if (platform.positionValidator(newPosition)) {
-            platform.moveTo(newPosition);
-        }
+        let globalOffset = platform.toGlobalsWithoutOffset(localOffsetVector);
+        platform.moveByWithConstraints(globalOffset);
     }
 
     updateBallState(position, velocity) {

@@ -30,19 +30,15 @@ export class Platform extends GameComponent {
         platform.moveTo(position);
         platform.rotateTo(rotation);
 
-        const offsetValidator = (offsetVec) => {
-            const f1 = (x, y) => y < triangleField.height * (1 - relativeLength) + x * triangleField.height / triangleField.halfWidth;
-            const f2 = (x, y) => y < triangleField.height * (1 - relativeLength) - x * triangleField.height / triangleField.halfWidth;
-            const f3 = x => -triangleField.halfWidth * (1 - relativeLength) < x && x < triangleField.halfWidth * (1 - relativeLength);
-
-            let [offsetX, offsetY] = offsetVec;
-            offsetY *= -1;
-
-            return offsetY > 0 && f1(offsetX, offsetY) && f2(offsetX, offsetY) && f3(offsetX);
+        const offsetValidator = (globalOffsetVec) => {
+            return platform.getPointArray()
+                .map(([x, y]) => [x + globalOffsetVec[0], y + globalOffsetVec[1]])
+                .map(point => triangleField.contains(point))
+                .reduce((res, curr) => res && curr, true);
         };
 
         platform.anchor = platform.position.slice();
-        platform.positionValidator = ([xOffset, yOffset]) => offsetValidator([xOffset - platform.anchor[0], yOffset - platform.anchor[1]]);
+        platform.positionValidator = offsetValidator;
 
         return platform;
     }

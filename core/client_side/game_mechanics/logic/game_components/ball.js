@@ -1,7 +1,7 @@
 
 import * as math from '../../../../_lib/math';
 import {Circle} from '../geometry_shapes/circle';
-import {GameComponent} from './game_component'
+import {GameComponent} from './game_component';
 
 
 export class Ball extends GameComponent {

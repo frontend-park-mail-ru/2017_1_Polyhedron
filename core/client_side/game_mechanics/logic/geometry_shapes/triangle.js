@@ -23,6 +23,19 @@ export class Triangle {
         ];
     }
 
+    contains(point) {
+        const f1 = (x, y) => y < this.height + x * this.height / this.halfWidth;
+        const f2 = (x, y) => y < this.height - x * this.height / this.halfWidth;
+        const f3 = x => -this.halfWidth < x && x < this.halfWidth;
+
+        //let [offsetX, offsetY] = offsetVec;
+        //offsetY *= -1;
+
+        const pointX = point[0];
+        const pointY = point[1] + this.height; // move coordinate system origin to the base center
+        return pointY > 0 && f1(pointX, pointY) && f2(pointX, pointY) && f3(pointX);
+    }
+
     getBottomDistance(point) {
         return point[1] + this._height;
     }
