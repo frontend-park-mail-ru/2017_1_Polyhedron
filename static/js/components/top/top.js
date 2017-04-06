@@ -20,7 +20,6 @@ export class Top extends Component {
                 window.user = responseJSON.data;
                 const userpanel = document.querySelector(".js-top");
                 userpanel.innerHTML = renderTop.template();
-                renderTop.template();
             });
         return this;
     }
