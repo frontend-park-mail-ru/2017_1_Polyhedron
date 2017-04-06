@@ -2,9 +2,12 @@
 import * as math from '../../../_lib/math';
 import * as events from '../common/events';
 import {GameWorld} from '../logic/game_world';
+import {Bot} from '../logic/ai/bot';
 
 const KEY_LEFT = 39;
 const KEY_RIGHT = 37;
+const KEY_UP = 38;
+const KEY_DOWN = 40;
 
 const DEFAULT_PLAYERS_NUM = 4;
 const DEFAULT_FRAME_RATE = 60;
@@ -17,10 +20,17 @@ const PLATFORM_TOLERANCE = 5;
 
 const MILLISECONDS_PER_SECOND = 1000;
 
+const MODES = {
+    single: 'single',
+    multi: 'multi'
+};
+
+const DEFAULT_MODE = MODES.single;
+
 
 export class Game {
     constructor(canvas, playersNum, frameRate, fillFactor, ballRelativeRadius,
-                initialRelativeBallOffset, initialRelativeBallVelocity) {
+                initialRelativeBallOffset, initialRelativeBallVelocity, mode) {
         this._canvas = canvas;
         this._context = canvas.getContext("2d");
         this._playersNum = playersNum || DEFAULT_PLAYERS_NUM;
@@ -34,10 +44,13 @@ export class Game {
 
         this._leftPressed = false;
         this._rightPressed = false;
+        this._upPressed = false;
+        this._downPressed = false;
 
         this._platformVelocityDirection = [0, 0];
         this._setIntervalID = null;
         this._lastPlatformPosition = null;
+        this._mode = mode || DEFAULT_MODE;
     }
 
     start() {
@@ -46,6 +59,11 @@ export class Game {
 
         let time = MILLISECONDS_PER_SECOND / this._frameRate;
         this._setIntervalID = setInterval(() => this._makeIteration(time), time);
+
+        //TODO remove (temporary solution while multiplayer is unavailable)
+        if (this._mode === MODES.single) {
+            this._bots = [1, 2, 3].map(i => new Bot(this._getPlatformByIndex(i), this._world.ball, 0.07, time));
+        }
     }
 
     stop() {
@@ -142,7 +160,12 @@ export class Game {
             this._leftPressed = true;
         } else if (event.keyCode == KEY_RIGHT) {
             this._rightPressed = true;
+        } else if (event.keyCode == KEY_DOWN) {
+            this._downPressed = true;
+        } else if (event.keyCode == KEY_UP) {
+            this._upPressed = true;
         }
+
         this._updatePlatformVelocityDirection();
     }
 
@@ -151,19 +174,39 @@ export class Game {
             this._leftPressed = false;
         } else if (event.keyCode == KEY_RIGHT) {
             this._rightPressed = false;
+        } else if (event.keyCode == KEY_DOWN) {
+            this._downPressed = false;
+        } else if (event.keyCode == KEY_UP) {
+            this._upPressed = false;
         }
         this._updatePlatformVelocityDirection();
     }
 
     _updatePlatformVelocityDirection() {
+        return this._platformVelocityDirection = [this._getPlatformHorDirection(), this._getPlatformVertDirection()];
+    }
+
+    _getPlatformHorDirection() {
         if (!this._leftPressed && !this._rightPressed) {
-            this._platformVelocityDirection = [0, 0];
+            return 0;
         } else if (this._leftPressed && !this._rightPressed) {
-            this._platformVelocityDirection = [-1, 0];
+            return -1;
         } else if (!this._leftPressed && this._rightPressed) {
-            this._platformVelocityDirection = [1, 0];
+            return 1;
         } else {
-            this._platformVelocityDirection = [0, 0];
+            return 0;
+        }
+    }
+
+    _getPlatformVertDirection() {
+        if (!this._downPressed && !this._upPressed) {
+            return 0;
+        } else if (this._downPressed && !this._upPressed) {
+            return -1;
+        } else if (!this._downPressed && this._upPressed) {
+            return 1;
+        } else {
+            return 0;
         }
     }
 
@@ -217,8 +260,8 @@ export class Game {
             alert("You win");
         }
 
-        let relId = sectorId - playerId;
-        this._getUserSectorByIndex(relId).setLoser();
+        this._world.userSectors.filter(sector => sector.id == sectorId).forEach(sector => sector.setLoser());
+
         this._redraw();
         this.stop();
     }

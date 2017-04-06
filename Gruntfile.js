@@ -100,7 +100,7 @@ module.exports = function(grunt) {
         },
 
         exec: {
-            compile_pug: 'node pug_compiler.js',
+            compile_pug: 'node compilers/pug_compiler.js',
         },
 
     });

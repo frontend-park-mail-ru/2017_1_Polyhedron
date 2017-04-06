@@ -1,13 +1,13 @@
 
 import * as math from '../../../../_lib/math';
-import * as shapes from '../geometry_shapes';
-import {SolidBody} from '../solid_body';
+import {Circle} from '../geometry_shapes/circle';
+import {GameComponent} from './game_component';
 
 
-export class Ball extends SolidBody {
+export class Ball extends GameComponent {
     constructor(radius) {
         super();
-        this._circle = new shapes.Circle(radius);
+        this._circle = new Circle(radius);
     }
 
     get radius() {
