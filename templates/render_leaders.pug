@@ -2,8 +2,8 @@ if locals.items.length
     table.leaderboard
         each item, index in locals.items
             tr.leaderboard__leader.leader(class= (window.user && (item.login === window.user.login)) ? 'leaderboard__leader_current' : '')
-                td.leader__info.leader__info_place= index + 1
-                td.leader__info.leader__info_login= item.login
-                td.leader__info.leader__info_score= item.score
+                td.leader__info.leader__info_w10= index + 1
+                td.leader__info= item.login
+                td.leader__info.leader__info_w10= item.score
 else
     p.text-block Лидеров пока нет

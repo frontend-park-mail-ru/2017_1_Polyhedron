@@ -1,11 +1,10 @@
-.form__input-block {
-    display: block;
+.input-block {
     margin: 1rem .5rem;
     padding-bottom: 0;
     border-bottom: 1px dashed gray;
 }
 
-.form__input-block:active, .form__input-block:hover {
+.input-block:active, .input-block:hover {
     border-bottom: 1px dashed white;
     text-shadow: 1px 1px 2px black,
     0 0 30px #aa0101,
