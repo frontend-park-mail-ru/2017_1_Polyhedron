@@ -1,12 +1,12 @@
 form.form(autocomplete="off", id=locals.name)
     each item, index in locals.inputs
-        p.form__input-block.input-block
+        div.input-block
             label.input-block__label(for=item.name)= item.text + ':'
             input.input-block__input(id=item.name type=item.type name=item.name placeholder=item.placeholder autofocus=(index===1))
             label.input-block__label.input-block__label_error(id='error-'+item.name for=item.name)
     each item in locals.controls
         if item.type !== 'link'
-            p.form__input-block.input-block
+            div.input-block
                 input.input-block__input.input-block__input_control(id=item.name type=item.type class=item.type value=item.text)
         else
-            a.form__input-link(data-page=item.page href="#")= item.text
+            a(data-page=item.page href="#")= item.text
