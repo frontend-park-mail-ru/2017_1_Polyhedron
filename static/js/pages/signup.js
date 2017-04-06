@@ -6,10 +6,10 @@ import {Form} from '../components/form/form'
 
 
 export class Signup extends BasePage {
-    render () {
-        this._heading.innerHTML = "Регистрация";
-        window.userpanel.render();
+    constructor (heading, content, options) {
+        super(heading, content, options);
         this.form = new Form({
+            name: 'signUpForm',
             inputs: [
                 {name: 'login', text: 'Логин', type: 'text', placeholder: "Введите логин"},
                 {name: 'password', text: 'Пароль', type: 'password', placeholder: "Введите пароль"},
@@ -21,7 +21,13 @@ export class Signup extends BasePage {
                 {type: 'link', text: 'Войти', page: 'login'},
             ],
             parent: this._content
-        }).render();
+        });
+    }
+
+    render () {
+        this._heading.innerHTML = "Регистрация";
+        window.userpanel.render();
+        this.form.render();
         this._validator = new SignUpForm();
     }
 }

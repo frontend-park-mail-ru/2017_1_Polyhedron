@@ -15,13 +15,13 @@ const REGISTER_SELECTORS = {
     },
 
     errors: {
-        email: '#errorEmail',
-        password: '#errorPassword',
-        login: '#errorLogin',
-        passwordRepeat: '#errorPassword2',
+        email: '#error-email',
+        password: '#error-password',
+        login: '#error-login',
+        passwordRepeat: '#error-password2',
     },
 
-    submitter: '#submitSignUpButton'
+    submitter: '#submit'
 };
 
 

@@ -6,6 +6,10 @@ import {startGame} from '../../../core/client_side/game_mechanics/main/game_star
 
 
 export class Game extends BasePage {
+    constructor (heading, content, options) {
+        super(heading, content, options);
+    }
+
     render () {
         this._heading.innerHTML = "Игра";
         window.userpanel.render();

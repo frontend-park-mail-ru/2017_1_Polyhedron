@@ -13,11 +13,11 @@ const LOGIN_SELECTORS = {
     },
 
     errors: {
-        email: '#errorEmail',
-        password: '#errorPassword'
+        email: '#error-email',
+        password: '#error-password'
     },
 
-    submitter: '#submitSignInButton'
+    submitter: '#submit'
 };
 
 export class SignInForm extends Form {

@@ -5,9 +5,8 @@ import {Text} from '../components/text/text'
 
 
 export class About extends BasePage {
-    render () {
-        this._heading.innerHTML = "Об игре";
-        window.userpanel.render();
+    constructor (heading, content, options) {
+        super(heading, content, options);
         this.text = new Text({
             items: [
                 {text: 'Наша игра - сетевой пинг-понг для трёх пользователей.'},
@@ -16,6 +15,11 @@ export class About extends BasePage {
                 '<a href="http://park.mail.ru"> Технопарка@mail.ru</a>.'},
             ],
             parent: this._content
-        }).render();
+        });
+    }
+    render () {
+        this._heading.innerHTML = "Об игре";
+        window.userpanel.render();
+        this.text.render();
     }
 }
