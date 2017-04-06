@@ -101,6 +101,7 @@ module.exports = function(grunt) {
 
         exec: {
             compile_pug: 'node compilers/pug_compiler.js',
+            compile_swagger: 'node compilers/swagger_compiler.js'
         },
 
     });
@@ -113,7 +114,7 @@ module.exports = function(grunt) {
     grunt.loadNpmTasks('grunt-exec');
 
     grunt.registerTask('postinstall', [
-        'exec:compile_pug', 'webpack'
+        'exec:compile_pug', 'exec:compile_swagger', 'webpack'
     ]);
 
     grunt.registerTask('test', [

@@ -43,3 +43,4 @@ jspm_packages
 dist
 static/js/templates/*.js
 /core/server_side/ws_server/
+/swagger.json

@@ -1,20 +1,18 @@
 
 
-import {SolidBody} from '../solid_body';
+import {GameComponent} from './game_component';
 
 const DEFAULT_RELATIVE_DISTANCE = 0.05;
 const DEFAULT_RELATIVE_LENGTH = 0.3;
 const DEFAULT_WIDTH = 5;
 
 
-export class Platform extends SolidBody {
+export class Platform extends GameComponent {
     constructor(length, width, isActive) {
         super();
         this._length = length;
         this._width = width;
         this._isActive = isActive || false;
-
-        this._optionalPositioningInfo = null;   // extra info necessary to make positioning inside another object
     }
 
     static platformFromTriangleField(triangleField, _relativeDistance, _relativeLength, _width) {
@@ -32,22 +30,15 @@ export class Platform extends SolidBody {
         platform.moveTo(position);
         platform.rotateTo(rotation);
 
-        const offsetValidator = (offsetVec) => {
-            const f1 = (x, y) => y < triangleField.height * (1 - relativeLength) + x * triangleField.height / triangleField.halfWidth;
-            const f2 = (x, y) => y < triangleField.height * (1 - relativeLength) - x * triangleField.height / triangleField.halfWidth;
-            const f3 = x => -triangleField.halfWidth * (1 - relativeLength) < x && x < triangleField.halfWidth * (1 - relativeLength);
-
-            let [offsetX, offsetY] = offsetVec;
-            offsetY *= -1;
-
-            return offsetY > 0 && f1(offsetX, offsetY) && f2(offsetX, offsetY) && f3(offsetX);
+        const offsetValidator = (globalOffsetVec) => {
+            return platform.getPointArray()
+                .map(([x, y]) => [x + globalOffsetVec[0], y + globalOffsetVec[1]])
+                .map(point => triangleField.contains(point))
+                .reduce((res, curr) => res && curr, true);
         };
 
-        platform.optionalPositioningInfo = {
-            "originalPosition": platform.position.slice(),
-            "maxOffset": totalLength * (1 - relativeLength) / 2,
-            "offsetValidator": offsetValidator
-        };
+        platform.anchor = platform.position.slice();
+        platform.positionValidator = offsetValidator;
 
         return platform;
     }
@@ -83,10 +74,6 @@ export class Platform extends SolidBody {
 
     get upperBorder() {
         return this._width / 2;
-    }
-
-    get optionalPositioningInfo() {
-        return this._optionalPositioningInfo;
     }
 
     set optionalPositioningInfo(optionalInfo) {

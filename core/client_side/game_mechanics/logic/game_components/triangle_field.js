@@ -1,7 +1,7 @@
 
 
-import * as shapes from '../geometry_shapes';
-import {SolidBody} from '../solid_body';
+import {Triangle} from '../geometry_shapes/triangle';
+import {GameComponent} from './game_component';
 
 
 const generateId = (function () {
@@ -12,14 +12,18 @@ const generateId = (function () {
 })();
 
 
-export class TriangleField extends SolidBody {
+export class TriangleField extends GameComponent {
     constructor(height, sectorAngle, isNeutral) {
         super();
-        this._triangle = new shapes.Triangle(height, sectorAngle);
+        this._triangle = new Triangle(height, sectorAngle);
         this._isNeutral = isNeutral;
         this._isLoser = false;
 
         this._id = generateId();
+    }
+
+    contains(point) {
+        return this._triangle.contains(this.toLocals(point));
     }
 
     get height() {
