@@ -1,10 +1,10 @@
 
 import * as math from '../../../../_lib/math';
 import {Circle} from '../geometry_shapes/circle';
-import {SolidBody} from '../solid_body';
+import {GameComponent} from './game_component'
 
 
-export class Ball extends SolidBody {
+export class Ball extends GameComponent {
     constructor(radius) {
         super();
         this._circle = new Circle(radius);

@@ -1,7 +1,7 @@
 
 
 import {Triangle} from '../geometry_shapes/triangle';
-import {SolidBody} from '../solid_body';
+import {GameComponent} from './game_component';
 
 
 const generateId = (function () {
@@ -12,7 +12,7 @@ const generateId = (function () {
 })();
 
 
-export class TriangleField extends SolidBody {
+export class TriangleField extends GameComponent {
     constructor(height, sectorAngle, isNeutral) {
         super();
         this._triangle = new Triangle(height, sectorAngle);

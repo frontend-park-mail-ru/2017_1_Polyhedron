@@ -1,20 +1,18 @@
 
 
-import {SolidBody} from '../solid_body';
+import {GameComponent} from './game_component';
 
 const DEFAULT_RELATIVE_DISTANCE = 0.05;
 const DEFAULT_RELATIVE_LENGTH = 0.3;
 const DEFAULT_WIDTH = 5;
 
 
-export class Platform extends SolidBody {
+export class Platform extends GameComponent {
     constructor(length, width, isActive) {
         super();
         this._length = length;
         this._width = width;
         this._isActive = isActive || false;
-
-        this._optionalPositioningInfo = null;   // extra info necessary to make positioning inside another object
     }
 
     static platformFromTriangleField(triangleField, _relativeDistance, _relativeLength, _width) {
@@ -43,11 +41,8 @@ export class Platform extends SolidBody {
             return offsetY > 0 && f1(offsetX, offsetY) && f2(offsetX, offsetY) && f3(offsetX);
         };
 
-        platform.optionalPositioningInfo = {
-            "originalPosition": platform.position.slice(),
-            "maxOffset": totalLength * (1 - relativeLength) / 2,
-            "offsetValidator": offsetValidator
-        };
+        platform.anchor = platform.position.slice();
+        platform.positionValidator = ([xOffset, yOffset]) => offsetValidator([xOffset - platform.anchor[0], yOffset - platform.anchor[1]]);
 
         return platform;
     }
@@ -83,10 +78,6 @@ export class Platform extends SolidBody {
 
     get upperBorder() {
         return this._width / 2;
-    }
-
-    get optionalPositioningInfo() {
-        return this._optionalPositioningInfo;
     }
 
     set optionalPositioningInfo(optionalInfo) {
