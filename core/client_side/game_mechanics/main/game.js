@@ -260,11 +260,7 @@ export class Game {
             alert("You win");
         }
 
-        this._world.userSectors.forEach(sector => {
-            if (sector.id == sectorId) {
-                sector.setLoser();
-            }
-        });
+        this._world.userSectors.filter(sector => sector.id == sectorId).forEach(sector => sector.setLoser());
 
         this._redraw();
         this.stop();
