@@ -1,4 +1,21 @@
-.menu a:hover {
+.menu__item {
+    display: block;
+    height: 2.8rem;
+    margin: .5rem;
+    padding: 0;
+    line-height: 2.8rem;
+    border-bottom: 1px dashed gray;
+}
+
+.menu__item:hover, .menu__item:active {
     font-size: 120%;
     font-weight: bold;
+    border-bottom: 1px dashed white;
 }
+
+.menu__item_accented {
+    color: red;
+    font-size: 120%;
+}
+
+
