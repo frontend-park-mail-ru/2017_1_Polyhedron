@@ -1,7 +1,7 @@
 'use strict';
 
 import {About} from './about';
-import {Choice} from './choice';
+import {ChoiceGameMode} from './choice';
 import {Game} from './game';
 import {Error} from './error404';
 import {Index} from './index';
@@ -27,7 +27,7 @@ export let router = new Router({
 
     '^/?index$': new Index(heading, content),
     '^/?about$': new About(heading, content),
-    '^/?choice$': new Choice(heading, content),
+    '^/?choice$': new ChoiceGameMode(heading, content),
     '^/?game$': new Game(heading, content),
     '^/?leaders$': new Leaders(heading, content, {count: 10}),
     '^/?login$': new Login(heading, content),

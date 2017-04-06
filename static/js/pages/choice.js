@@ -4,7 +4,7 @@ import {BasePage} from './base';
 import {Menu} from '../components/menu/menu';
 
 
-export class Choice extends BasePage {
+export class ChoiceGameMode extends BasePage {
     constructor (heading, content, options) {
         super(heading, content, options);
         this.menu = new Menu({

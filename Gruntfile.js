@@ -74,6 +74,7 @@ module.exports = function(grunt) {
                 'core/client_side/**/*.js',
                 'core/server_side/**/*.js',
                 'static/js/pages/*.js',
+                'static/js/components/**/*.js',
                 './tests/*.js',
                 '.pug_compiler.js',
                 '!core/server_side/ws_server/server.js'

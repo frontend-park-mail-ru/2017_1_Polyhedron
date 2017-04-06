@@ -6,8 +6,10 @@ import {LeaderBoard} from '../components/leaderboard/leaderboard';
 import {BackendAPI} from '../../../core/client_side/site_service/backend_api';
 
 
+const DEFAULT_LEADER_COUNT = 10;
+
 export class Leaders extends BasePage {
-    constructor (heading, content, options) {
+    constructor (heading, content, options, leaderCount) {
         super(heading, content, options);
         this.text = new Text({
             items: [
@@ -15,6 +17,7 @@ export class Leaders extends BasePage {
             ],
             parent: this._content
         });
+        this._leaderCount = leaderCount || DEFAULT_LEADER_COUNT;
     }
 
     render() {
@@ -23,7 +26,7 @@ export class Leaders extends BasePage {
         this.text.render();
 
         let backendAPI = new BackendAPI();
-        backendAPI.getLeaders(10)
+        backendAPI.getLeaders(this._leaderCount)
             .then(response => {
                 return response.json();
             })
