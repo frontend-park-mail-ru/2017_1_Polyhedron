@@ -1,6 +1,6 @@
 
 
-import * as shapes from '../geometry_shapes';
+import {Triangle} from '../geometry_shapes/triangle';
 import {SolidBody} from '../solid_body';
 
 
@@ -15,7 +15,7 @@ const generateId = (function () {
 export class TriangleField extends SolidBody {
     constructor(height, sectorAngle, isNeutral) {
         super();
-        this._triangle = new shapes.Triangle(height, sectorAngle);
+        this._triangle = new Triangle(height, sectorAngle);
         this._isNeutral = isNeutral;
         this._isLoser = false;
 
