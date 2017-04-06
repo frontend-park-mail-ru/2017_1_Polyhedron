@@ -1,7 +1,7 @@
 'use strict';
 
 import {BasePage} from './base';
-import {Menu} from '../components/menu/menu'
+import {Menu} from '../components/menu/menu';
 
 
 export class Index extends BasePage {

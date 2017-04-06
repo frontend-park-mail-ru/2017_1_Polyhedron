@@ -1,8 +1,8 @@
 'use strict';
 
 import {BasePage} from './base';
-import {Text} from '../components/text/text'
-import {LeaderBoard} from '../components/leaderboard/leaderboard'
+import {Text} from '../components/text/text';
+import {LeaderBoard} from '../components/leaderboard/leaderboard';
 import {BackendAPI} from '../../../core/client_side/site_service/backend_api';
 
 

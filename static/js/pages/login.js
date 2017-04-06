@@ -2,7 +2,7 @@
 
 import {BasePage} from './base';
 import {SignInForm} from '../../../core/client_side/site_service/form_validation/custom_forms/sign_in_form';
-import {Form} from '../components/form/form'
+import {Form} from '../components/form/form';
 
 
 export class Login extends BasePage {
