@@ -18,7 +18,7 @@ import {Top} from './components/top/top';
                 event.preventDefault();
                 if (target.dataset.page === "logout") {
                     window.userpanel.logout();
-                    router.renderAndSave("index");
+                    router.render("/");
                 }
                 else
                     router.renderAndSave(target.dataset.page);
