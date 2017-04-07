@@ -22,12 +22,24 @@ export class Signup extends BasePage {
             ],
             parent: this._content
         });
+
+        this.authorised = new Text({
+            items: [
+                {text: 'Вы уже зарегистрированы.'},
+            ],
+            parent: this._content
+        });
     }
 
     render () {
         this._heading.innerHTML = "Регистрация";
         window.userpanel.render();
-        this.form.render();
-        this._validator = new SignUpForm();
+        if (window.user !== null) {
+            this.authorised.render();
+        }
+        else {
+            this.form.render();
+            this._validator = new SignUpForm();
+        }
     }
 }
