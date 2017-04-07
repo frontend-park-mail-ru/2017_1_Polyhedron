@@ -54,7 +54,7 @@ export class SignInForm extends Form {
                     alert('Invalid credentials');
                 } else {
                     alert('Logged in successfully');
-                    window.router.render("/");
+                    window.router.renderAndSave("/");
                 }
 
             })
