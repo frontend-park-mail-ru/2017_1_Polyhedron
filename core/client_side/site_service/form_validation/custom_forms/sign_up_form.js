@@ -69,7 +69,7 @@ export class SignUpForm extends Form {
             .then(response => {
                 if (response.status === 200) {
                     alert('Signed up successfully');
-                    window.location.replace("/");
+                    window.router.render("/");
                 } else {
                     alert('failed to sign up');
                 }

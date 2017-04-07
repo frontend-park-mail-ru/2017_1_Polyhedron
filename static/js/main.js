@@ -7,6 +7,7 @@ import {Top} from './components/top/top';
     window.backendAPI = new BackendAPI();
     window.userpanel = new Top();
     window.userpanel.render();
+    window.router = router;
 
     router.renderAndSave(window.location.pathname);
 

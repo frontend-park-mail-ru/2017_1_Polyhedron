@@ -46,17 +46,17 @@ export class SignInForm extends Form {
 
         backendAPI.login(this._fields.email.getValue(), this._fields.password.getValue())
             .then(response => {
-                if (response.status === 200) {
-                    alert('Logged in successfully');
-                    return response.json();
-                } else {
-                    alert('failed to login');
-                }
-                console.log(response);
+                return response.json();
             })
             .then(responseJson => {
-                console.log(responseJson);
-                window.location.replace("/");
+                if (responseJson.errors) {
+                    console.log(responseJson.errors);
+                    alert('Invalid credentials');
+                } else {
+                    alert('Logged in successfully');
+                    window.router.render("/");
+                }
+
             })
             .catch(err => {
                 alert('Connection failed');
