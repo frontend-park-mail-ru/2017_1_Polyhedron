@@ -23,13 +23,9 @@ export class Ball extends GameComponent {
         ];
 
         let identityMatrix = math.eye(2);
-
         let transformMatrix = math.subtract(identityMatrix, math.multiply(normMatrix, 2));
 
-        let newVelocity = math.multiply(transformMatrix, this.velocity).toArray();
-        newVelocity.forEach(x => -x);
-
-        this.velocity = newVelocity;
+        this.velocity = math.multiply(transformMatrix, this.velocity).toArray();
     }
 
     draw(canvas) {

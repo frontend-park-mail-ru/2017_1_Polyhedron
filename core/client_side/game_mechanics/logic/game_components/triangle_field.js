@@ -59,11 +59,11 @@ export class TriangleField extends GameComponent {
     }
 
     containsGlobalPoint(point) {
-        return this._triangle.containsPoint(this.toLocals(point));
+        return this._triangle.contains(this.toLocals(point));
     }
 
     containsLocalPoint(point) {
-        return this._triangle.containsPoint(point);
+        return this._triangle.contains(point);
     }
 
     reachesBottomLevel(ball) {

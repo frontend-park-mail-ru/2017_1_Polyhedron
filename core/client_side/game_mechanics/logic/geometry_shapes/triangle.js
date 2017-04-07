@@ -28,9 +28,6 @@ export class Triangle {
         const f2 = (x, y) => y < this.height - x * this.height / this.halfWidth;
         const f3 = x => -this.halfWidth < x && x < this.halfWidth;
 
-        //let [offsetX, offsetY] = offsetVec;
-        //offsetY *= -1;
-
         const pointX = point[0];
         const pointY = point[1] + this.height; // move coordinate system origin to the base center
         return pointY > 0 && f1(pointX, pointY) && f2(pointX, pointY) && f3(pointX);
@@ -47,14 +44,5 @@ export class Triangle {
      */
     getWidthOnDistance(bottomDistance) {
         return 2 * (1 - bottomDistance / this._height) * this._halfWidth;
-    }
-
-    containsPoint(point) {
-        // offsets below move coordinate system origin to the lower left corner
-        // because it is easier to write conditions in this coordinate system
-        let x = point[0] + this._halfWidth;
-        let y = point[1] + this._height;
-
-        return (y > 0) && (y <= this._height / this._halfWidth * x) && (y <= this._height * (2 - x / this._halfWidth));
     }
 }

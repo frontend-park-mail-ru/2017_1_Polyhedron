@@ -1,6 +1,8 @@
 
 
 import {GameComponent} from './game_component';
+import {Rectangle} from '../geometry_shapes/rectangle';
+import {Line} from '../geometry_shapes/line';
 
 const DEFAULT_RELATIVE_DISTANCE = 0.05;
 const DEFAULT_RELATIVE_LENGTH = 0.3;
@@ -10,6 +12,7 @@ const DEFAULT_WIDTH = 5;
 export class Platform extends GameComponent {
     constructor(length, width, isActive) {
         super();
+        this._rectangle = new Rectangle(length, width);
         this._length = length;
         this._width = width;
         this._isActive = isActive || false;
@@ -52,12 +55,15 @@ export class Platform extends GameComponent {
     }
 
     getPointArray() {
-        return [
-            [this.leftBorder, this.lowerBorder],
-            [this.rightBorder, this.lowerBorder],
-            [this.rightBorder, this.upperBorder],
-            [this.leftBorder, this.upperBorder],
-        ].map(point => this.toGlobals(point));
+        return this._rectangle.getPointArray().map(point => this.toGlobals(point));
+    }
+
+    getLineArray() {
+        const pointArray = this._rectangle.getPointArray().map(point => this.toGlobals(point));
+        const indArray = [...Array(pointArray.length).keys()];
+        const pointPairArray = indArray
+            .map(i => [pointArray[i % pointArray.length], pointArray[(i + 1) % pointArray.length]]);
+        return pointPairArray.map(pointPair => new Line(pointPair[0], pointPair[1]));
     }
 
     get leftBorder() {
@@ -85,14 +91,19 @@ export class Platform extends GameComponent {
     }
 
     inBounceZone(ball) {
-        let localBallPosition = this.toLocals(ball.position);
+        const lineArray = this.getLineArray();
+        const contacted = lineArray.filter(line => line.getClosestPointDistance(ball.position) < ball.radius);
 
-        let checkPoint = [
-            localBallPosition[0], localBallPosition[1] - ball.radius
-        ];
+        if (contacted.length === 0) {
+            return null;
+        }
 
-        return (this.leftBorder <= checkPoint[0]) && (checkPoint[0] <= this.rightBorder) &&
-            (this.lowerBorder <= checkPoint[1]) && (checkPoint[1] <= this.upperBorder);
+        return contacted[0];
+
+        const lineDistanceArray = lineArray.map(line => line.getClosestPointDistance(ball.position));
+        const inRangeArray = lineDistanceArray.map(distance => distance < ball.radius);
+
+        return inRangeArray.reduce((res, curr) => res || curr, false);
     }
 
     draw(canvas) {

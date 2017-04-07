@@ -58,8 +58,8 @@ export class GameWorld {
     }
 
     _initPlatforms() {
-        this._platforms = this._userSectors.map(sector => Platform.platformFromTriangleField(sector)); // using
-        // default parameters for platforms
+        // using default parameters for platforms
+        this._platforms = this._userSectors.map(sector => Platform.platformFromTriangleField(sector));
     }
 
     _initBall() {
@@ -98,8 +98,9 @@ export class GameWorld {
         });
 
         this.platforms.forEach(platform => {
-            if (platform.inBounceZone(this.ball)) {
-                this._handlePlatformCollision(platform, this.ball);
+            const line = platform.inBounceZone(this.ball);
+            if (line) {
+                this._handlePlatformCollision(platform, this.ball, line);
             }
         });
     }
@@ -117,9 +118,9 @@ export class GameWorld {
         }
     }
 
-    _handlePlatformCollision(platform, ball) {
+    _handlePlatformCollision(platform, ball, line) {
         if (platform != this._lastCollidedObject) {
-            ball.bounce(platform.getNorm());
+            ball.bounce(line.getPositiveNorm());
             this._lastCollidedObject = platform;
         }
     }
