@@ -1,6 +1,7 @@
 
 import {BackendAPI} from '../../backend_api';
 import {Form} from '../base_form';
+import {MESSAGE_MAP} from '../messages';
 import * as fields from '../form_fields';
 
 
@@ -51,15 +52,15 @@ export class SignInForm extends Form {
             .then(responseJson => {
                 if (responseJson.errors) {
                     console.log(responseJson.errors);
-                    alert('Invalid credentials');
+                    alert(MESSAGE_MAP.INVALID_CREDENTIALS);
                 } else {
-                    alert('Logged in successfully');
+                    alert(MESSAGE_MAP.LOGIN_SUCCESS);
                     window.router.renderAndSave("/");
                 }
 
             })
             .catch(err => {
-                alert('Connection failed');
+                alert(MESSAGE_MAP.CONNECTION_FAIL);
                 console.log(err);
             });
     }

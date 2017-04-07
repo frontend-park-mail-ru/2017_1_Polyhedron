@@ -20,8 +20,9 @@ import {Top} from './components/top/top';
                     window.userpanel.logout();
                     router.renderAndSave("/");
                 }
-                else
+                else {
                     router.renderAndSave(target.dataset.page);
+                }
             }
     });
 

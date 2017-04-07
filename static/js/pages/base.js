@@ -8,8 +8,11 @@ export class BasePage {
     }
 
     render() {
-        //override this method
+        throw new Error('Override render method or the BasePage class');
     }
 
-    reset () {}
+    reset () {
+        // this method rarely must be overrided.
+        // In most cases you need it to be empty.
+    }
 }
