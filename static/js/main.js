@@ -12,10 +12,16 @@ import {Top} from './components/top/top';
 
     document.body.addEventListener('click', event => {
         let target = event.target;
-        if (target.nodeName === "A" && target.dataset.page) {
-            event.preventDefault();
-            router.renderAndSave(target.dataset.page);
-        }
+        if (target.nodeName === "A")
+            if (target.dataset.page) {
+                event.preventDefault();
+                if (target.dataset.page === "logout") {
+                    window.userpanel.logout();
+                    router.renderAndSave("index");
+                }
+                else
+                    router.renderAndSave(target.dataset.page);
+            }
     });
 
     window.addEventListener('popstate', event => {
