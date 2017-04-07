@@ -1,0 +1,6 @@
+.text-block {
+    display: block;
+    margin: 1rem 0;
+    padding-bottom: 1rem;
+    border-bottom: 1px dashed gray;
+}

@@ -1,11 +1,24 @@
 'use strict';
 
 import {BasePage} from './base';
+import {Menu} from '../components/menu/menu';
 
 
-export class Choice extends BasePage {
+export class ChoiceGameMode extends BasePage {
+    constructor (heading, content, options) {
+        super(heading, content, options);
+        this.menu = new Menu({
+            items: [
+                {text: 'Одиночная игра', page: 'game', accented: true},
+                {text: 'Сетевая игра', page: 'waiting'}
+            ],
+            parent: this._content
+        });
+    }
+
     render () {
         this._heading.innerHTML = "Выбор режима";
-        this._content.innerHTML = this._template(this._options);
+        window.userpanel.render();
+        this.menu.render();
     }
 }

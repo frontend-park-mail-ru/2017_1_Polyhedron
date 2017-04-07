@@ -3,6 +3,7 @@ export class Router {
     constructor(viewMap, defaultView) {
         this._viewMap = viewMap || {};
         this._defaultView = defaultView;
+        this._currView = null;
     }
 
     register(url, view) {
@@ -17,9 +18,12 @@ export class Router {
 
     render(url, options) {
         let view = this._getViewByURL(url);
-        if (view) {
-            view.render(options);
+
+        if (this._currView) {
+            this._currView.reset();
         }
+        view.render(options);
+        this._currView = view;
     }
 
     renderAndSave(url, options) {

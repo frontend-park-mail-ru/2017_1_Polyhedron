@@ -1,6 +1,7 @@
 
 import {BackendAPI} from '../../backend_api';
 import {Form} from '../base_form';
+import {MESSAGE_MAP} from '../messages';
 import * as fields from '../form_fields';
 
 
@@ -15,13 +16,13 @@ const REGISTER_SELECTORS = {
     },
 
     errors: {
-        email: '#errorEmail',
-        password: '#errorPassword',
-        login: '#errorLogin',
-        passwordRepeat: '#errorPassword2',
+        email: '#error-email',
+        password: '#error-password',
+        login: '#error-login',
+        passwordRepeat: '#error-password2',
     },
 
-    submitter: '#submitSignUpButton'
+    submitter: '#submit'
 };
 
 
@@ -68,15 +69,15 @@ export class SignUpForm extends Form {
         )
             .then(response => {
                 if (response.status === 200) {
-                    alert('Signed up successfully');
-                    window.location.replace("/");
+                    alert(MESSAGE_MAP.SIGN_UP_SUCCESS);
+                    window.router.render("/");
                 } else {
-                    alert('failed to sign up');
+                    alert(MESSAGE_MAP.SIGN_UP_FAIL);
                 }
                 console.log(response);
             })
             .catch(err => {
-                alert('Connection failed');
+                alert(MESSAGE_MAP.CONNECTION_FAIL);
                 console.log(err);
             });
     }

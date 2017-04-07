@@ -1,6 +1,7 @@
 
 import {BackendAPI} from '../../backend_api';
 import {Form} from '../base_form';
+import {MESSAGE_MAP} from '../messages';
 import * as fields from '../form_fields';
 
 
@@ -13,11 +14,11 @@ const LOGIN_SELECTORS = {
     },
 
     errors: {
-        email: '#errorEmail',
-        password: '#errorPassword'
+        email: '#error-email',
+        password: '#error-password'
     },
 
-    submitter: '#submitSignInButton'
+    submitter: '#submit'
 };
 
 export class SignInForm extends Form {
@@ -46,20 +47,20 @@ export class SignInForm extends Form {
 
         backendAPI.login(this._fields.email.getValue(), this._fields.password.getValue())
             .then(response => {
-                if (response.status === 200) {
-                    alert('Logged in successfully');
-                    return response.json();
-                } else {
-                    alert('failed to login');
-                }
-                console.log(response);
+                return response.json();
             })
             .then(responseJson => {
-                console.log(responseJson);
-                window.location.replace("/");
+                if (responseJson.errors) {
+                    console.log(responseJson.errors);
+                    alert(MESSAGE_MAP.INVALID_CREDENTIALS);
+                } else {
+                    alert(MESSAGE_MAP.LOGIN_SUCCESS);
+                    window.router.renderAndSave("/");
+                }
+
             })
             .catch(err => {
-                alert('Connection failed');
+                alert(MESSAGE_MAP.CONNECTION_FAIL);
                 console.log(err);
             });
     }

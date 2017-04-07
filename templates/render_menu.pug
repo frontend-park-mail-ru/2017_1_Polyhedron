@@ -1,0 +1,3 @@
+nav.menu&attributes(locals.attrs)
+    each item in locals.items
+        a.menu__item(data-page=item.page href="#" class= item.accented ? 'menu__item_accented' : '')= item.text
