@@ -1,7 +1,6 @@
 'use strict';
 
 import {Component} from '../base';
-import {BackendAPI} from '../../../../core/client_side/site_service/backend_api';
 import * as renderTop from '../../templates/render_top';
 
 export class Top extends Component {
