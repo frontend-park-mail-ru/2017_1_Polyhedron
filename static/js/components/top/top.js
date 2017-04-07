@@ -11,8 +11,7 @@ export class Top extends Component {
     }
 
     render () {
-        let backendAPI = new BackendAPI();
-        backendAPI.getuser()
+        window.backendAPI.getuser()
             .then(response => {
                 return response.json();
             })
@@ -22,5 +21,22 @@ export class Top extends Component {
                 userpanel.innerHTML = renderTop.template();
             });
         return this;
+    }
+
+    login () {
+        window.backendAPI.getuser()
+            .then(response => {
+                return response.json();
+            })
+            .then(responseJSON => {
+                window.user = responseJSON.data;
+                const userpanel = document.querySelector(".js-top");
+                userpanel.innerHTML = renderTop.template();
+            });
+    }
+
+    logout () {
+        window.user = null;
+        window.backendAPI.logout();
     }
 }

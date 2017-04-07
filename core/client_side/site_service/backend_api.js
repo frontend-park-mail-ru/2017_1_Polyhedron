@@ -45,7 +45,7 @@ export class BackendAPI {
     }
 
     logout() {
-        return this._fetchCORS(this._urlMap.logout, METHODS.GET);
+        return this._fetchCORS(this._urlMap.logout, METHODS.POST);
     }
 
     getLeaders(leadersCountLimit) {

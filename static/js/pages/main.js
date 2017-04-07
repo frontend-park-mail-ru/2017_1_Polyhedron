@@ -9,6 +9,7 @@ import {Leaders} from './leaders';
 import {Login} from './login';
 import {Signup} from './signup';
 import {Waiting} from './waiting';
+import {Logout} from './logout';
 
 import * as pugRuntime from '../../../node_modules/pug-runtime/index';
 
@@ -31,6 +32,7 @@ export let router = new Router({
     '^/?game$': new Game(heading, content),
     '^/?leaders$': new Leaders(heading, content, {count: 10}),
     '^/?login$': new Login(heading, content),
+    '^/?logout$': new Logout(),
     '^/?signup$': new Signup(heading, content),
     '^/?waiting$': new Waiting(heading, content),
 }, new Error(heading, content));

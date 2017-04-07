@@ -1,11 +1,12 @@
 'use strict';
 import {router} from './pages/main';
+import {BackendAPI} from '../../core/client_side/site_service/backend_api'
 import {Top} from './components/top/top';
 
 (function () {
+    window.backendAPI = new BackendAPI();
     window.userpanel = new Top();
     window.userpanel.render();
-
 
     router.renderAndSave(window.location.pathname);
 

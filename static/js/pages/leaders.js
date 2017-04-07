@@ -22,7 +22,6 @@ export class Leaders extends BasePage {
 
     render() {
         this._heading.innerHTML = "Топ-10";
-        window.userpanel.render();
         this.text.render();
 
         let backendAPI = new BackendAPI();
