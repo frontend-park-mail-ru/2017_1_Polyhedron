@@ -20,12 +20,11 @@ import {Top} from './components/top/top';
                     window.userpanel.logout();
                     router.renderAndSave("/");
                 }
-                else if (target.dataset.page === "game") {
-                    router.renderAndSave(target.dataset.page);
-                    launchIntoFullscreen(document.querySelector('#game'));
-                }
                 else {
                     router.renderAndSave(target.dataset.page);
+                }
+                if (target.dataset.page === "game") {
+                    launchIntoFullscreen(document.querySelector('#game'));
                 }
             }
     });
