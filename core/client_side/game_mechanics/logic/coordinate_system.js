@@ -37,7 +37,7 @@ export class CoordinateSystem {
         return math.multiply(this._getRotationMatrix(this._angle), globalPoint).toArray();
     }
 
-    toGlobalsWithoutOffset(localPoint,) {
+    toGlobalsWithoutOffset(localPoint) {
         return math.multiply(this._getInverseRotationMatrix(this._angle), localPoint).toArray();
     }
 

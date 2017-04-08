@@ -152,7 +152,7 @@ export class Game {
 
         window.addEventListener('dblclick', () => {
             this._canvas.style.backgroundColor = 'black';
-            this._canvas.webkitRequestFullScreen()
+            this._canvas.webkitRequestFullScreen();
         });
 
         window.addEventListener('webkitfullscreenchange', () => {

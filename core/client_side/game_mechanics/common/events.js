@@ -93,5 +93,5 @@ export class ConnectionClosedEvent extends BaseEvent {}
 export class ServerErrorEvent extends BaseEvent {}
 
 
-export class BallBounced extends BaseEvent {};
+export class BallBounced extends BaseEvent {}
 

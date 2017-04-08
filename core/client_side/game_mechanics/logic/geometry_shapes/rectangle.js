@@ -37,7 +37,7 @@ export class Rectangle {
             [this._width / 2, -this._height / 2],
             [this._width / 2, this._height / 2],
             [-this._width / 2, this._height / 2]
-        ]
+        ];
     }
 
     scale(scaleFactor) {

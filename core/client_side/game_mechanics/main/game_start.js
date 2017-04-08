@@ -1,7 +1,7 @@
 
 import {Game} from './game';
 
-import {WSEndpoint} from '../network/endpoint';  //TODO remove
+//import {WSEndpoint} from '../network/endpoint';  //TODO remove
 import {GameEventDispatcher} from '../network/game_event_dispatcher';   //TODO remove
 //window.wse = new WSEndpoint();    //TODO remove
 window.disp = new GameEventDispatcher(); //TODO remove
