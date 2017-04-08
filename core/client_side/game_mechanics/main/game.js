@@ -62,7 +62,7 @@ export class Game {
 
         //TODO remove (temporary solution while multiplayer is unavailable)
         if (this._mode === MODES.single) {
-            this._bots = [1, 2, 3].map(i => new Bot(this._getPlatformByIndex(i), this._world.ball, 0.07, time));
+            this._bots = [1, 2, 3].map(i => new Bot(this._getPlatformByIndex(i), this._world.ball, 0.21, time));
         }
     }
 
@@ -141,6 +141,12 @@ export class Game {
             event => this._handleEnemyMovementEvent(event));
 
         window.addEventListener(events.WorldUpdateEvent.eventName, event => this._handleWorldUpdateEvent(event));
+
+        window.addEventListener(events.BallBounced.eventName, event => {
+            if (event.detail === this._activePlatform.id) {
+                ++this._world._score;
+            }
+        })
     }
 
     _makeIteration(time) {
@@ -220,7 +226,7 @@ export class Game {
             this._movePlatform(platform, localOffset)
         });
         */
-        let platformVelocity = 0.5;
+        let platformVelocity = 1.5;
         let localOffset = math.multiply(this._platformVelocityDirection, platformVelocity);
         this._world.movePlatform(this._getPlatformByIndex(0), localOffset);
 

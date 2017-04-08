@@ -21,6 +21,8 @@ export class GameWorld {
         this._platforms = [];
         this._ball = null;
 
+        this._score = 0; // TODO only for pretest
+
         this._initSectors();
         this._initBall();
         this._initPlatforms();
@@ -122,6 +124,8 @@ export class GameWorld {
         if (platform != this._lastCollidedObject) {
             ball.bounce(line.getPositiveNorm());
             this._lastCollidedObject = platform;
+
+            window.dispatchEvent(events.BallBounced.create(platform.id));
         }
     }
 
@@ -131,11 +135,17 @@ export class GameWorld {
         this._platforms.forEach(platform => platform.draw(canvas));
         this._ball.draw(canvas);
 
+        this._writeScore(canvas);
+    }
+
+    _writeScore(canvas) {
         const context = canvas.getContext('2d');
-        context.font = '15px Arial';
+        context.font = '30px Arial';
         context.textAlign = "center";
         context.fillStyle = "white";
-        context.fillText("Hello world", canvas.width * 0.5, canvas.height);
+
+        const message = "Вы отбили " + this._score + " мячей";
+        context.fillText(message, canvas.width * 0.5, canvas.height);
     }
 
 

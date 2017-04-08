@@ -9,6 +9,15 @@ const DEFAULT_RELATIVE_LENGTH = 0.3;
 const DEFAULT_WIDTH = 5;
 
 
+// TODO get rid of copy paste
+const generateId = (function () {
+    let id = 0;
+    return () => {
+        return ++id;
+    };
+})();
+
+
 export class Platform extends GameComponent {
     constructor(length, width, isActive) {
         super();
@@ -16,6 +25,8 @@ export class Platform extends GameComponent {
         this._length = length;
         this._width = width;
         this._isActive = isActive || false;
+
+        this.id = generateId(); // TODO refactor
     }
 
     static platformFromTriangleField(triangleField, _relativeDistance, _relativeLength, _width) {
@@ -80,18 +91,15 @@ export class Platform extends GameComponent {
 
     inBounceZone(ball) {
         const lineArray = this.getLineArray();
-        const contacted = lineArray.filter(line => line.getClosestPointDistance(ball.position) < ball.radius);
+        const contacted = lineArray
+            .filter(line => line.getClosestPointDistance(ball.position) < ball.radius)
+            .sort((line1, line2) => line1.getClosestPointDistance(ball.position) - line2.getClosestPointDistance(ball.position));
 
         if (contacted.length === 0) {
             return null;
         }
 
         return contacted[0];
-
-        const lineDistanceArray = lineArray.map(line => line.getClosestPointDistance(ball.position));
-        const inRangeArray = lineDistanceArray.map(distance => distance < ball.radius);
-
-        return inRangeArray.reduce((res, curr) => res || curr, false);
     }
 
     draw(canvas) {
