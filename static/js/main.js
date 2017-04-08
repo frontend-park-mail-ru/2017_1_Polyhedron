@@ -20,6 +20,10 @@ import {Top} from './components/top/top';
                     window.userpanel.logout();
                     router.renderAndSave("/");
                 }
+                else if (target.dataset.page === "game") {
+                    router.renderAndSave(target.dataset.page);
+                    launchIntoFullscreen(document.querySelector('#game'));
+                }
                 else {
                     router.renderAndSave(target.dataset.page);
                 }
@@ -29,6 +33,18 @@ import {Top} from './components/top/top';
     window.addEventListener('popstate', event => {
         router.render(event.state.url, event.state);
     });
+
+   function launchIntoFullscreen (element) {
+        if (element.requestFullscreen) {
+            element.requestFullscreen();
+        } else if (element.mozRequestFullScreen) {
+            element.mozRequestFullScreen();
+        } else if (element.webkitRequestFullscreen) {
+            element.webkitRequestFullscreen();
+        } else if (element.msRequestFullscreen) {
+            element.msRequestFullscreen();
+        }
+    }
 
 })();
 
