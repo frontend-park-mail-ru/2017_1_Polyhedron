@@ -33,25 +33,13 @@ export class Signup extends BasePage {
 
     render () {
         this._heading.innerHTML = "Регистрация";
-        let page = this;
-
-        window.backendAPI.getuser()
-            .then(response => {
-                return response.json();
-            })
-            .then(responseJSON => {
-                window.user = responseJSON.data;
-            })
-            .then(() => {
-                if (window.user) {
-                    page.authorised.render();
-                }
-                else {
-                    page.form.render();
-                    page._validator = new SignUpForm();
-                }
-                window.userpanel.render();
-            });
-
+        window.userpanel.render();
+        if (window.user !== null) {
+            this.authorised.render();
         }
+        else {
+            this.form.render();
+            this._validator = new SignUpForm();
+        }
+    }
 }
