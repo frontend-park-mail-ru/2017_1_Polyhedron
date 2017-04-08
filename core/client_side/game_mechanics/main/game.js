@@ -261,9 +261,9 @@ export class Game {
         let playerId = this._activeSector.id;
 
         if (sectorId == playerId) {
-            alert("You lose");
+            alert("Вы проиграли");
         } else {
-            alert("You win");
+            alert("Вы победили!");
         }
 
         this._world.userSectors.filter(sector => sector.id == sectorId).forEach(sector => sector.setLoser());

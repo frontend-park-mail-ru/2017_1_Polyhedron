@@ -31,14 +31,23 @@ export class Login extends BasePage {
 
     render () {
         this._heading.innerHTML = "Вход в игру";
-        window.userpanel.render();
 
-        if (window.user !== null) {
-            this.authorised.render();
-        }
-        else {
-            this.form.render();
-            this._validator = new SignInForm();
-        }
+        window.backendAPI.getuser()
+            .then(response => {
+                return response.json();
+            })
+            .then(responseJSON => {
+                window.user = responseJSON.data;
+                if (window.user) {
+                    this.authorised.render();
+                    console.log('already logged in');
+                }
+                else {
+                    this.form.render();
+                    this._validator = new SignInForm();
+                    console.log('not logged in');
+                }
+                window.userpanel.render();
+            });
     }
 }
