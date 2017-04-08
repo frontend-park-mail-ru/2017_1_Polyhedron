@@ -111,7 +111,9 @@ export class Game {
         let worldPosition = [this._canvas.width / 2, this._canvas.height / 2];
         let sectorHeight = Math.min(this._canvas.width, this._canvas.height) * this._fillFactor / 2;
         let ballRadius = this._ballRelativeRadius * sectorHeight;
-        let ballPosition = math.add(worldPosition, math.multiply(this._initialRelativeBallOffset, sectorHeight));
+        let ballPosition = math.add(
+            worldPosition, math.multiply([Math.random() / 2 - 1, Math.random() / 2 - 1], sectorHeight / 2)
+        );
         let ballVelocity = math.multiply(this._initialRelativeBallVelocity, sectorHeight / this._frameRate);
 
         this._world = new GameWorld(this._playersNum, sectorHeight, ballRadius, worldPosition);
@@ -146,7 +148,16 @@ export class Game {
             if (event.detail === this._activePlatform.id) {
                 ++this._world._score;
             }
-        })
+        });
+
+        window.addEventListener('dblclick', () => {
+            this._canvas.style.backgroundColor = 'black';
+            this._canvas.webkitRequestFullScreen()
+        });
+
+        window.addEventListener('webkitfullscreenchange', () => {
+            this._canvas.style.backgroundColor = 'rgba(0, 0, 0, 0)';
+        });
     }
 
     _makeIteration(time) {
