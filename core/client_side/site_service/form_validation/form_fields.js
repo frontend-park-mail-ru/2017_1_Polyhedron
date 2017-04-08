@@ -21,10 +21,10 @@ const DEFAULT_PARAMETERS = {
 
 
 const DEFAULT_TEXT_MESSAGES = {
-    short: 'Too short',
-    long: 'Too long',
-    incorrect: 'Incorrect value',
-    match: 'Not match'
+    short: 'Слишком короткий',
+    long: 'Слишком длинный',
+    incorrect: 'Недопустимое значение',
+    match: 'Не совпадает'
 };
 
 

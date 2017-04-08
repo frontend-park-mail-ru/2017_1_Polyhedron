@@ -36,7 +36,7 @@ export class Top extends Component {
 
     logout () {
         window.user = null;
-        window.backendAPI.logout();
         this.render();
+        window.backendAPI.logout();
     }
 }

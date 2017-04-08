@@ -30,7 +30,7 @@ export class Form {
         if (this.isValid()) {
             this._sendData();
         } else {
-            alert('Input valid data, please');
+            alert('Пожалуйста, введите корректные данные');
         }
     }
 
