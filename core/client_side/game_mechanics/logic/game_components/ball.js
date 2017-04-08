@@ -14,6 +14,10 @@ export class Ball extends GameComponent {
         return this._circle.radius;
     }
 
+    get shape() {
+        return this._circle;
+    }
+
     bounce(normVec) {
         let normVec0 = math.divide(normVec, math.norm(normVec));
 

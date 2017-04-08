@@ -29,6 +29,14 @@ export class GameComponent extends SolidBody {
         this._positionValidator = value;
     }
 
+    get shape() {
+        throw Error("Override this method");
+    }
+
+    scale(scaleFactor) {
+        this.shape.scale(scaleFactor);
+    }
+
     moveToWithConstraints(newPosition) {
         if (this._positionValidator(newPosition)) {
             this.moveTo(newPosition);
@@ -40,4 +48,6 @@ export class GameComponent extends SolidBody {
             this.moveBy(offsetVec);
         }
     }
+
+
 }

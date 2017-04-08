@@ -11,4 +11,8 @@ export class Circle {
     set radius(value) {
         this._radius = value;
     }
+
+    scale(scaleFactor) {
+        this._radius *= scaleFactor;
+    }
 }

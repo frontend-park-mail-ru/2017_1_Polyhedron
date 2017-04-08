@@ -66,20 +66,8 @@ export class Platform extends GameComponent {
         return pointPairArray.map(pointPair => new Line(pointPair[0], pointPair[1]));
     }
 
-    get leftBorder() {
-        return -this._length / 2;
-    }
-
-    get rightBorder() {
-        return this._length / 2;
-    }
-
-    get lowerBorder() {
-        return -this._width / 2;
-    }
-
-    get upperBorder() {
-        return this._width / 2;
+    get shape() {
+        return this._rectangle;
     }
 
     set optionalPositioningInfo(optionalInfo) {

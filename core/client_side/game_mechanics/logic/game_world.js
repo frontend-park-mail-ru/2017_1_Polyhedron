@@ -131,4 +131,13 @@ export class GameWorld {
         this._platforms.forEach(platform => platform.draw(canvas));
         this._ball.draw(canvas);
     }
+
+
+    scale(scaleFactor) {
+        //TODO fix (game world scaling sometimes kills bots and does not move objects to corresponding places)
+        this._userSectors.forEach(sector => sector.scale(scaleFactor));
+        this._neutralSectors.forEach(sector => sector.scale(scaleFactor));
+        this._platforms.forEach(platform => platform.scale(scaleFactor));
+        this._ball.scale(scaleFactor);
+    }
 }

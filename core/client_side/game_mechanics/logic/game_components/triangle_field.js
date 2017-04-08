@@ -38,6 +38,10 @@ export class TriangleField extends GameComponent {
         return this._id;
     }
 
+    get shape() {
+        return this._triangle;
+    }
+
     getPointArray() {
         return this._triangle.getPointArray().map(point => this.toGlobals(point));
     }

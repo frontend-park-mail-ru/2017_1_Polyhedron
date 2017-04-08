@@ -45,4 +45,9 @@ export class Triangle {
     getWidthOnDistance(bottomDistance) {
         return 2 * (1 - bottomDistance / this._height) * this._halfWidth;
     }
+
+    scale(scaleFactor) {
+        this._height *= scaleFactor;
+        this._halfWidth *= scaleFactor;
+    }
 }
