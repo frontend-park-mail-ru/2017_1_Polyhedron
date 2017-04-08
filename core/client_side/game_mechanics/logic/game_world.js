@@ -130,6 +130,12 @@ export class GameWorld {
         this._neutralSectors.forEach(sector => sector.draw(canvas));
         this._platforms.forEach(platform => platform.draw(canvas));
         this._ball.draw(canvas);
+
+        const context = canvas.getContext('2d');
+        context.font = '15px Arial';
+        context.textAlign = "center";
+        context.fillStyle = "white";
+        context.fillText("Hello world", canvas.width * 0.5, canvas.height);
     }
 
 
