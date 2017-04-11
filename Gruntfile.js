@@ -11,18 +11,23 @@ module.exports = function(grunt) {
 
         webpack: {
 
-            build_index: {
+            pre_build_index: {
                 progress: true,
                 entry: "./static/js/main.js",
                 output: {
                     path: path.resolve(__dirname, 'dist'),
-                    filename: 'index_bundle.js'
+                    filename: 'temp_index_bundle.js'
+                },
+
+                resolve : {
+                    extensions: [".ts", ".js"]
                 },
 
                 module: {
-                    loaders: [
+                    rules: [
                         {
-                            loader: "babel-loader",
+                            test: /\.tsx?$/,
+                            loader: 'ts-loader',
 
                             include: [
                                 path.resolve(__dirname, 'static/js'),
@@ -30,16 +35,46 @@ module.exports = function(grunt) {
                                 path.resolve(__dirname, 'core'),
                                 path.resolve(__dirname, 'core/_lib'),
                             ],
+                        },
+
+                    ]
+                }
+            },
+
+            build_index: {
+                progress: true,
+                entry: "./dist/temp_index_bundle.js",
+                output: {
+                    path: path.resolve(__dirname, 'dist'),
+                    filename: 'index_bundle.js'
+                },
+
+                resolve : {
+                    extensions: [".ts", ".js"]
+                },
+
+                module: {
+                    rules: [
+                        {
+                            loader: "babel-loader",
+
+                            include: [
+                                path.resolve(__dirname, 'dist')
+                            ],
 
                             test: /\.js$/,
+
 
                             query: {
                                 plugins: ['transform-runtime'],
                                 presets: ['es2015'],
+
                             }
+
                         },
+
                     ]
-                },
+                }
 
                 //plugins: [
                 //    new webpack.optimize.UglifyJsPlugin({minimize: true})

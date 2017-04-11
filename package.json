@@ -16,6 +16,7 @@
   "author": "",
   "homepage": "https://polyhedron.herokuapp.com/",
   "devDependencies": {
+    "awesome-typescript-loader": "^3.1.2",
     "babel-core": "^6.23.1",
     "babel-loader": "^6.3.2",
     "babel-plugin-transform-runtime": "^6.23.0",
@@ -35,6 +36,9 @@
     "node-fetch": "^1.6.3",
     "path": "^0.12.7",
     "pug": "^2.0.0-beta11",
+    "source-map-loader": "^0.2.1",
+    "ts-loader": "^2.0.3",
+    "typescript": "^2.2.2",
     "webpack": "^2.2.1"
   },
   "dependencies": {

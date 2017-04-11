@@ -19,7 +19,9 @@ export class SolidBody extends CoordinateSystem {
     }
 
     set velocity(velocity) {
-        this._velocity = velocity;
+        if (velocity) {
+            this._velocity = velocity;
+        }
     }
 
     get angularVelocity() {

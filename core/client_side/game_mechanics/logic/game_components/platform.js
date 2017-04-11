@@ -3,6 +3,7 @@
 import {GameComponent} from './game_component';
 import {Rectangle} from '../geometry_shapes/rectangle';
 import {Line} from '../geometry_shapes/line';
+import * as math from '../../../../_lib/math';
 
 const DEFAULT_RELATIVE_DISTANCE = 0.05;
 const DEFAULT_RELATIVE_LENGTH = 0.3;
@@ -81,25 +82,25 @@ export class Platform extends GameComponent {
         return this._rectangle;
     }
 
-    set optionalPositioningInfo(optionalInfo) {
-        this._optionalPositioningInfo = optionalInfo;
-    }
-
     getNorm() {
         return this.toGlobalsWithoutOffset([0, 1]);
     }
 
-    inBounceZone(ball) {
+    getBouncePoint(ball) {
         const lineArray = this.getLineArray();
-        const contacted = lineArray
-            .filter(line => line.getClosestPointDistance(ball.position) < ball.radius)
-            .sort((line1, line2) => line1.getClosestPointDistance(ball.position) - line2.getClosestPointDistance(ball.position));
+        const points = lineArray
+            .map(line => line.getClosestPoint(ball.position))
+            .map(point => {
+                return {
+                    point: point,
+                    distance: math.norm(math.subtract(point, ball.position))
+                }
+            })
+            .filter(obj => obj.distance <= ball.radius)
+            .sort((obj1, obj2) => obj1.distance - obj2.distance)
+            .map(obj => obj.point);
 
-        if (contacted.length === 0) {
-            return null;
-        }
-
-        return contacted[0];
+        return points.length === 0 ? null : points[0];
     }
 
     draw(canvas) {

@@ -43,9 +43,12 @@ export class GameComponent extends SolidBody {
         }
     }
 
-    moveByWithConstraints(offsetVec) {
+    moveByWithConstraints(offsetVec, velocityVector) {
         if (this._positionValidator(offsetVec)) {
             this.moveBy(offsetVec);
+            this.velocity = velocityVector;
+        } else {
+            this.velocity = [0, 0];
         }
     }
 

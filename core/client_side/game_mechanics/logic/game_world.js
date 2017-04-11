@@ -69,9 +69,9 @@ export class GameWorld {
         this._ball.moveTo(this._position);
     }
 
-    movePlatform(platform, localOffsetVector) {
+    movePlatform(platform, localOffsetVector, velocityVector) {
         let globalOffset = platform.toGlobalsWithoutOffset(localOffsetVector);
-        platform.moveByWithConstraints(globalOffset);
+        platform.moveByWithConstraints(globalOffset, velocityVector);
     }
 
     updateBallState(position, velocity) {
@@ -100,9 +100,9 @@ export class GameWorld {
         });
 
         this.platforms.forEach(platform => {
-            const line = platform.inBounceZone(this.ball);
-            if (line) {
-                this._handlePlatformCollision(platform, this.ball, line);
+            const point = platform.getBouncePoint(this.ball);
+            if (point) {
+                this._handlePlatformCollision(platform, this.ball, point);
             }
         });
     }
@@ -115,14 +115,14 @@ export class GameWorld {
 
     _handleNeutralSectorCollision(sector, ball) {
         if (sector != this._lastCollidedObject) {
-            ball.bounce(sector.getBottomNorm());
+            ball.bounceNorm(sector.getBottomNorm());
             this._lastCollidedObject = sector;
         }
     }
 
-    _handlePlatformCollision(platform, ball, line) {
+    _handlePlatformCollision(platform, ball, point) {
         if (platform != this._lastCollidedObject) {
-            ball.bounce(line.getPositiveNorm());
+            ball.bouncePoint(point, platform.velocity);
             this._lastCollidedObject = platform;
 
             window.dispatchEvent(events.BallBounced.create(platform.id));

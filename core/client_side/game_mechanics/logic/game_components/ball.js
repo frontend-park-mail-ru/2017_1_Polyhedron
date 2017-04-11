@@ -18,18 +18,31 @@ export class Ball extends GameComponent {
         return this._circle;
     }
 
-    bounce(normVec) {
-        let normVec0 = math.divide(normVec, math.norm(normVec));
+    bounceNorm(normVec, _transportVelocity) {
+        const transportVelocity = _transportVelocity ? math.multiply(_transportVelocity, -1) : [0, 0];
+        const bounceMatrix = this._getBounceMatrix(normVec);
+        const relVelocity = math.subtract(this.velocity, transportVelocity);
 
-        let normMatrix = [
+        this.velocity = math.add(transportVelocity, math.multiply(bounceMatrix, relVelocity)).toArray();
+
+        //this.velocity = math.multiply(transformMatrix, this.velocity).toArray();
+    }
+
+    bouncePoint(point, transportVelocity) {
+        console.log(transportVelocity);
+        this.bounceNorm(math.subtract(this.position, point), transportVelocity);
+    }
+
+    _getBounceMatrix(normVec) {
+        const normVec0 = math.divide(normVec, math.norm(normVec));
+
+        const normMatrix = [
             [normVec0[0] * normVec0[0], normVec0[0] * normVec0[1]],
             [normVec0[0] * normVec0[1], normVec0[1] * normVec0[1]]
         ];
 
-        let identityMatrix = math.eye(2);
-        let transformMatrix = math.subtract(identityMatrix, math.multiply(normMatrix, 2));
-
-        this.velocity = math.multiply(transformMatrix, this.velocity).toArray();
+        const identityMatrix = math.eye(2);
+        return math.subtract(identityMatrix, math.multiply(normMatrix, 2));
     }
 
     draw(canvas) {

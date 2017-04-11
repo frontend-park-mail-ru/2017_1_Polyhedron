@@ -10,9 +10,9 @@ const KEY_UP = 38;
 const KEY_DOWN = 40;
 
 const DEFAULT_PLAYERS_NUM = 4;
-const DEFAULT_FRAME_RATE = 60;
+const DEFAULT_FRAME_RATE = 100;
 const DEFAULT_FILL_FACTOR = 0.8;
-const DEFAULT_BALL_RELATIVE_RADIUS = 0.05;
+const DEFAULT_BALL_RELATIVE_RADIUS = 0.08;
 const DEFAULT_RELATIVE_BALL_OFFSET = [0.1, 0.05];
 const DEFAULT_RELATIVE_BALL_VELOCITY = [0.25, 0.25];
 
@@ -163,7 +163,7 @@ export class Game {
     _makeIteration(time) {
         this._redraw();
         this._world._makeIteration(time);
-        this._handleUserInput();
+        this._handleUserInput(time);
 
         let activePlatformOffset = math.subtract(this._activePlatform.position, this._lastPlatformPosition);
         if (math.norm(activePlatformOffset) > PLATFORM_TOLERANCE) {
@@ -227,7 +227,7 @@ export class Game {
         }
     }
 
-    _handleUserInput () {
+    _handleUserInput (time) {
         // TODO refactor. Just testing
         /*
         this._world.platforms.forEach(platform => {
@@ -237,9 +237,9 @@ export class Game {
             this._movePlatform(platform, localOffset)
         });
         */
-        let platformVelocity = 1.5;
+        let platformVelocity = 3;
         let localOffset = math.multiply(this._platformVelocityDirection, platformVelocity);
-        this._world.movePlatform(this._getPlatformByIndex(0), localOffset);
+        this._world.movePlatform(this._getPlatformByIndex(0), localOffset, math.divide(localOffset, 5 * time));
 
         let offset = localOffset[0];
         if (offset > 1) {
