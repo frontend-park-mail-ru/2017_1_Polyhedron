@@ -1,8 +1,8 @@
 
 import * as math from '../../../_lib/math';
 import * as events from '../common/events';
-import {GameWorld} from '../logic/game_world';
-import {Bot} from '../logic/ai/bot';
+import {GameWorld} from './game_world';
+import {Bot} from '../ai/bot';
 
 const KEY_LEFT = 39;
 const KEY_RIGHT = 37;

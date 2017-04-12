@@ -1,7 +1,7 @@
 
 
 import {Triangle} from '../geometry_shapes/triangle';
-import {GameComponent} from './game_component';
+import {GameComponent} from '../base/game_component';
 
 
 const generateId = (function () {

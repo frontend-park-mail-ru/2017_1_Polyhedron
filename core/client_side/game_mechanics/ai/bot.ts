@@ -1,25 +1,40 @@
+'use strict';
 
-import * as math from '../../../../_lib/math';
+import * as math from '../../../_lib/math';
+import {Configurable, FromConfig, Initializable} from "../experimental/decorators";
+import {config} from "../config";
+import {Platform} from "../game_components/platform";
+import {Ball} from "../game_components/ball";
 
 
-const DEFAULT_VELOCITY = 5;
-const MILLISECONDS_PER_SECOND = 1000;
-const DEFAULT_FRAME_RATE = 60;
-
-
+@Initializable
+@Configurable(config, 'bot')
 export class Bot {
-    constructor(platform, ball, velocity, time) {
+    private _platform: Platform;
+    private _ball: Ball;
+    private _velocity: number;
+    private _time: number;
+    private _setIntervalID;
+
+    constructor(platform, ball, velocity?, time?) {
         this._platform = platform;
         this._ball = ball;
-        this._velocity = velocity || DEFAULT_VELOCITY;
-
-        this._time = time || MILLISECONDS_PER_SECOND / DEFAULT_FRAME_RATE;
+        this._velocity = velocity;
+        this._time = time;
         this._setIntervalID = null;
-
-        this._init();
     }
 
-    _init() {
+    @FromConfig('velocity')
+    get velocity() {
+        return this._velocity;
+    }
+
+    @FromConfig('time')
+    get time() {
+        return this._time;
+    }
+
+    init() {
         this._setIntervalID = setInterval(() => {
             this._movePlatform(this._time);
         }, this._time);

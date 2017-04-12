@@ -1,39 +1,39 @@
 
-import * as math from '../../../../_lib/math';
+import * as math from '../../../_lib/math';
 import {Circle} from '../geometry_shapes/circle';
-import {GameComponent} from './game_component';
+import {GameComponent} from '../base/game_component';
+import {Drawable} from '../experimental/interfaces';
 
 
-export class Ball extends GameComponent {
-    constructor(radius) {
+export class Ball extends GameComponent implements Drawable {
+    private _circle: Circle;
+
+    constructor(radius: number) {
         super();
         this._circle = new Circle(radius);
     }
 
-    get radius() {
+    get radius(): number {
         return this._circle.radius;
     }
 
-    get shape() {
+    get shape(): Circle {
         return this._circle;
     }
 
-    bounceNorm(normVec, _transportVelocity) {
-        const transportVelocity = _transportVelocity ? math.multiply(_transportVelocity, -1) : [0, 0];
+    bounceNorm(normVec: number[], _transportVelocity: number[] = [0, 0]) {
+        const transportVelocity = math.multiply(_transportVelocity, -1);
         const bounceMatrix = this._getBounceMatrix(normVec);
         const relVelocity = math.subtract(this.velocity, transportVelocity);
 
         this.velocity = math.add(transportVelocity, math.multiply(bounceMatrix, relVelocity)).toArray();
-
-        //this.velocity = math.multiply(transformMatrix, this.velocity).toArray();
     }
 
-    bouncePoint(point, transportVelocity) {
-        console.log(transportVelocity);
+    bouncePoint(point: number[], transportVelocity: number[]) {
         this.bounceNorm(math.subtract(this.position, point), transportVelocity);
     }
 
-    _getBounceMatrix(normVec) {
+    _getBounceMatrix(normVec: number[]) {
         const normVec0 = math.divide(normVec, math.norm(normVec));
 
         const normMatrix = [
@@ -45,9 +45,10 @@ export class Ball extends GameComponent {
         return math.subtract(identityMatrix, math.multiply(normMatrix, 2));
     }
 
-    draw(canvas) {
-        let context = canvas.getContext("2d");
-        let position = this.position;
+    draw(canvas: HTMLCanvasElement) {
+        const context = canvas.getContext("2d");
+        const position = this.position;
+
         context.beginPath();
         context.arc(position[0], position[1], this.radius, 0, 2 * Math.PI, false);
         context.fillStyle = 'green';

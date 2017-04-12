@@ -1,7 +1,7 @@
 'use strict';
 
-import {CoordinateSystem} from '../coordinate_system';
-import * as math from '../../../../_lib/math';
+import {CoordinateSystem} from '../base/coordinate_system';
+import * as math from '../../../_lib/math';
 
 
 export class Line {

@@ -1,33 +1,29 @@
 
 
-import {GameComponent} from './game_component';
+import {GameComponent} from '../base/game_component';
 import {Rectangle} from '../geometry_shapes/rectangle';
 import {Line} from '../geometry_shapes/line';
-import * as math from '../../../../_lib/math';
+import * as math from '../../../_lib/math';
+import {getIdGenerator} from '../common/id_generator'
 
 const DEFAULT_RELATIVE_DISTANCE = 0.05;
 const DEFAULT_RELATIVE_LENGTH = 0.3;
 const DEFAULT_WIDTH = 5;
 
 
-// TODO get rid of copy paste
-const generateId = (function () {
-    let id = 0;
-    return () => {
-        return ++id;
-    };
-})();
-
-
 export class Platform extends GameComponent {
-    constructor(length, width, isActive) {
+    private static generateId = getIdGenerator();
+    private _rectangle: Rectangle;
+    private _isActive: boolean;
+
+    readonly id: number;
+
+    constructor(length, width, isActive = false) {
         super();
         this._rectangle = new Rectangle(length, width);
-        this._length = length;
-        this._width = width;
-        this._isActive = isActive || false;
+        this._isActive = isActive;
 
-        this.id = generateId(); // TODO refactor
+        this.id = Platform.generateId();
     }
 
     static platformFromTriangleField(triangleField, _relativeDistance, _relativeLength, _width) {

@@ -1,9 +1,9 @@
 
 import * as math from '../../../_lib/math';
 
-import {Ball} from './game_components/ball';
-import {Platform} from './game_components/platform';
-import {TriangleField} from './game_components/triangle_field';
+import {Ball} from '../game_components/ball';
+import {Platform} from '../game_components/platform';
+import {TriangleField} from '../game_components/triangle_field';
 
 import * as events from '../common/events';
 
