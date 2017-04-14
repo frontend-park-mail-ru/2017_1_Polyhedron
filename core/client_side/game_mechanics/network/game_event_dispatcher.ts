@@ -8,7 +8,7 @@ export class GameEventDispatcher {
     }
 
     _setListeners() {
-        window.addEventListener(events.PlatformMovedEvent.eventName, event => this.handlePlatformMovedEvent(event));
+        window.addEventListener(events.gameEvents.PlatformMovedEvent.eventName, event => this.handlePlatformMovedEvent(event));
 
         /*
         window.addEventListener(events.ServerMessageEvent.eventName, event => {
@@ -24,7 +24,7 @@ export class GameEventDispatcher {
         });
         */
 
-        window.addEventListener(events.ServerMessageEvent.eventName, function (event: CustomEvent) {
+        window.addEventListener(events.networkEvents.ServerMessageEvent.eventName, function (event: CustomEvent) {
             const detail = event.detail;
             const gameEventClass = detail.type;
             const data = detail.data;
@@ -38,8 +38,8 @@ export class GameEventDispatcher {
     }
 
     handlePlatformMovedEvent(event) {
-        window.dispatchEvent(events.ClientMessageEvent.create({
-            type: events.PlatformMovedEvent.eventName,
+        window.dispatchEvent(events.networkEvents.ClientMessageEvent.create({
+            type: events.gameEvents.PlatformMovedEvent.eventName,
             data: event.detail
         }));
     }

@@ -1,5 +1,7 @@
 'use strict';
+import {Service} from "../experimental/decorators";
 
+@Service
 export class EventBus {
     private _listeners: {} = {};
 

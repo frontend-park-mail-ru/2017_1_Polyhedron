@@ -1,5 +1,5 @@
 'use strict';
-import {Context} from "./service";
+import {Context} from "./context";
 
 
 interface NamedConstructorFunc {

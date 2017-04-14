@@ -20,80 +20,70 @@ export abstract class BaseEvent {
 }
 
 
-export class PlatformMovedEvent extends BaseEvent {}
+export namespace networkEvents {
+    export class ServerErrorEvent extends BaseEvent {}
 
 
-export class BallPositionCorrectionEvent extends BaseEvent {}
+    export class ServerMessageEvent extends BaseEvent {}
 
 
-export class DefeatEvent extends BaseEvent {
-    static create(eventDetail) {
-        const playerIndex = eventDetail.playerIndex;
-        const looserIndex = eventDetail.looserIndex;
+    export class ClientMessageEvent extends BaseEvent {}
 
-        return new CustomEvent(this._name, {
-            detail: looserIndex - playerIndex
-        });
+
+    export class ConnectionClosedEvent extends BaseEvent {}
+
+
+    export class WorldUpdateEvent extends BaseEvent {
+        static create(eventDetail) {
+            const detail = {
+                platformsUpdate: [],
+
+                ballUpdate: {}
+            };
+
+            detail.platformsUpdate = eventDetail.platformsUpdate.map(
+                platformUpdate => {
+                    return {
+                        index: platformUpdate.index - eventDetail.playerIndex,
+                        position: platformUpdate.position
+                    };
+                }
+            );
+
+            detail.ballUpdate = eventDetail.ballUpdate;
+
+            return new CustomEvent(this._name, {
+                detail: detail
+            });
+        }
+    }
+
+
+    export class DefeatEvent extends BaseEvent {
+        static create(eventDetail) {
+            const playerIndex = eventDetail.playerIndex;
+            const looserIndex = eventDetail.looserIndex;
+
+            return new CustomEvent(this._name, {
+                detail: looserIndex - playerIndex
+            });
+        }
     }
 }
 
 
-export class ClientDefeatEvent extends BaseEvent {}
+export namespace gameEvents {
+    export class PlatformMovedEvent extends BaseEvent {}
 
 
-export class EnemyPositionCorrectionEvent extends BaseEvent {
-    static create(eventDetail) {
-        const playerIndex = eventDetail.playerIndex;
-        const enemyIndex = eventDetail.enemyIndex;
-        const offset = eventDetail.offset;
+    export class ClientDefeatEvent extends BaseEvent {}
 
-        return new CustomEvent(this._name, {
-            detail: {
-                index: enemyIndex - playerIndex,
-                offset: offset
-            }
-        });
-    }
+
+    export class BallBounced extends BaseEvent {}
 }
 
 
-export class WorldUpdateEvent extends BaseEvent {
-    static create(eventDetail) {
-        const detail = {
-            platformsUpdate: [],
-
-            ballUpdate: {}
-        };
-
-        detail.platformsUpdate = eventDetail.platformsUpdate.map(
-            platformUpdate => {
-                return {
-                    index: platformUpdate.index - eventDetail.playerIndex,
-                    position: platformUpdate.position
-                };
-            }
-        );
-
-        detail.ballUpdate = eventDetail.ballUpdate;
-
-        return new CustomEvent(this._name, {
-            detail: detail
-        });
-    }
-}
 
 
-export class ServerMessageEvent extends BaseEvent {}
 
-
-export class ClientMessageEvent extends BaseEvent {}
-
-
-export class ConnectionClosedEvent extends BaseEvent {}
-
-
-export class ServerErrorEvent extends BaseEvent {}
-
-
-export class BallBounced extends BaseEvent {}
 

@@ -42,12 +42,14 @@ export class Bot {
     }
 
     _movePlatform(time) {
+        /*
         const offsetVector = math.multiply(this._getOffsetDirection(), this._velocity * time);
         const xOffset = [offsetVector[0], 0];
         const yOffset = [0, offsetVector[1]];
 
         this._platform.moveByWithConstraints(xOffset);
         this._platform.moveByWithConstraints(yOffset);
+        */
     }
 
     _getOffsetDirection() {
@@ -60,10 +62,3 @@ export class Bot {
         return this._platform.toGlobalsWithoutOffset(localDirection);
     }
 }
-
-/*
-const ball = new Ball(100);
-const platform = new Platform(100, 200);
-const bot = new Bot(platform, ball);
-console.log(bot.velocity);
-*/

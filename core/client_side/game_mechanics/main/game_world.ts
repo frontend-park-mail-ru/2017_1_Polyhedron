@@ -7,9 +7,14 @@ import {TriangleField} from '../game_components/triangle_field';
 
 import * as events from '../event_system/events';
 import {GameComponent} from "../base/game_component";
+import {Autowired} from "../experimental/decorators";
+import {EventBus} from "../event_system/event_bus";
 
 
 export class GameWorld {
+    @Autowired(EventBus)
+    private eventBus: EventBus;
+
     private _userNum: number;
     private _sectorAngle: number;
     private _sectorHeight: number;
@@ -17,7 +22,7 @@ export class GameWorld {
     private _position: number[];
     private _userSectors: TriangleField[];
     private _neutralSectors: TriangleField[];
-    public _platforms: Platform[];  //TODO fix
+    public _platforms: Platform[];  //TODO back to private
     private _ball: Ball;
     private _score: number;
 
@@ -125,7 +130,8 @@ export class GameWorld {
         if (sector != this._lastCollidedObject) {
             ball.bounceNorm(sector.getBottomNorm());
             this._lastCollidedObject = sector;
-            //window.dispatchEvent(events.ClientDefeatEvent.create(sector.id));
+
+            this.eventBus.dispatchEvent(events.gameEvents.ClientDefeatEvent.create(sector.id));
         }
     }
 

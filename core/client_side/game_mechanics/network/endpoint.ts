@@ -41,11 +41,11 @@ export class WSEndpoint {
 
     _initSocket() {
         this._socket.onmessage = event => {
-            window.dispatchEvent(events.ServerMessageEvent.create(JSON.parse(event.data)));
+            window.dispatchEvent(events.networkEvents.ServerMessageEvent.create(JSON.parse(event.data)));
         };
 
         this._socket.onclose = () => {
-            window.dispatchEvent(events.ConnectionClosedEvent.create());
+            window.dispatchEvent(events.networkEvents.ConnectionClosedEvent.create());
         };
 
         /*
@@ -55,12 +55,12 @@ export class WSEndpoint {
         */
         this._socket.onerror = function (event: ErrorEvent) {
             //window.dispatchEvent(events.ServerErrorEvent.create(event.data));
-            window.dispatchEvent(events.ServerErrorEvent.create()); // TODO fix
+            window.dispatchEvent(events.networkEvents.ServerErrorEvent.create()); // TODO fix
         };
     }
 
     _setListeners() {
-        window.addEventListener(events.ClientMessageEvent.eventName, function (event: CustomEvent) {
+        window.addEventListener(events.networkEvents.ClientMessageEvent.eventName, function (event: CustomEvent) {
             const detail = event.detail;
             this.sendMessage(detail.type, detail.data)
         });

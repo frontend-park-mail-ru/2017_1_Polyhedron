@@ -4,6 +4,8 @@ import * as events from '../event_system/events';
 import {GameWorld} from './game_world';
 import {Bot} from '../ai/bot';
 import {GameComponent} from "../base/game_component";
+import {Autowired} from "../experimental/decorators";
+import {EventBus} from "../event_system/event_bus";
 
 const KEY_LEFT = 39;
 const KEY_RIGHT = 37;
@@ -30,6 +32,9 @@ const DEFAULT_MODE = MODES.single;
 
 
 export class Game {
+    @Autowired(EventBus)
+    private eventBus;
+
     private _canvas: HTMLCanvasElement;
     private _context: CanvasRenderingContext2D;
     private _playersNum: number;
@@ -155,19 +160,16 @@ export class Game {
         document.addEventListener("keydown", event => this._handleKeyDown(event));
         document.addEventListener("keyup", event => this._handleKeyUp(event));
 
-        window.addEventListener(events.DefeatEvent.eventName,
+        window.addEventListener(events.networkEvents.DefeatEvent.eventName,
             event => this._handleDefeatEvent(event));
 
+        /*
         window.addEventListener(events.ClientDefeatEvent.eventName,
             event => this._handleClientDefeatEvent(event));
+        */
+        this.eventBus.addEventListener(events.gameEvents.ClientDefeatEvent.eventName, event => this._handleClientDefeatEvent(event));
 
-        window.addEventListener(events.BallPositionCorrectionEvent.eventName,
-            event => this._handleBallPositionCorrectionEvent(event));
-
-        window.addEventListener(events.EnemyPositionCorrectionEvent.eventName,
-            event => this._handleEnemyMovementEvent(event));
-
-        window.addEventListener(events.WorldUpdateEvent.eventName, event => this._handleWorldUpdateEvent(event));
+        window.addEventListener(events.networkEvents.WorldUpdateEvent.eventName, event => this._handleWorldUpdateEvent(event));
 
         /*
         window.addEventListener(events.BallBounced.eventName, event => {
@@ -176,7 +178,7 @@ export class Game {
             }
         });
         */
-        window.addEventListener(events.BallBounced.eventName, function (event: CustomEvent) {
+        window.addEventListener(events.gameEvents.BallBounced.eventName, function (event: CustomEvent) {
             if (event.detail === this._activePlatform.id) {
                 ++this._world._score;
             }
@@ -317,11 +319,6 @@ export class Game {
         this.stop();
     }
 
-    _handleBallPositionCorrectionEvent(event) {
-        console.log("Ball position corrected");
-        this._world.ball.moveTo(event.detail);
-    }
-
     _handleWorldUpdateEvent(event) {
         let gameUpdate = event.detail;
 
@@ -330,14 +327,6 @@ export class Game {
         });
 
         this._world.updateBallState(gameUpdate.ballUpdate.position, gameUpdate.ballUpdate.velocity);
-    }
-
-    _handleEnemyMovementEvent(event) {
-        console.log("Enemy moved");
-        let detail = event.detail;
-
-        let platform = this._getPlatformByIndex(detail.index);
-        this._world.movePlatform(platform, math.multiply([1, 0], detail.offset));
     }
 
     _redraw() {
