@@ -6,5 +6,11 @@ export const config = {
     bot: {
         velocity: 5,
         time: MILLISECONDS_PER_SECOND / FRAME_RATE
+    },
+
+    platform: {
+        relativeDistance: 0.05,
+        relativeLength: 0.3,
+        width: 5
     }
 };

@@ -1,8 +1,8 @@
 'use strict';
 import {Context} from "./context";
 import NamedConstructible = interfaces.NamedConstructible;
-import ServiceConstructionData = interfaces.ServiceConstructionData;
 import Constructible = interfaces.Constructible;
+import ContextConfig = interfaces.ContextConfig;
 
 namespace interfaces {
     export interface NamedConstructible {
@@ -16,9 +16,15 @@ namespace interfaces {
     }
 
 
-    export interface ServiceConstructionData {
+    interface ServiceInfo {
         cls: NamedConstructible;
         args?: any[];
+    }
+
+
+    export interface ContextConfig {
+        serviceInfo: ServiceInfo[];
+        dataSources: {};
     }
 }
 
@@ -62,6 +68,7 @@ export function Configurable(config, path?: string) {
 
         return class extends constructor {
             private config;
+            static config = locator.getService(configName);
 
             constructor(...args: any[]) {
                 super(...args);
@@ -90,10 +97,12 @@ export function FromConfig(name?: string) {
 }
 
 
-export function Application (registrationList: ServiceConstructionData[]) {
+export function Application (config: ContextConfig) {
     const locator = Context.getInstance();
 
-    registrationList.forEach(consData => {
+    //config.dataSources.forEach()
+
+    config.serviceInfo.forEach(consData => {
         locator.add(consData.cls.name, new consData.cls(...consData.args));
     });
 

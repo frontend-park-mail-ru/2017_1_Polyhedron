@@ -9,6 +9,7 @@ export abstract class GameComponent extends SolidBody implements Scalable{
 
     private _anchor: number[];
     private _positionValidator: validatorType;
+    static config;
 
     constructor(
         anchor: number[] = [0, 0],

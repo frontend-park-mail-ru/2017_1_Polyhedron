@@ -40,7 +40,7 @@ export class Game {
     private _initialRelativeBallOffset: number[];
     private _initialRelativeBallVelocity: number[];
     private _ballRelativeRadius: number;
-    private _platformVelocityDirection: number[];
+    private _platformVelocityDirection: number[] = [0, 0];
 
 
     private _lastCollidedObject: GameComponent;

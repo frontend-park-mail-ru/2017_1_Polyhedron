@@ -6,12 +6,11 @@ import {Line} from '../geometry_shapes/line';
 import * as math from '../../../_lib/math';
 import {getIdGenerator} from '../common/id_generator'
 import {TriangleField} from "./triangle_field";
-
-const DEFAULT_RELATIVE_DISTANCE = 0.05;
-const DEFAULT_RELATIVE_LENGTH = 0.3;
-const DEFAULT_WIDTH = 5;
+import {Configurable} from "../experimental/decorators";
+import {config} from "../configs/game_config";
 
 
+@Configurable(config, 'platform')
 export class Platform extends GameComponent {
     private static generateId = getIdGenerator();
     private _rectangle: Rectangle;
@@ -28,9 +27,9 @@ export class Platform extends GameComponent {
     }
 
     static platformFromTriangleField(triangleField: TriangleField, _relativeDistance?, _relativeLength?, _width?) {
-        const relativeDistance = _relativeDistance || DEFAULT_RELATIVE_DISTANCE;
-        const relativeLength = _relativeLength || DEFAULT_RELATIVE_LENGTH;
-        const width = _width || DEFAULT_WIDTH;
+        const relativeDistance = _relativeDistance || this.config.relativeDistance;
+        const relativeLength = _relativeLength || this.config.relativeLength;
+        const width = _width || this.config.width;
 
         const position = triangleField.toGlobals([0, -triangleField.height * (1 - relativeDistance)]); // using such
         // coordinates because triangleField coordinate system origin is in the topmost corner.
