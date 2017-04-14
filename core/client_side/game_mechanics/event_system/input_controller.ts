@@ -18,7 +18,7 @@ export class InputController {
     private _upPressed: boolean;
     private _downPressed: boolean;
 
-    private _direction: number[];
+    private _direction: number[] = [0, 0];
 
     constructor() {
         this._setListeners();
@@ -26,13 +26,11 @@ export class InputController {
 
     _setListeners() {
         document.addEventListener("keydown", event => {
-            console.log("Key down");
             this._handleKeyDown(event);
             this.eventBus.dispatchEvent(events.controllerEvents.ArrowDirectionEvent.create(this._direction));
         });
 
         document.addEventListener("keyup", event => {
-            console.log("Key up");
             this._handleKeyUp(event);
             this.eventBus.dispatchEvent(events.controllerEvents.ArrowDirectionEvent.create(this._direction));
         });

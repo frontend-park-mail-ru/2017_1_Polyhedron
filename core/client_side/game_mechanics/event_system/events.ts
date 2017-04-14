@@ -4,8 +4,6 @@
  * NEVER create instances of BaseEvent class with new. ALWAYS use classname.create(...).
  */
 export abstract class BaseEvent {
-    protected static _name: string;
-
     constructor() {
         throw new Error('NEVER create instances of BaseEvent class with new. ALWAYS use classname.create(...).');
     }
