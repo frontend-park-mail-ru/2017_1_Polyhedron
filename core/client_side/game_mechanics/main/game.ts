@@ -4,9 +4,10 @@ import * as events from '../event_system/events';
 import {GameWorld} from './game_world';
 import {Bot} from '../ai/bot';
 import {GameComponent} from "../base/game_component";
-import {Autowired, Application} from "../experimental/decorators";
 import {EventBus} from "../event_system/event_bus";
-import * as js_spring_config from '../configs/js_spring_config';
+import {config} from '../configs/dataSources';
+import {Autowired} from "../experimental/decorators";
+import {Application} from "../experimental/application";
 
 const DEFAULT_PLAYERS_NUM = 4;
 const DEFAULT_FRAME_RATE = 100;
@@ -27,7 +28,7 @@ const MODES = {
 const DEFAULT_MODE = MODES.single;
 
 
-@Application(js_spring_config.config)
+@Application()
 export class Game {
     @Autowired(EventBus)
     private eventBus: EventBus;

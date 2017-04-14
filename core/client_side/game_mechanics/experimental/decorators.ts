@@ -1,35 +1,10 @@
 'use strict';
 import {Context} from "./context";
-import NamedConstructible = interfaces.NamedConstructible;
-import Constructible = interfaces.Constructible;
-import ContextConfig = interfaces.ContextConfig;
-
-namespace interfaces {
-    export interface NamedConstructible {
-        new(...args: any[]):{};
-        name?: string;
-    }
+import {loadDataSources} from './loaders/dataSourceLoader';
+import {NamedConstructible} from "./interfaces";
 
 
-    export interface Constructible {
-        new(...args: any[]):{};
-    }
-
-
-    interface ServiceInfo {
-        cls: NamedConstructible;
-        args?: any[];
-    }
-
-
-    export interface ContextConfig {
-        serviceInfo: ServiceInfo[];
-        dataSources: {};
-    }
-}
-
-
-function getClassConfigName<T extends interfaces.NamedConstructible> (constructor: T) {
+function getClassConfigName<T extends NamedConstructible> (constructor: T) {
     return constructor.name + '.config';
 }
 
@@ -44,10 +19,10 @@ export function Service<T extends NamedConstructible> (constructor: T) {
 
 
 export function Autowired(constructFunc: NamedConstructible, ...args: any[]) {
+    loadDataSources();
+
     const locator = Context.getInstance();
-    if (!locator.contains(String(constructFunc))) {
-        locator.add(constructFunc.name, new constructFunc(...args));
-    }
+    locator.addService(constructFunc.name, new constructFunc(...args));
 
     return (target: any, key: string) => {
         target[key] = locator.getService(constructFunc.name);
@@ -55,58 +30,49 @@ export function Autowired(constructFunc: NamedConstructible, ...args: any[]) {
 }
 
 
-export function Configurable(config, path?: string) {
-    const pathItems: string[] = path ? path.split('/') : [];
-    const localConfig = pathItems.reduce((subConfig, key) => subConfig[key], config);
+export function NewConfigurable(path: string) {
+    console.log('Configurable');
+    loadDataSources();
+
+    const locator = Context.getInstance();
+    const [head, ...tail] = path.split('/');
+    const localConfig = tail.reduce((subConfig, key) => subConfig[key], locator.getDataSource(head));
 
     return function<T extends NamedConstructible> (constructor: T) {
         const locator = Context.getInstance();
         const configName = getClassConfigName(constructor);
+        /*
         if (!locator.contains(configName)) {
             locator.add(configName, localConfig);
         }
+        */
+        locator.addDataSource(configName, localConfig);
 
         return class extends constructor {
             private config;
-            static config = locator.getService(configName);
+            static config = locator.getDataSource(configName);
 
             constructor(...args: any[]) {
                 super(...args);
-                this.config = locator.getService(configName);
+                this.config = locator.getDataSource(configName);
             }
         }
     }
 }
 
 
-export function FromConfig(name?: string) {
+export function FromConfig(name: string) {
+    console.log('From config');
+    loadDataSources();
+
     const locator = Context.getInstance();
 
-    return (target: any, key: string, descriptor: PropertyDescriptor) => {
+    return (target: any, key: string) => {
         if (!target[key]) {
-            descriptor.get = () => {
-                const config = locator.getService(getClassConfigName(target.constructor));
-                const propName = name || key;
-                return config[propName];
-
-                //target[key] = config[propName];
-            }
-
+            target[key] = locator.getDataSource(name);
         }
+
+        return target[key];
     }
 }
 
-
-export function Application (config: ContextConfig) {
-    const locator = Context.getInstance();
-
-    //config.dataSources.forEach()
-
-    config.serviceInfo.forEach(consData => {
-        locator.add(consData.cls.name, new consData.cls(...consData.args));
-    });
-
-    return function<T extends Constructible> (constructor: T) {
-        return constructor;
-    }
-}

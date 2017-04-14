@@ -1,7 +1,7 @@
 'use strict';
 import {EventBus} from "./event_bus";
-import {Autowired, Service} from "../experimental/decorators";
 import * as events from "./events";
+import {Service, Autowired} from "../experimental/decorators";
 
 const KEY_LEFT = 39;
 const KEY_RIGHT = 37;

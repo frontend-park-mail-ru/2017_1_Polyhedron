@@ -6,11 +6,13 @@ import {Line} from '../geometry_shapes/line';
 import * as math from '../../../_lib/math';
 import {getIdGenerator} from '../common/id_generator'
 import {TriangleField} from "./triangle_field";
-import {Configurable} from "../experimental/decorators";
-import {config} from "../configs/game_config";
+import {NewConfigurable} from "../experimental/decorators";
+
+//import {config} from "../configs/data_sources";
 
 
-@Configurable(config, 'platform')
+//@Configurable(config, 'platform')
+@NewConfigurable('platform')
 export class Platform extends GameComponent {
     private static generateId = getIdGenerator();
     private _rectangle: Rectangle;

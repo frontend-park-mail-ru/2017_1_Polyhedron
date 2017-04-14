@@ -7,8 +7,8 @@ import {TriangleField} from '../game_components/triangle_field';
 
 import * as events from '../event_system/events';
 import {GameComponent} from "../base/game_component";
-import {Autowired} from "../experimental/decorators";
 import {EventBus} from "../event_system/event_bus";
+import {Autowired} from "../experimental/decorators";
 
 
 export class GameWorld {

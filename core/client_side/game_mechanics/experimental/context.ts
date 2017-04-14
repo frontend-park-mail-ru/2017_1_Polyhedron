@@ -2,27 +2,35 @@
 
 export class Context {
     private static _locator = new Context();
-    private _serviceInstances: {};
+    private _services: {};
+    private _dataSources: {};
 
     private constructor() {
-        this._serviceInstances = {};
+        this._services = {};
+        this._dataSources = {};
     }
 
     static getInstance(): Context {
         return Context._locator;
     }
 
-    add(key: string, val: any) {
-        if (!(key in this._serviceInstances)) {
-            this._serviceInstances[key] = val;
+    addService(key: string, val: any) {
+        if (!(key in this._services)) {
+            this._services[key] = val;
         }
     }
 
-    contains(key: string): boolean {
-        return key in this._serviceInstances;
+    addDataSource(key: string, val: any) {
+        if (!(key in this._dataSources)) {
+            this._dataSources[key] = val;
+        }
     }
 
     getService(key: string): any {
-        return this._serviceInstances[key];
+        return this._services[key];
+    }
+
+    getDataSource(key: string): any {
+        return this._dataSources[key];
     }
 }
