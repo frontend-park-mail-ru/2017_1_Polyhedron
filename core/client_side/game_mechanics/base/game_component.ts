@@ -3,7 +3,7 @@ import {SolidBody} from './solid_body';
 import {Scalable} from '../experimental/interfaces'
 
 
-type validatorType = (position: number[]) => true;
+type validatorType = (position: number[]) => boolean;
 
 export abstract class GameComponent extends SolidBody implements Scalable{
 

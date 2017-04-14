@@ -12,7 +12,7 @@ export abstract class BaseEvent {
         return this._name;
     }
 
-    static create(eventDetail) {
+    static create(eventDetail={}) {
         return new CustomEvent(this._name, {
             detail: eventDetail,
         });

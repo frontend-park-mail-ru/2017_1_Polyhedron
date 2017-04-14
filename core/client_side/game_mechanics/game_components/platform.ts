@@ -5,6 +5,7 @@ import {Rectangle} from '../geometry_shapes/rectangle';
 import {Line} from '../geometry_shapes/line';
 import * as math from '../../../_lib/math';
 import {getIdGenerator} from '../common/id_generator'
+import {TriangleField} from "./triangle_field";
 
 const DEFAULT_RELATIVE_DISTANCE = 0.05;
 const DEFAULT_RELATIVE_LENGTH = 0.3;
@@ -26,7 +27,7 @@ export class Platform extends GameComponent {
         this.id = Platform.generateId();
     }
 
-    static platformFromTriangleField(triangleField, _relativeDistance, _relativeLength, _width) {
+    static platformFromTriangleField(triangleField: TriangleField, _relativeDistance?, _relativeLength?, _width?) {
         const relativeDistance = _relativeDistance || DEFAULT_RELATIVE_DISTANCE;
         const relativeLength = _relativeLength || DEFAULT_RELATIVE_LENGTH;
         const width = _width || DEFAULT_WIDTH;

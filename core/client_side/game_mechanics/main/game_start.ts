@@ -4,7 +4,7 @@ import {Game} from './game';
 //import {WSEndpoint} from '../network/endpoint';  //TODO remove
 import {GameEventDispatcher} from '../network/game_event_dispatcher';   //TODO remove
 //window.wse = new WSEndpoint();    //TODO remove
-window.disp = new GameEventDispatcher(); //TODO remove
+//window.disp = new GameEventDispatcher(); //TODO remove
 
 
 //const CANVAS_ID = "game";
@@ -17,10 +17,10 @@ const INITIAL_RELATIVE_BALL_VELOCITY = [0.08, 0.04];    // ball velocity divided
 
 
 export function startGame(canvasId) {
-    window.loop = new Game(
+    (<any>window).loop = new Game(
         document.getElementById(canvasId),
         PLAYER_NUM, FRAME_RATE, CANVAS_FILL_FACTOR, BALL_RELATIVE_RADIUS,
         INITIAL_RELATIVE_BALL_OFFSET, INITIAL_RELATIVE_BALL_VELOCITY
     );
-    window.loop.start();
+    (<any>window).loop.start();
 }

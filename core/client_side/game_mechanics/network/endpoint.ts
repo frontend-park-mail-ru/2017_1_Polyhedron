@@ -11,6 +11,9 @@ const DEFAULT_URL = "ws://localhost:8081";
 
 
 export class WSEndpoint {
+    private _url: string;
+    private _socket: WebSocket;
+
     constructor(url) {
         this._url = url || DEFAULT_URL;
         this._socket = new WebSocket(this._url);
@@ -26,7 +29,7 @@ export class WSEndpoint {
         this.sendMessage(REQUEST_TYPES.gameStart);
     }
 
-    sendMessage(messageType, data) {
+    sendMessage(messageType, data={}) {
         this._send(
             this._getRequestJson(messageType, data)
         );
@@ -45,15 +48,21 @@ export class WSEndpoint {
             window.dispatchEvent(events.ConnectionClosedEvent.create());
         };
 
+        /*
         this._socket.onerror = event => {
             window.dispatchEvent(events.ServerErrorEvent.create(event.data));
+        };
+        */
+        this._socket.onerror = function (event: ErrorEvent) {
+            //window.dispatchEvent(events.ServerErrorEvent.create(event.data));
+            window.dispatchEvent(events.ServerErrorEvent.create()); // TODO fix
         };
     }
 
     _setListeners() {
-        window.addEventListener(events.ClientMessageEvent.eventName, event => {
-            let detail = event.detail;
-            this.sendMessage(detail.type, detail.data);
+        window.addEventListener(events.ClientMessageEvent.eventName, function (event: CustomEvent) {
+            const detail = event.detail;
+            this.sendMessage(detail.type, detail.data)
         });
     }
 

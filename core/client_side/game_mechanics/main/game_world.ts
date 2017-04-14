@@ -6,9 +6,23 @@ import {Platform} from '../game_components/platform';
 import {TriangleField} from '../game_components/triangle_field';
 
 import * as events from '../event_system/events';
+import {GameComponent} from "../base/game_component";
 
 
 export class GameWorld {
+    private _userNum: number;
+    private _sectorAngle: number;
+    private _sectorHeight: number;
+    private _ballRadius: number;
+    private _position: number[];
+    private _userSectors: TriangleField[];
+    private _neutralSectors: TriangleField[];
+    public _platforms: Platform[];  //TODO fix
+    private _ball: Ball;
+    private _score: number;
+
+    private _lastCollidedObject: GameComponent = null;
+
     constructor(userNum, sectorHeight, ballRadius, position) {
         this._userNum = userNum;
         this._sectorAngle = Math.PI / userNum;
@@ -69,7 +83,7 @@ export class GameWorld {
         this._ball.moveTo(this._position);
     }
 
-    movePlatform(platform, localOffsetVector, velocityVector) {
+    movePlatform(platform, localOffsetVector, velocityVector?) {
         let globalOffset = platform.toGlobalsWithoutOffset(localOffsetVector);
         platform.moveByWithConstraints(globalOffset, velocityVector);
     }
@@ -107,9 +121,11 @@ export class GameWorld {
         });
     }
 
-    _handleUserSectorCollision(sector) {
+    _handleUserSectorCollision(sector, ball) {
         if (sector != this._lastCollidedObject) {
-            window.dispatchEvent(events.ClientDefeatEvent.create(sector.id));
+            ball.bounceNorm(sector.getBottomNorm());
+            this._lastCollidedObject = sector;
+            //window.dispatchEvent(events.ClientDefeatEvent.create(sector.id));
         }
     }
 
@@ -123,7 +139,6 @@ export class GameWorld {
     _handlePlatformCollision(platform, ball, point) {
         if (platform != this._lastCollidedObject) {
             ball.bouncePoint(point, platform.velocity);
-            debugger;
             this._lastCollidedObject = platform;
 
             //window.dispatchEvent(events.BallBounced.create(platform.id));

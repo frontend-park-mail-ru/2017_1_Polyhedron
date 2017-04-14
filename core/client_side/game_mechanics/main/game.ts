@@ -3,6 +3,7 @@ import * as math from '../../../_lib/math';
 import * as events from '../event_system/events';
 import {GameWorld} from './game_world';
 import {Bot} from '../ai/bot';
+import {GameComponent} from "../base/game_component";
 
 const KEY_LEFT = 39;
 const KEY_RIGHT = 37;
@@ -29,9 +30,32 @@ const DEFAULT_MODE = MODES.single;
 
 
 export class Game {
+    private _canvas: HTMLCanvasElement;
+    private _context: CanvasRenderingContext2D;
+    private _playersNum: number;
+    private _frameRate: number;
+    private _fillFactor: number;
+    private _initialRelativeBallOffset: number[];
+    private _initialRelativeBallVelocity: number[];
+    private _ballRelativeRadius: number;
+
+    private _lastCollidedObject: GameComponent;
+
+    private _leftPressed: boolean;
+    private _rightPressed: boolean;
+    private _upPressed: boolean;
+    private _downPressed: boolean;
+
+    private _platformVelocityDirection: number[];
+    private _setIntervalID: number;
+    private _lastPlatformPosition: number[];
+    private _mode: string;
+
+    private _bots: Bot[];
+    private _world: GameWorld;
 
     constructor(canvas, playersNum, frameRate, fillFactor, ballRelativeRadius,
-                initialRelativeBallOffset, initialRelativeBallVelocity, mode) {
+                initialRelativeBallOffset, initialRelativeBallVelocity, mode?) {
         this._canvas = canvas;
         this._context = canvas.getContext("2d");
         this._playersNum = playersNum || DEFAULT_PLAYERS_NUM;
@@ -145,7 +169,14 @@ export class Game {
 
         window.addEventListener(events.WorldUpdateEvent.eventName, event => this._handleWorldUpdateEvent(event));
 
+        /*
         window.addEventListener(events.BallBounced.eventName, event => {
+            if (event.detail === this._activePlatform.id) {
+                ++this._world._score;
+            }
+        });
+        */
+        window.addEventListener(events.BallBounced.eventName, function (event: CustomEvent) {
             if (event.detail === this._activePlatform.id) {
                 ++this._world._score;
             }
@@ -231,13 +262,13 @@ export class Game {
     _handleUserInput (time) {
         // TODO refactor. Just testing
         /*
-        this._world.platforms.forEach(platform => {
-            let platformVelocity = 0.5;
-            let localOffset = math.multiply(this._platformVelocityDirection, platformVelocity);
+         this._world.platforms.forEach(platform => {
+         let platformVelocity = 0.5;
+         let localOffset = math.multiply(this._platformVelocityDirection, platformVelocity);
 
-            this._movePlatform(platform, localOffset)
-        });
-        */
+         this._movePlatform(platform, localOffset)
+         });
+         */
         let platformVelocity = 3;
         let localOffset = math.multiply(this._platformVelocityDirection, platformVelocity);
         this._world.movePlatform(this._getPlatformByIndex(0), localOffset, math.divide(localOffset, 5 * time));
@@ -250,10 +281,10 @@ export class Game {
 
     _throwPlatformMovedEvent(platformOffset) {
         /*
-        window.dispatchEvent(
-            events.PlatformMovedEvent.create(platformOffset)
-        );
-        */
+         window.dispatchEvent(
+         events.PlatformMovedEvent.create(platformOffset)
+         );
+         */
     }
 
     _handleDefeatEvent(event) {

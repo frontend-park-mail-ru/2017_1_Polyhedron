@@ -10,10 +10,24 @@ export class GameEventDispatcher {
     _setListeners() {
         window.addEventListener(events.PlatformMovedEvent.eventName, event => this.handlePlatformMovedEvent(event));
 
+        /*
         window.addEventListener(events.ServerMessageEvent.eventName, event => {
             let detail = event.detail;
             let gameEventClass = detail.type;
             let data = detail.data;
+
+            try {
+                window.dispatchEvent(events[gameEventClass].create(data));
+            } catch (error) {
+                console.error(error);
+            }
+        });
+        */
+
+        window.addEventListener(events.ServerMessageEvent.eventName, function (event: CustomEvent) {
+            const detail = event.detail;
+            const gameEventClass = detail.type;
+            const data = detail.data;
 
             try {
                 window.dispatchEvent(events[gameEventClass].create(data));
