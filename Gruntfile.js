@@ -94,6 +94,13 @@ module.exports = function(grunt) {
                 tasks: ['webpack']
             },
 
+            ts: {
+                files: [
+                    './core/**/*.ts'
+                ],
+                tasks: ['webpack']
+            },
+
             pug: {
                 files: [
                     './templates/*.pug'
