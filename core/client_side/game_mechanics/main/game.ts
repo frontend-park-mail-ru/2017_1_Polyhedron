@@ -4,8 +4,9 @@ import * as events from '../event_system/events';
 import {GameWorld} from './game_world';
 import {Bot} from '../ai/bot';
 import {GameComponent} from "../base/game_component";
-import {Autowired} from "../experimental/decorators";
+import {Autowired, Application} from "../experimental/decorators";
 import {EventBus} from "../event_system/event_bus";
+import * as js_spring_config from '../configs/js_spring_config';
 
 const KEY_LEFT = 39;
 const KEY_RIGHT = 37;
@@ -31,9 +32,10 @@ const MODES = {
 const DEFAULT_MODE = MODES.single;
 
 
+@Application(js_spring_config.config)
 export class Game {
     @Autowired(EventBus)
-    private eventBus;
+    private eventBus: EventBus;
 
     private _canvas: HTMLCanvasElement;
     private _context: CanvasRenderingContext2D;
@@ -178,9 +180,9 @@ export class Game {
             }
         });
         */
-        window.addEventListener(events.gameEvents.BallBounced.eventName, function (event: CustomEvent) {
+        window.addEventListener(events.gameEvents.BallBounced.eventName, event => {
             if (event.detail === this._activePlatform.id) {
-                ++this._world._score;
+                //++this._world._score;
             }
         });
 

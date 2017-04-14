@@ -60,7 +60,7 @@ export class WSEndpoint {
     }
 
     _setListeners() {
-        window.addEventListener(events.networkEvents.ClientMessageEvent.eventName, function (event: CustomEvent) {
+        window.addEventListener(events.networkEvents.ClientMessageEvent.eventName, event => {
             const detail = event.detail;
             this.sendMessage(detail.type, detail.data)
         });

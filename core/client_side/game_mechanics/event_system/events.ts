@@ -1,3 +1,5 @@
+'use strict';
+
 /**
  * NEVER create instances of BaseEvent class with new. ALWAYS use classname.create(...).
  */
@@ -9,11 +11,11 @@ export abstract class BaseEvent {
     }
 
     static get eventName() {
-        return this._name;
+        return (<any>this).name;
     }
 
     static create(eventDetail={}) {
-        return new CustomEvent(this._name, {
+        return new CustomEvent(this.eventName, {
             detail: eventDetail,
         });
     }
@@ -52,7 +54,7 @@ export namespace networkEvents {
 
             detail.ballUpdate = eventDetail.ballUpdate;
 
-            return new CustomEvent(this._name, {
+            return new CustomEvent(this.eventName, {
                 detail: detail
             });
         }
@@ -64,7 +66,7 @@ export namespace networkEvents {
             const playerIndex = eventDetail.playerIndex;
             const looserIndex = eventDetail.looserIndex;
 
-            return new CustomEvent(this._name, {
+            return new CustomEvent(this.eventName, {
                 detail: looserIndex - playerIndex
             });
         }
@@ -80,6 +82,11 @@ export namespace gameEvents {
 
 
     export class BallBounced extends BaseEvent {}
+}
+
+
+export namespace controllerEvents {
+    export class ArrowDirectionEvent extends BaseEvent {}
 }
 
 

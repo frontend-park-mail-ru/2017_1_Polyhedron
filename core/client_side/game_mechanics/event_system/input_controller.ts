@@ -1,6 +1,7 @@
 'use strict';
 import {EventBus} from "./event_bus";
 import {Autowired, Service} from "../experimental/decorators";
+import * as events from "./events";
 
 const KEY_LEFT = 39;
 const KEY_RIGHT = 37;
@@ -17,14 +18,24 @@ export class InputController {
     private _upPressed: boolean;
     private _downPressed: boolean;
 
-    private _platformVelocityDirection: number[];
+    private _direction: number[];
 
     constructor() {
+        this._setListeners();
     }
 
     _setListeners() {
-        document.addEventListener("keydown", event => this._handleKeyDown(event));
-        document.addEventListener("keyup", event => this._handleKeyUp(event));
+        document.addEventListener("keydown", event => {
+            console.log("Key down");
+            this._handleKeyDown(event);
+            this.eventBus.dispatchEvent(events.controllerEvents.ArrowDirectionEvent.create(this._direction));
+        });
+
+        document.addEventListener("keyup", event => {
+            console.log("Key up");
+            this._handleKeyUp(event);
+            this.eventBus.dispatchEvent(events.controllerEvents.ArrowDirectionEvent.create(this._direction));
+        });
     }
 
     _handleKeyDown(event) {
@@ -55,7 +66,7 @@ export class InputController {
     }
 
     _updatePlatformVelocityDirection() {
-        return this._platformVelocityDirection = [this._getPlatformHorDirection(), this._getPlatformVertDirection()];
+        return this._direction = [this._getPlatformHorDirection(), this._getPlatformVertDirection()];
     }
 
     _getPlatformHorDirection() {

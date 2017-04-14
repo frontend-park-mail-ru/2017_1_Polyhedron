@@ -2,7 +2,7 @@
 
 import * as math from '../../../_lib/math';
 import {Configurable, FromConfig} from "../experimental/decorators";
-import {config} from "../config";
+import {config} from "../configs/game_config";
 import {Platform} from "../game_components/platform";
 import {Ball} from "../game_components/ball";
 
@@ -42,14 +42,12 @@ export class Bot {
     }
 
     _movePlatform(time) {
-        /*
         const offsetVector = math.multiply(this._getOffsetDirection(), this._velocity * time);
         const xOffset = [offsetVector[0], 0];
         const yOffset = [0, offsetVector[1]];
 
         this._platform.moveByWithConstraints(xOffset);
         this._platform.moveByWithConstraints(yOffset);
-        */
     }
 
     _getOffsetDirection() {
