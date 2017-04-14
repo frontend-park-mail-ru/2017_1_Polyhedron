@@ -5,7 +5,7 @@ import {Ball} from '../game_components/ball';
 import {Platform} from '../game_components/platform';
 import {TriangleField} from '../game_components/triangle_field';
 
-import * as events from '../common/events';
+import * as events from '../event_system/events';
 
 
 export class GameWorld {
@@ -123,9 +123,10 @@ export class GameWorld {
     _handlePlatformCollision(platform, ball, point) {
         if (platform != this._lastCollidedObject) {
             ball.bouncePoint(point, platform.velocity);
+            debugger;
             this._lastCollidedObject = platform;
 
-            window.dispatchEvent(events.BallBounced.create(platform.id));
+            //window.dispatchEvent(events.BallBounced.create(platform.id));
         }
     }
 

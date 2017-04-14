@@ -27,17 +27,17 @@ export class Platform extends GameComponent {
     }
 
     static platformFromTriangleField(triangleField, _relativeDistance, _relativeLength, _width) {
-        let relativeDistance = _relativeDistance || DEFAULT_RELATIVE_DISTANCE;
-        let relativeLength = _relativeLength || DEFAULT_RELATIVE_LENGTH;
-        let width = _width || DEFAULT_WIDTH;
+        const relativeDistance = _relativeDistance || DEFAULT_RELATIVE_DISTANCE;
+        const relativeLength = _relativeLength || DEFAULT_RELATIVE_LENGTH;
+        const width = _width || DEFAULT_WIDTH;
 
-        let position = triangleField.toGlobals([0, -triangleField.height * (1 - relativeDistance)]); // using such
+        const position = triangleField.toGlobals([0, -triangleField.height * (1 - relativeDistance)]); // using such
         // coordinates because triangleField coordinate system origin is in the topmost corner.
-        let rotation = triangleField.rotation;
-        let totalLength = triangleField.getWidthOnRelativeDistance(relativeDistance);
-        let platformLength = totalLength * relativeLength;
+        const rotation = triangleField.rotation;
+        const totalLength = triangleField.getWidthOnRelativeDistance(relativeDistance);
+        const platformLength = totalLength * relativeLength;
 
-        let platform = new Platform(platformLength, width);
+        const platform = new Platform(platformLength, width);
         platform.moveTo(position);
         platform.rotateTo(rotation);
 
@@ -68,7 +68,8 @@ export class Platform extends GameComponent {
 
     getLineArray() {
         const pointArray = this._rectangle.getPointArray().map(point => this.toGlobals(point));
-        const indArray = [...Array(pointArray.length).keys()];
+        const indArray = pointArray.map((_, index) => index);
+        //const indArray = [...Array(pointArray.length).keys()];
         const pointPairArray = indArray
             .map(i => [pointArray[i % pointArray.length], pointArray[(i + 1) % pointArray.length]]);
         return pointPairArray.map(pointPair => new Line(pointPair[0], pointPair[1]));

@@ -25,7 +25,6 @@ export class Ball extends GameComponent implements Drawable {
         const transportVelocity = math.multiply(_transportVelocity, -1);
         const bounceMatrix = this._getBounceMatrix(normVec);
         const relVelocity = math.subtract(this.velocity, transportVelocity);
-
         this.velocity = math.add(transportVelocity, math.multiply(bounceMatrix, relVelocity)).toArray();
     }
 

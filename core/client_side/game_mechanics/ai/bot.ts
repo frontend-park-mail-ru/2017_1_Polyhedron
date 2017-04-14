@@ -1,13 +1,12 @@
 'use strict';
 
 import * as math from '../../../_lib/math';
-import {Configurable, FromConfig, Initializable} from "../experimental/decorators";
+import {Configurable, FromConfig} from "../experimental/decorators";
 import {config} from "../config";
 import {Platform} from "../game_components/platform";
 import {Ball} from "../game_components/ball";
 
 
-@Initializable
 @Configurable(config, 'bot')
 export class Bot {
     private _platform: Platform;
@@ -22,6 +21,8 @@ export class Bot {
         this._velocity = velocity;
         this._time = time;
         this._setIntervalID = null;
+
+        this.init();
     }
 
     @FromConfig('velocity')
@@ -59,3 +60,10 @@ export class Bot {
         return this._platform.toGlobalsWithoutOffset(localDirection);
     }
 }
+
+/*
+const ball = new Ball(100);
+const platform = new Platform(100, 200);
+const bot = new Bot(platform, ball);
+console.log(bot.velocity);
+*/

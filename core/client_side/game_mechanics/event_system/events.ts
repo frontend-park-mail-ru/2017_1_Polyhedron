@@ -1,17 +1,19 @@
 /**
  * NEVER create instances of BaseEvent class with new. ALWAYS use classname.create(...).
  */
-class BaseEvent {
+export abstract class BaseEvent {
+    protected static _name: string;
+
     constructor() {
         throw new Error('NEVER create instances of BaseEvent class with new. ALWAYS use classname.create(...).');
     }
 
     static get eventName() {
-        return this.name;
+        return this._name;
     }
 
     static create(eventDetail) {
-        return new CustomEvent(this.name, {
+        return new CustomEvent(this._name, {
             detail: eventDetail,
         });
     }
@@ -26,10 +28,10 @@ export class BallPositionCorrectionEvent extends BaseEvent {}
 
 export class DefeatEvent extends BaseEvent {
     static create(eventDetail) {
-        let playerIndex = eventDetail.playerIndex;
-        let looserIndex = eventDetail.looserIndex;
+        const playerIndex = eventDetail.playerIndex;
+        const looserIndex = eventDetail.looserIndex;
 
-        return new CustomEvent(this.name, {
+        return new CustomEvent(this._name, {
             detail: looserIndex - playerIndex
         });
     }
@@ -41,11 +43,11 @@ export class ClientDefeatEvent extends BaseEvent {}
 
 export class EnemyPositionCorrectionEvent extends BaseEvent {
     static create(eventDetail) {
-        let playerIndex = eventDetail.playerIndex;
-        let enemyIndex = eventDetail.enemyIndex;
-        let offset = eventDetail.offset;
+        const playerIndex = eventDetail.playerIndex;
+        const enemyIndex = eventDetail.enemyIndex;
+        const offset = eventDetail.offset;
 
-        return new CustomEvent(this.name, {
+        return new CustomEvent(this._name, {
             detail: {
                 index: enemyIndex - playerIndex,
                 offset: offset
@@ -57,7 +59,7 @@ export class EnemyPositionCorrectionEvent extends BaseEvent {
 
 export class WorldUpdateEvent extends BaseEvent {
     static create(eventDetail) {
-        let detail = {
+        const detail = {
             platformsUpdate: [],
 
             ballUpdate: {}
@@ -74,7 +76,7 @@ export class WorldUpdateEvent extends BaseEvent {
 
         detail.ballUpdate = eventDetail.ballUpdate;
 
-        return new CustomEvent(this.name, {
+        return new CustomEvent(this._name, {
             detail: detail
         });
     }

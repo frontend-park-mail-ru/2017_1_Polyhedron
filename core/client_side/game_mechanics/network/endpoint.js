@@ -1,5 +1,5 @@
 
-import * as events from '../common/events';
+import * as events from '../event_system/events';
 
 const REQUEST_TYPES = {
     roomRequest: "roomRequest",

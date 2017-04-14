@@ -55,11 +55,11 @@ export class Line {
         );
     }
 
-    getPositiveNorm(): number {
+    getPositiveNorm(): number[] {
         return this._coordinateSystem.toGlobalsWithoutOffset([0, 1]);
     }
 
-    getNegativeNorm(): number {
+    getNegativeNorm(): number[] {
         return this._coordinateSystem.toGlobalsWithoutOffset([0, -1]);
     }
 

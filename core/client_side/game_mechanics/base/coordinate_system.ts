@@ -36,19 +36,19 @@ export class CoordinateSystem {
         return this._angle;
     }
 
-    toLocalsWithoutOffset(globalPoint: number[]) {
+    toLocalsWithoutOffset(globalPoint: number[]): number[] {
         return math.multiply(this._getRotationMatrix(), globalPoint).toArray();
     }
 
-    toGlobalsWithoutOffset(localPoint: number[]) {
+    toGlobalsWithoutOffset(localPoint: number[]): number[] {
         return math.multiply(this._getInverseRotationMatrix(), localPoint).toArray();
     }
 
-    toLocals(globalCoord: number[]) {
+    toLocals(globalCoord: number[]): number[] {
         return math.multiply(this._getRotationMatrix(), math.subtract(globalCoord, this._origin)).toArray();
     }
 
-    toGlobals(localCoord: number[]) {
+    toGlobals(localCoord: number[]): number[] {
         return math.add(math.multiply(this._getInverseRotationMatrix(), localCoord), this._origin).toArray();
     }
 

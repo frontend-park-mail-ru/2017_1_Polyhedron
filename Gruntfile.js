@@ -16,7 +16,7 @@ module.exports = function(grunt) {
                 entry: "./static/js/main.js",
                 output: {
                     path: path.resolve(__dirname, 'dist'),
-                    filename: 'temp_index_bundle.js'
+                    filename: 'index_bundle.js'
                 },
 
                 resolve : {
@@ -41,6 +41,7 @@ module.exports = function(grunt) {
                 }
             },
 
+            /*
             build_index: {
                 progress: true,
                 entry: "./dist/temp_index_bundle.js",
@@ -80,6 +81,7 @@ module.exports = function(grunt) {
                 //    new webpack.optimize.UglifyJsPlugin({minimize: true})
                 //],
             }
+            */
         },
 
         watch: {

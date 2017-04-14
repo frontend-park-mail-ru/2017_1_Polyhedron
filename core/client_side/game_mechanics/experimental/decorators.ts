@@ -1,5 +1,5 @@
 'use strict';
-import {ServiceLocator} from "./service";
+import {Context} from "./service";
 
 
 interface NamedConstructorFunc {
@@ -28,7 +28,7 @@ export function Service<T extends NamedConstructorFunc> (constructor: T) {
 
 
 export function Autowired(constructFunc) {
-    const locator = ServiceLocator.getInstance();
+    const locator = Context.getInstance();
     if (!locator.contains(String(constructFunc))) {
         locator.add(constructFunc.name, new constructFunc());
     }
@@ -44,9 +44,8 @@ export function Configurable(config, path?: string) {
     const localConfig = pathItems.reduce((subConfig, key) => subConfig[key], config);
 
     return function<T extends NamedConstructorFunc> (constructor: T) {
-        const locator = ServiceLocator.getInstance();
+        const locator = Context.getInstance();
         const configName = getClassConfigName(constructor);
-
         if (!locator.contains(configName)) {
             locator.add(configName, localConfig);
         }
@@ -62,8 +61,9 @@ export function Configurable(config, path?: string) {
     }
 }
 
-
+/*
 export function Initializable<T extends Constructible> (constructor: T) {
+    console.log('Initializable called');
     return class extends constructor {
         constructor(...args: any[]) {
             super(...args);
@@ -71,10 +71,11 @@ export function Initializable<T extends Constructible> (constructor: T) {
         }
     };
 }
+*/
 
 
 export function FromConfig(name?: string) {
-    const locator = ServiceLocator.getInstance();
+    const locator = Context.getInstance();
 
     return (target: any, key: string, descriptor: PropertyDescriptor) => {
         if (!target[key]) {

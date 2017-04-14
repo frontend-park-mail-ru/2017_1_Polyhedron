@@ -5,7 +5,7 @@ import {Scalable} from '../experimental/interfaces'
 
 type validatorType = (position: number[]) => true;
 
-export class GameComponent extends SolidBody implements Scalable{
+export abstract class GameComponent extends SolidBody implements Scalable{
 
     private _anchor: number[];
     private _positionValidator: validatorType;
@@ -36,9 +36,7 @@ export class GameComponent extends SolidBody implements Scalable{
         this._positionValidator = value;
     }
 
-    get shape(): any {
-        throw Error("Override this method");
-    }
+    abstract get shape(): any
 
     scale(scaleFactor: number) {
         this.shape.scale(scaleFactor);

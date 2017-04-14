@@ -1,6 +1,6 @@
 
 import * as math from '../../../_lib/math';
-import * as events from '../common/events';
+import * as events from '../event_system/events';
 import {GameWorld} from './game_world';
 import {Bot} from '../ai/bot';
 
@@ -29,6 +29,7 @@ const DEFAULT_MODE = MODES.single;
 
 
 export class Game {
+
     constructor(canvas, playersNum, frameRate, fillFactor, ballRelativeRadius,
                 initialRelativeBallOffset, initialRelativeBallVelocity, mode) {
         this._canvas = canvas;
@@ -248,9 +249,11 @@ export class Game {
     }
 
     _throwPlatformMovedEvent(platformOffset) {
+        /*
         window.dispatchEvent(
             events.PlatformMovedEvent.create(platformOffset)
         );
+        */
     }
 
     _handleDefeatEvent(event) {
