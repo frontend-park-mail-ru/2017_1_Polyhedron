@@ -14,7 +14,7 @@ export class Circle implements Scalable{
         this._radius = value;
     }
 
-    scale(scaleFactor: number) {
+    rescale(scaleFactor: number) {
         this._radius *= scaleFactor;
     }
 

@@ -21,11 +21,12 @@ export class Ball extends GameComponent implements Drawable {
         return this._circle;
     }
 
-    bounceNorm(normVec: number[], _transportVelocity: number[] = [0, 0]) {
-        const transportVelocity = math.multiply(_transportVelocity, -1);
+    bounceNorm(normVec: number[], surfaceVelocity: number[] = [0, 0]) {
+        surfaceVelocity = math.multiply(surfaceVelocity, -1);
+        const relativeVelocity = math.subtract(this.velocity, surfaceVelocity);
         const bounceMatrix = this._getBounceMatrix(normVec);
-        const relVelocity = math.subtract(this.velocity, transportVelocity);
-        this.velocity = math.add(transportVelocity, math.multiply(bounceMatrix, relVelocity)).toArray();
+        const newRelativeVelocity = math.multiply(bounceMatrix, relativeVelocity);
+        this.velocity = math.add(newRelativeVelocity, surfaceVelocity).toArray();
     }
 
     bouncePoint(point: number[], transportVelocity: number[]) {

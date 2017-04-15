@@ -18,11 +18,9 @@ export class Bot {
     private _time: number;
     private _setIntervalID;
 
-    constructor(platform, ball, velocity?, time?) {
+    constructor(platform, ball) {
         this._platform = platform;
         this._ball = ball;
-        this._velocity = velocity;
-        this._time = time;
         this._setIntervalID = null;
 
         this.init();

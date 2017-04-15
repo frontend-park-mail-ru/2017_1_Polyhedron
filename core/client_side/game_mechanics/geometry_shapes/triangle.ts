@@ -27,14 +27,14 @@ export class Triangle {
         ];
     }
 
-    contains(point): boolean {
-        const f1 = (x, y) => y < this.height + x * this.height / this.halfWidth;
-        const f2 = (x, y) => y < this.height - x * this.height / this.halfWidth;
-        const f3 = x => -this.halfWidth < x && x < this.halfWidth;
+    contains(point: number[]): boolean {
+        const [x, y] = [point[0], point[1] + this.height];
+        return this.isInSector(point) && this._aboveBottom(y) && this._inHorRange(x);
+    }
 
-        const pointX = point[0];
-        const pointY = point[1] + this.height; // move coordinate system origin to the base center
-        return pointY > 0 && f1(pointX, pointY) && f2(pointX, pointY) && f3(pointX);
+    isInSector(point: number[]): boolean {
+        const [x, y] = [point[0], point[1] + this.height];
+        return this._underLeftSide(x, y) && this._underRightSide(x, y);
     }
 
     getBottomDistance(point): number {
@@ -53,5 +53,21 @@ export class Triangle {
     scale(scaleFactor) {
         this._height *= scaleFactor;
         this._halfWidth *= scaleFactor;
+    }
+
+    private _underLeftSide(x: number, y: number): boolean {
+        return y < this.height + x * this.height / this.halfWidth;
+    }
+
+    private _underRightSide(x: number, y: number): boolean {
+        return y < this.height - x * this.height / this.halfWidth;
+    }
+
+    private _aboveBottom(y: number): boolean {
+        return y > 0;
+    }
+
+    private _inHorRange(x: number): boolean {
+        return -this.halfWidth < x && x < this.halfWidth;
     }
 }

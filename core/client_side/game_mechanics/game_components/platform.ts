@@ -5,13 +5,11 @@ import {Rectangle} from '../geometry_shapes/rectangle';
 import {Line} from '../geometry_shapes/line';
 import * as math from '../../../_lib/math';
 import {getIdGenerator} from '../common/id_generator'
-import {TriangleField} from "./triangle_field";
 import {NewConfigurable} from "../experimental/decorators";
-import {getOffsetChecker} from "../base/geometry";
 
 
 @NewConfigurable('platform')
-export class Platform extends GameComponent {
+export class Platform extends GameComponent{
     private static generateId = getIdGenerator();
     private _rectangle: Rectangle;
     private _isActive: boolean;
@@ -24,26 +22,6 @@ export class Platform extends GameComponent {
         this._isActive = isActive;
 
         this.id = Platform.generateId();
-    }
-
-    static platformFromTriangleField(triangleField: TriangleField, _relativeDistance?, _relativeLength?, _width?) {
-        const relativeDistance = _relativeDistance || this.config.relativeDistance;
-        const relativeLength = _relativeLength || this.config.relativeLength;
-        const width = _width || this.config.width;
-
-        const position = triangleField.toGlobals([0, -triangleField.height * (1 - relativeDistance)]); // using such
-        // coordinates because triangleField coordinate system origin is in the topmost corner.
-        const rotation = triangleField.rotation;
-        const totalLength = triangleField.getWidthOnRelativeDistance(relativeDistance);
-        const platformLength = totalLength * relativeLength;
-
-        const platform = new Platform(platformLength, width);
-        platform.moveTo(position);
-        platform.rotateTo(rotation);
-
-        platform.positionValidator = getOffsetChecker(platform, triangleField);
-
-        return platform;
     }
 
     setActive() {

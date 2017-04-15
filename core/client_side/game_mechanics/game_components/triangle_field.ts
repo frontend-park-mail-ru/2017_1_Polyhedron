@@ -71,9 +71,13 @@ export class TriangleField extends GameComponent implements Drawable{
         return this._triangle.contains(point);
     }
 
+    isInSector(globalPoint: number[]): boolean {
+        return this._triangle.isInSector(this.toLocals(globalPoint));
+    }
+
     reachesBottomLevel(ball: Ball): boolean {
-        let localBallPosition = this.toLocals(ball.position);
-        let ballRadius = ball.radius;
+        const localBallPosition = this.toLocals(ball.position);
+        const ballRadius = ball.radius;
 
         return this._triangle.getBottomDistance(localBallPosition) < ballRadius;
     }

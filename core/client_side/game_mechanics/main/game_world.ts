@@ -8,7 +8,9 @@ import {TriangleField} from '../game_components/triangle_field';
 import * as events from '../event_system/events';
 import {GameComponent} from "../base/game_component";
 import {EventBus} from "../event_system/event_bus";
-import {Autowired} from "../experimental/decorators";
+import {Autowired, Load} from "../experimental/decorators";
+import {getOffsetChecker} from "../base/geometry";
+import {Context} from "../experimental/context";
 
 
 export class GameWorld {
@@ -28,7 +30,7 @@ export class GameWorld {
 
     private _lastCollidedObject: GameComponent = null;
 
-    constructor(userNum, sectorHeight, ballRadius, position) {
+    constructor(userNum: number, sectorHeight: number, ballRadius: number, position: number[]) {
         this._userNum = userNum;
         this._sectorAngle = Math.PI / userNum;
         this._sectorHeight = sectorHeight;
@@ -63,29 +65,13 @@ export class GameWorld {
         return this._platforms;
     }
 
-    _initSectors() {
-        for (let i = 0; i != this._userNum; ++i) {
-            let userSector = new TriangleField(this._sectorHeight, this._sectorAngle, false);
-            userSector.rotateBy(2 * this._sectorAngle * i);
-            userSector.moveTo(this._position);
+    draw(canvas) {
+        this._userSectors.forEach(sector => sector.draw(canvas));
+        this._neutralSectors.forEach(sector => sector.draw(canvas));
+        this._platforms.forEach(platform => platform.draw(canvas));
+        this._ball.draw(canvas);
 
-            let neutralSector = new TriangleField(this._sectorHeight, this._sectorAngle, true);
-            neutralSector.rotateBy(this._sectorAngle * (2 * i + 1));
-            neutralSector.moveTo(this._position);
-
-            this._userSectors.push(userSector);
-            this._neutralSectors.push(neutralSector);
-        }
-    }
-
-    _initPlatforms() {
-        // using default parameters for platforms
-        this._platforms = this._userSectors.map(sector => Platform.platformFromTriangleField(sector));
-    }
-
-    _initBall() {
-        this._ball = new Ball(this._ballRadius);
-        this._ball.moveTo(this._position);
+        this._writeScore(canvas);
     }
 
     movePlatform(platform, localOffsetVector, velocityVector?) {
@@ -103,17 +89,41 @@ export class GameWorld {
         }
     }
 
+    _initSectors() {
+        for (let i = 0; i != this._userNum; ++i) {
+            let userSector = new TriangleField(this._sectorHeight, this._sectorAngle, false);
+            userSector.rotateBy(2 * this._sectorAngle * i);
+            userSector.moveTo(this._position);
+
+            let neutralSector = new TriangleField(this._sectorHeight, this._sectorAngle, true);
+            neutralSector.rotateBy(this._sectorAngle * (2 * i + 1));
+            neutralSector.moveTo(this._position);
+
+            this._userSectors.push(userSector);
+            this._neutralSectors.push(neutralSector);
+        }
+    }
+
+    _initPlatforms() {
+        this._platforms = this._userSectors.map(sector => GameWorld._platformFromTriangleField(sector));
+    }
+
+    _initBall() {
+        this._ball = new Ball(this._ballRadius);
+        this._ball.moveTo(this._position);
+    }
+
     _makeIteration(time) {
         this.ball.moveBy(math.multiply(this.ball.velocity, time));
 
         this.userSectors.forEach(sector => {
-            if (sector.containsGlobalPoint(this.ball.position) && sector.reachesBottomLevel(this.ball)) {
+            if (sector.isInSector(this.ball.position) && sector.reachesBottomLevel(this.ball)) {
                 this._handleUserSectorCollision(sector, this.ball);
             }
         });
 
         this.neutralSectors.forEach(sector => {
-            if (sector.containsGlobalPoint(this.ball.position) && sector.reachesBottomLevel(this.ball)) {
+            if (sector.isInSector(this.ball.position) && sector.reachesBottomLevel(this.ball)) {
                 this._handleNeutralSectorCollision(sector, this.ball);
             }
         });
@@ -131,7 +141,7 @@ export class GameWorld {
             ball.bounceNorm(sector.getBottomNorm());
             this._lastCollidedObject = sector;
 
-            this.eventBus.dispatchEvent(events.gameEvents.ClientDefeatEvent.create(sector.id));
+            //this.eventBus.dispatchEvent(events.gameEvents.ClientDefeatEvent.create(sector.id));
         }
     }
 
@@ -146,18 +156,7 @@ export class GameWorld {
         if (platform != this._lastCollidedObject) {
             ball.bouncePoint(point, platform.velocity);
             this._lastCollidedObject = platform;
-
-            //window.dispatchEvent(events.BallBounced.create(platform.id));
         }
-    }
-
-    draw(canvas) {
-        this._userSectors.forEach(sector => sector.draw(canvas));
-        this._neutralSectors.forEach(sector => sector.draw(canvas));
-        this._platforms.forEach(platform => platform.draw(canvas));
-        this._ball.draw(canvas);
-
-        this._writeScore(canvas);
     }
 
     _writeScore(canvas) {
@@ -170,12 +169,36 @@ export class GameWorld {
         context.fillText(message, canvas.width * 0.5, canvas.height);
     }
 
+    static _platformFromTriangleField(triangleField: TriangleField) {
+        const platformConfig = Context.getInstance().getDataSource('platform');
+
+        const relativeDistance = platformConfig.relativeDistance;
+        const relativeLength = platformConfig.relativeLength;
+        const totalLength = triangleField.getWidthOnRelativeDistance(relativeDistance);
+        const platformLength = totalLength * relativeLength;
+
+        const platformWidth = platformConfig.aspectRatio * platformLength;
+        const platform = new Platform(platformLength, platformWidth);
+
+
+        // using such coordinates because triangleField coordinate system origin is in the topmost corner.
+        const position = triangleField.toGlobals([0, -triangleField.height * (1 - relativeDistance)]);
+        const rotation = triangleField.rotation;
+
+        platform.moveTo(position);
+        platform.rotateTo(rotation);
+
+        platform.positionValidator = getOffsetChecker(platform, triangleField);
+        triangleField.addChild(platform);
+
+        return platform;
+    }
 
     scale(scaleFactor) {
         //TODO fix (game world scaling sometimes kills bots and does not move objects to corresponding places)
-        this._userSectors.forEach(sector => sector.scale(scaleFactor));
-        this._neutralSectors.forEach(sector => sector.scale(scaleFactor));
-        this._platforms.forEach(platform => platform.scale(scaleFactor));
-        this._ball.scale(scaleFactor);
+        this._userSectors.forEach(sector => sector.rescale(scaleFactor));
+        this._neutralSectors.forEach(sector => sector.rescale(scaleFactor));
+        this._platforms.forEach(platform => platform.rescale(scaleFactor));
+        this._ball.rescale(scaleFactor);
     }
 }

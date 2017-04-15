@@ -10907,7 +10907,7 @@
 
                                     if (p1 % 1 === 0) {
                                         n = p1;
-                                    } else if (p1 > 0) { // check for != 0, scale would become NaN (log(0)), which converges really slow
+                                    } else if (p1 > 0) { // check for != 0, rescale would become NaN (log(0)), which converges really slow
 
                                         if (p1 >= 1) {
                                             z = Math.pow(10, Math.floor(1 + Math.log(p1) / Math.LN10));
@@ -41498,7 +41498,7 @@
                             if (pinv[i] < 0) {
                                 // save unpermuted row in L
                                 lindex[lnz] = i;
-                                // scale pivot column
+                                // rescale pivot column
                                 lvalues[lnz++] = divideScalar(x[i], pivot);
                             }
                             // x[0..n-1] = 0 for next k

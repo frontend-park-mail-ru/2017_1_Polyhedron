@@ -45,6 +45,13 @@ export class Game {
 
     @Load('game/ballRelativeRadius')
     private _ballRelativeRadius: number;
+
+    @Load('game/defaultCanvasSize')
+    private _defaultCanvasSize: number;
+
+    @Load('game/ballVelocity')
+    private _ballVelocity: number[];
+
     private _platformVelocityDirection: number[] = [0, 0];
     private _lastCollidedObject: GameComponent;
 
@@ -75,7 +82,7 @@ export class Game {
 
         //TODO remove (temporary solution while multiplayer is unavailable)
         if (this._mode === MODES.single) {
-            this._bots = [1, 2, 3].map(i => new Bot(this._getPlatformByIndex(i), this._world.ball, 0.21, time));
+            this._bots = [1, 2, 3].map(i => new Bot(this._getPlatformByIndex(i), this._world.ball));
         }
     }
 
@@ -121,18 +128,19 @@ export class Game {
     }
 
     _initWorld() {
-        let worldPosition = [this._canvas.width / 2, this._canvas.height / 2];
-        let sectorHeight = Math.min(this._canvas.width, this._canvas.height) * this._fillFactor / 2;
-        let ballRadius = this._ballRelativeRadius * sectorHeight;
-        let ballPosition = math.add(
-            worldPosition, math.multiply([Math.random() / 2 - 1, Math.random() / 2 - 1], sectorHeight / 2)
+        const worldPosition = [this._canvas.width / 2, this._canvas.height / 2];
+        const canvasSize = Math.min(this._canvas.width, this._canvas.height);
+        const sectorHeight = canvasSize * this._fillFactor / 2;
+        const ballRadius = this._ballRelativeRadius * sectorHeight;
+        const ballPosition = math.add(
+            worldPosition, math.multiply([1 / 2 - 1, 1 / 2 - 1], sectorHeight / 2)
         );
 
-        let ballVelocity = math.multiply(this._initialRelativeBallVelocity, sectorHeight / this._frameRate);
+        //const ballVelocity = math.multiply(this._initialRelativeBallVelocity, this._defaultCanvasSize / this._frameRate);
 
         this._world = new GameWorld(this._playersNum, sectorHeight, ballRadius, worldPosition);
         this._world.ball.moveTo(ballPosition);   // TODO remove. Now it just moves ball from center
-        this._world.ball.velocity = ballVelocity;
+        this._world.ball.velocity = this._ballVelocity;
 
         this._activePlatform.setActive();
         this._lastPlatformPosition = this._activePlatform.position.slice();
@@ -181,8 +189,12 @@ export class Game {
 
     _makeIteration(time) {
         this._redraw();
-        this._world._makeIteration(time);
-        this._handleUserInput(time);
+
+        const timeScaleFactor = Math.min(this._canvas.height, this._canvas.width) / this._defaultCanvasSize;
+        const scaledTime = time * timeScaleFactor;
+
+        this._world._makeIteration(scaledTime);
+        this._handleUserInput(scaledTime);
 
         let activePlatformOffset = math.subtract(this._activePlatform.position, this._lastPlatformPosition);
         if (math.norm(activePlatformOffset) > PLATFORM_TOLERANCE) {
@@ -194,7 +206,7 @@ export class Game {
     _handleUserInput (time: number) {
         const platformVelocity = 3;
         const localOffset = math.multiply(this._platformVelocityDirection, platformVelocity);
-        this._world.movePlatform(this._getPlatformByIndex(0), localOffset, math.divide(localOffset, 5 * time));
+        this._world.movePlatform(this._getPlatformByIndex(0), localOffset, math.divide(localOffset, 5 * time)); // TODO get rid of magic number
 
         let offset = localOffset[0];
         if (offset > 1) {
@@ -211,6 +223,7 @@ export class Game {
     }
 
     _handleDefeatEvent(event) {
+        /*
         // TODO сделать что-нибудь поинтереснее
         let sectorId = this._getItemIndex(event.detail);
         if (sectorId == this._playerItemsIndex) {
@@ -221,10 +234,12 @@ export class Game {
         this._world.userSectors[sectorId].setLoser();
         this._redraw();
         this.stop();
+        */
 
     }
 
     _handleClientDefeatEvent(event) {
+        /*
         let sectorId = event.detail;
         let playerId = this._activeSector.id;
 
@@ -238,6 +253,7 @@ export class Game {
 
         this._redraw();
         this.stop();
+        */
     }
 
     _handleWorldUpdateEvent(event) {

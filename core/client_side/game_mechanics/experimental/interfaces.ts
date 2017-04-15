@@ -1,7 +1,7 @@
 
 
 export interface Scalable {
-    scale(scaleFactor: number);
+    rescale(scaleFactor: number);
 }
 
 

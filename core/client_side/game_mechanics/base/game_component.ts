@@ -8,19 +8,14 @@ type validatorType = (position: number[]) => boolean;
 
 
 export abstract class GameComponent extends SolidBody implements Scalable{
-
-    private _anchor: number[];
     private _positionValidator: validatorType;
     private _children: GameComponent[];
-    static config;
+    private _scale: number;
 
     constructor(
-        anchor: number[] = [0, 0],
         positionValidator: validatorType = () => true
     ) {
         super();
-
-        this._anchor = anchor;
         this._positionValidator = positionValidator;
         this._children = [];
     }
@@ -45,22 +40,18 @@ export abstract class GameComponent extends SolidBody implements Scalable{
         super.rotateBy(angularOffset, parent);
     }
 
+    get scale(): number {
+        return this._scale;
+    }
+
+    set scale(scale: number) {
+        this._scale = scale;
+    }
+
     rotateTo(angle: number, parent?: GameComponent) {
         const angularOffset = angle - this.rotation;
         this._children.forEach(child => child.rotateBy(angularOffset, this));
         super.rotateBy(angularOffset, parent);
-    }
-
-    get anchor(): number[] {
-        return this._anchor;
-    }
-
-    set anchor(value: number[]) {
-        this._anchor = value;
-    }
-
-    get positionValidator(): validatorType {
-        return this._positionValidator;
     }
 
     set positionValidator(value: validatorType) {
@@ -69,8 +60,8 @@ export abstract class GameComponent extends SolidBody implements Scalable{
 
     abstract get shape(): any
 
-    scale(scaleFactor: number) {
-        this.shape.scale(scaleFactor);
+    rescale(scaleFactor: number) {
+        this.shape.rescale(scaleFactor);
     }
 
     moveToWithConstraints(newPosition: number[]) {

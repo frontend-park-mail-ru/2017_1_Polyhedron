@@ -12,24 +12,25 @@ export const config = {
 
     dataSources: {
         bot: {
-            velocity: 5,
+            velocity: 0.1,
             time: MILLISECONDS_PER_SECOND / FRAME_RATE
         },
 
         platform: {
             relativeDistance: 0.05,
             relativeLength: 0.3,
-            width: 5
+            aspectRatio: 0.25
         },
 
         game: {
+            defaultCanvasSize: 100,
             playersNum: 4,
-            frameRate: 100,
+            frameRate: FRAME_RATE,
             fillFactor: 0.8,
             ballRelativeRadius: 0.05,
             relativeBallOffset: [0.15, 0.1],
-            relativeBallVelocity: [0.1, 0.025],
-
+            relativeBallVelocity: [0.02, 0.005],
+            ballVelocity: [0.1, 0.025]
         }
     }
-};
+}
