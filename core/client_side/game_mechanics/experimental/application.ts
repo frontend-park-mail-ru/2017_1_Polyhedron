@@ -1,6 +1,6 @@
 'use strict';
 import {Constructible} from "./interfaces";
-import {loadServices} from "./loaders/serviceLoader";
+import {loadServices} from "../loaders/serviceLoader";
 
 export function Application () {
     console.log('Application');

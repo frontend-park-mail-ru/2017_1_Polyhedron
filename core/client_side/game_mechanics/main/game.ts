@@ -5,7 +5,7 @@ import {GameWorld} from './game_world';
 import {Bot} from '../ai/bot';
 import {GameComponent} from "../base/game_component";
 import {EventBus} from "../event_system/event_bus";
-import {Autowired, NewConfigurable, FromConfig} from "../experimental/decorators";
+import {Autowired, NewConfigurable, Load} from "../experimental/decorators";
 import {Application} from "../experimental/application";
 
 
@@ -23,7 +23,7 @@ const DEFAULT_MODE = MODES.single;
 
 
 @Application()
-@NewConfigurable('game')
+@NewConfigurable('game')    // TODO Ether refactor or optimize out
 export class Game {
     @Autowired(EventBus)
     private eventBus: EventBus;
@@ -31,19 +31,19 @@ export class Game {
     private _canvas: HTMLCanvasElement;
     private _context: CanvasRenderingContext2D;
 
-    @FromConfig('game/playersNum')
+    @Load('game/playersNum')
     private _playersNum: number;
 
-    @FromConfig('game/frameRate')
+    @Load('game/frameRate')
     private _frameRate: number;
 
-    @FromConfig('game/fillFactor')
+    @Load('game/fillFactor')
     private _fillFactor: number;
 
-    @FromConfig('game/relativeBallVelocity')
+    @Load('game/relativeBallVelocity')
     private _initialRelativeBallVelocity: number[];
 
-    @FromConfig('game/ballRelativeRadius')
+    @Load('game/ballRelativeRadius')
     private _ballRelativeRadius: number;
     private _platformVelocityDirection: number[] = [0, 0];
     private _lastCollidedObject: GameComponent;

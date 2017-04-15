@@ -1,7 +1,7 @@
 'use strict';
-import {services} from '../../configs/services';
-import {Context} from "../context";
-import {NamedConstructible} from "../interfaces";
+import {services} from '../configs/services';
+import {Context} from "../experimental/context";
+import {NamedConstructible} from "../experimental/interfaces";
 
 export const loadServices = (function () {
     let loaded = false;

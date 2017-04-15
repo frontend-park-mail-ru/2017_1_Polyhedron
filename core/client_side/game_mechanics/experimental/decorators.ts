@@ -1,6 +1,6 @@
 'use strict';
 import {Context} from "./context";
-import {loadDataSources} from './loaders/dataSourceLoader';
+import {loadDataSources} from '../loaders/dataSourceLoader';
 import {NamedConstructible} from "./interfaces";
 
 
@@ -60,7 +60,7 @@ export function NewConfigurable(path: string) {
 }
 
 
-export function FromConfig(url: string) {
+export function Load(url: string) {
     loadDataSources();
 
     const locator = Context.getInstance();

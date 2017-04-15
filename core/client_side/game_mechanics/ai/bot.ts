@@ -3,7 +3,7 @@
 import * as math from '../../../_lib/math';
 import {Platform} from "../game_components/platform";
 import {Ball} from "../game_components/ball";
-import {NewConfigurable, FromConfig} from "../experimental/decorators";
+import {NewConfigurable, Load} from "../experimental/decorators";
 
 
 @NewConfigurable('bot')
@@ -11,10 +11,10 @@ export class Bot {
     private _platform: Platform;
     private _ball: Ball;
 
-    @FromConfig('bot/velocity')
+    @Load('bot/velocity')
     private _velocity: number;
 
-    @FromConfig('bot/time')
+    @Load('bot/time')
     private _time: number;
     private _setIntervalID;
 
