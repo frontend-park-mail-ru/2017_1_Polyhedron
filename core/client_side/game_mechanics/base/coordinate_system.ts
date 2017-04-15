@@ -1,6 +1,7 @@
 'use strict';
 
 import * as math from './../../../_lib/math';
+import * as geometry from './geometry';
 
 
 export class CoordinateSystem {
@@ -20,12 +21,20 @@ export class CoordinateSystem {
         this._origin = position;
     }
 
-    rotateBy(angularOffset: number) {
+    rotateBy(angularOffset: number, origin?: CoordinateSystem) {
         this._angle += angularOffset;
+        if (origin) {
+            this._origin = geometry.rotate(this._origin, angularOffset, origin.position);
+        }
     }
 
-    rotateTo(angle: number) {
+    rotateTo(angle: number, origin?: CoordinateSystem) {
+        const angularOffset = angle - this._angle;
         this._angle = angle;
+
+        if (origin) {
+            this._origin = geometry.rotate(this._origin, angularOffset, origin.position);
+        }
     }
 
     get position(): number[] {
@@ -37,33 +46,19 @@ export class CoordinateSystem {
     }
 
     toLocalsWithoutOffset(globalPoint: number[]): number[] {
-        return math.multiply(this._getRotationMatrix(), globalPoint).toArray();
+        return math.multiply(geometry.getRotationMatrix(this._angle), globalPoint).toArray();
     }
 
     toGlobalsWithoutOffset(localPoint: number[]): number[] {
-        return math.multiply(this._getInverseRotationMatrix(), localPoint).toArray();
+        return math.multiply(geometry.getInverseRotationMatrix(this._angle), localPoint).toArray();
     }
 
     toLocals(globalCoord: number[]): number[] {
-        return math.multiply(this._getRotationMatrix(), math.subtract(globalCoord, this._origin)).toArray();
+        return math.multiply(geometry.getRotationMatrix(this._angle), math.subtract(globalCoord, this._origin)).toArray();
     }
 
     toGlobals(localCoord: number[]): number[] {
-        return math.add(math.multiply(this._getInverseRotationMatrix(), localCoord), this._origin).toArray();
-    }
-
-    _getRotationMatrix(): number[][] {
-        return math.matrix([
-            [Math.cos(this._angle), Math.sin(this._angle)],
-            [-Math.sin(this._angle), Math.cos(this._angle)]
-        ]);
-    }
-
-    _getInverseRotationMatrix(): number[][] {
-        return math.matrix([
-            [Math.cos(this._angle), -Math.sin(this._angle)],
-            [Math.sin(this._angle), Math.cos(this._angle)]
-        ]);
+        return math.add(math.multiply(geometry.getInverseRotationMatrix(this._angle), localCoord), this._origin).toArray();
     }
 }
 

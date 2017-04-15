@@ -87,7 +87,7 @@ module.exports = function(grunt) {
         watch: {
             js: {
                 files: [
-                    './core/**/*.js',
+                    //'./core/**/*.js',
                     './static/js/*.js',
                     './static/js/*/*.js'
                 ],

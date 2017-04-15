@@ -7,6 +7,7 @@ import * as math from '../../../_lib/math';
 import {getIdGenerator} from '../common/id_generator'
 import {TriangleField} from "./triangle_field";
 import {NewConfigurable} from "../experimental/decorators";
+import {getOffsetChecker} from "../base/geometry";
 
 
 @NewConfigurable('platform')
@@ -40,15 +41,7 @@ export class Platform extends GameComponent {
         platform.moveTo(position);
         platform.rotateTo(rotation);
 
-        const offsetValidator = (globalOffsetVec) => {
-            return platform.getPointArray()
-                .map(([x, y]) => [x + globalOffsetVec[0], y + globalOffsetVec[1]])
-                .map(point => triangleField.contains(point))
-                .reduce((res, curr) => res && curr, true);
-        };
-
-        platform.anchor = platform.position.slice();
-        platform.positionValidator = offsetValidator;
+        platform.positionValidator = getOffsetChecker(platform, triangleField);
 
         return platform;
     }

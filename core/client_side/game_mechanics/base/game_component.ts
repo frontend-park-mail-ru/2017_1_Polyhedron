@@ -1,14 +1,17 @@
 
 import {SolidBody} from './solid_body';
-import {Scalable} from '../experimental/interfaces'
+import {Scalable} from '../experimental/interfaces';
+import * as math from '../../../_lib/math';
 
 
 type validatorType = (position: number[]) => boolean;
+
 
 export abstract class GameComponent extends SolidBody implements Scalable{
 
     private _anchor: number[];
     private _positionValidator: validatorType;
+    private _children: GameComponent[];
     static config;
 
     constructor(
@@ -19,6 +22,33 @@ export abstract class GameComponent extends SolidBody implements Scalable{
 
         this._anchor = anchor;
         this._positionValidator = positionValidator;
+        this._children = [];
+    }
+
+    addChild(child: GameComponent) {
+        this._children.push(child);
+    }
+
+    moveBy(offset: number[]) {
+        this._children.forEach(child => child.moveBy(offset));
+        super.moveBy(offset);
+    }
+
+    moveTo(position: number[]) {
+        const offset = math.subtract(position, this.position);
+        this._children.forEach(child => child.moveBy(offset));
+        super.moveTo(position);
+    }
+
+    rotateBy(angularOffset: number, parent?: GameComponent) {
+        this._children.forEach(child => child.rotateBy(angularOffset, this));
+        super.rotateBy(angularOffset, parent);
+    }
+
+    rotateTo(angle: number, parent?: GameComponent) {
+        const angularOffset = angle - this.rotation;
+        this._children.forEach(child => child.rotateBy(angularOffset, this));
+        super.rotateBy(angularOffset, parent);
     }
 
     get anchor(): number[] {
@@ -57,6 +87,4 @@ export abstract class GameComponent extends SolidBody implements Scalable{
             this.velocity = [0, 0];
         }
     }
-
-
 }
