@@ -8,10 +8,7 @@ import {getIdGenerator} from '../common/id_generator'
 import {TriangleField} from "./triangle_field";
 import {NewConfigurable} from "../experimental/decorators";
 
-//import {config} from "../configs/data_sources";
 
-
-//@Configurable(config, 'platform')
 @NewConfigurable('platform')
 export class Platform extends GameComponent {
     private static generateId = getIdGenerator();

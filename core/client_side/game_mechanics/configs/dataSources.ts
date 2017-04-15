@@ -26,9 +26,10 @@ export const config = {
             playersNum: 4,
             frameRate: 100,
             fillFactor: 0.8,
-            ballRelativeRadius: 0.08,
+            ballRelativeRadius: 0.03,
             relativeBallOffset: [0.1, 0.05],
-            relativeBallVelocity: [0.25, 0.25]
+            relativeBallVelocity: [0.2, 0.05],
+
         }
     }
 };

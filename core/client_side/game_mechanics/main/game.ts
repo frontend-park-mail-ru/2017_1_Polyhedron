@@ -5,16 +5,9 @@ import {GameWorld} from './game_world';
 import {Bot} from '../ai/bot';
 import {GameComponent} from "../base/game_component";
 import {EventBus} from "../event_system/event_bus";
-import {config} from '../configs/dataSources';
-import {Autowired} from "../experimental/decorators";
+import {Autowired, NewConfigurable, FromConfig} from "../experimental/decorators";
 import {Application} from "../experimental/application";
 
-const DEFAULT_PLAYERS_NUM = 4;
-const DEFAULT_FRAME_RATE = 100;
-const DEFAULT_FILL_FACTOR = 0.8;
-const DEFAULT_BALL_RELATIVE_RADIUS = 0.08;
-const DEFAULT_RELATIVE_BALL_OFFSET = [0.1, 0.05];
-const DEFAULT_RELATIVE_BALL_VELOCITY = [0.25, 0.25];
 
 const PLATFORM_TOLERANCE = 5;
 
@@ -28,22 +21,31 @@ const MODES = {
 const DEFAULT_MODE = MODES.single;
 
 
+
 @Application()
+@NewConfigurable('game')
 export class Game {
     @Autowired(EventBus)
     private eventBus: EventBus;
 
     private _canvas: HTMLCanvasElement;
     private _context: CanvasRenderingContext2D;
+
+    @FromConfig('game/playersNum')
     private _playersNum: number;
+
+    @FromConfig('game/frameRate')
     private _frameRate: number;
+
+    @FromConfig('game/fillFactor')
     private _fillFactor: number;
-    private _initialRelativeBallOffset: number[];
+
+    @FromConfig('game/relativeBallVelocity')
     private _initialRelativeBallVelocity: number[];
+
+    @FromConfig('game/ballRelativeRadius')
     private _ballRelativeRadius: number;
     private _platformVelocityDirection: number[] = [0, 0];
-
-
     private _lastCollidedObject: GameComponent;
 
     private _setIntervalID: number;
@@ -53,16 +55,9 @@ export class Game {
     private _bots: Bot[];
     private _world: GameWorld;
 
-    constructor(canvas, playersNum, frameRate, fillFactor, ballRelativeRadius,
-                initialRelativeBallOffset, initialRelativeBallVelocity, mode?) {
+    constructor(canvas, mode?) {
         this._canvas = canvas;
         this._context = canvas.getContext("2d");
-        this._playersNum = playersNum || DEFAULT_PLAYERS_NUM;
-        this._frameRate = frameRate || DEFAULT_FRAME_RATE;
-        this._fillFactor = fillFactor || DEFAULT_FILL_FACTOR;
-        this._initialRelativeBallOffset = initialRelativeBallOffset || DEFAULT_RELATIVE_BALL_OFFSET;
-        this._initialRelativeBallVelocity  = initialRelativeBallVelocity || DEFAULT_RELATIVE_BALL_VELOCITY;
-        this._ballRelativeRadius = ballRelativeRadius || DEFAULT_BALL_RELATIVE_RADIUS;
 
         this._lastCollidedObject = null;
 
@@ -132,6 +127,7 @@ export class Game {
         let ballPosition = math.add(
             worldPosition, math.multiply([Math.random() / 2 - 1, Math.random() / 2 - 1], sectorHeight / 2)
         );
+
         let ballVelocity = math.multiply(this._initialRelativeBallVelocity, sectorHeight / this._frameRate);
 
         this._world = new GameWorld(this._playersNum, sectorHeight, ballRadius, worldPosition);

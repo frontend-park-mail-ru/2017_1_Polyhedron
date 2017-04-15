@@ -9,6 +9,11 @@ function getClassConfigName<T extends NamedConstructible> (constructor: T) {
 }
 
 
+function getSubObj(obj: {}, keys: string[]) {
+    return keys.reduce((subObj, key) => subObj[key], obj);
+}
+
+
 export function Service<T extends NamedConstructible> (constructor: T) {
     return class extends constructor {
         toString() {
@@ -31,7 +36,6 @@ export function Autowired(constructFunc: NamedConstructible, ...args: any[]) {
 
 
 export function NewConfigurable(path: string) {
-    console.log('Configurable');
     loadDataSources();
 
     const locator = Context.getInstance();
@@ -41,11 +45,6 @@ export function NewConfigurable(path: string) {
     return function<T extends NamedConstructible> (constructor: T) {
         const locator = Context.getInstance();
         const configName = getClassConfigName(constructor);
-        /*
-        if (!locator.contains(configName)) {
-            locator.add(configName, localConfig);
-        }
-        */
         locator.addDataSource(configName, localConfig);
 
         return class extends constructor {
@@ -61,18 +60,18 @@ export function NewConfigurable(path: string) {
 }
 
 
-export function FromConfig(name: string) {
-    console.log('From config');
+export function FromConfig(url: string) {
     loadDataSources();
 
     const locator = Context.getInstance();
 
     return (target: any, key: string) => {
         if (!target[key]) {
-            target[key] = locator.getDataSource(name);
-        }
 
-        return target[key];
+            const [head, ...tail] = url.split('/');
+            const subConf = locator.getDataSource(head);
+            target[key] = getSubObj(subConf, tail);
+        }
     }
 }
 

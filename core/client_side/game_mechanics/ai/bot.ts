@@ -1,22 +1,20 @@
 'use strict';
 
 import * as math from '../../../_lib/math';
-//import {config} from "../configs/data_sources";
 import {Platform} from "../game_components/platform";
 import {Ball} from "../game_components/ball";
 import {NewConfigurable, FromConfig} from "../experimental/decorators";
 
 
-//@Configurable(config, 'bot')
 @NewConfigurable('bot')
 export class Bot {
     private _platform: Platform;
     private _ball: Ball;
 
-    @FromConfig('velocity')
+    @FromConfig('bot/velocity')
     private _velocity: number;
 
-    @FromConfig('time')
+    @FromConfig('bot/time')
     private _time: number;
     private _setIntervalID;
 
@@ -29,16 +27,6 @@ export class Bot {
 
         this.init();
     }
-
-    //@FromConfig('velocity')
-    //get velocity() {
-    //    return this._velocity;
-    //}
-
-    //@FromConfig('time')
-    //get time() {
-    //    return this._time;
-    //}
 
     init() {
         this._setIntervalID = setInterval(() => {
