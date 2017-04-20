@@ -70,12 +70,11 @@ export abstract class GameComponent extends SolidBody implements Scalable{
         }
     }
 
-    moveByWithConstraints(offsetVec: number[], velocityVector?: number[]) {
+    moveByWithConstraints(offsetVec: number[], velocityVector: number[] = [0, 0]) {
         if (this._positionValidator(offsetVec)) {
             this.moveBy(offsetVec);
-            this.velocity = velocityVector;
-        } else {
-            this.velocity = [0, 0];
         }
+
+        this.velocity = velocityVector;
     }
 }

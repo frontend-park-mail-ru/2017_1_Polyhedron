@@ -12,7 +12,7 @@ export const config = {
 
     dataSources: {
         bot: {
-            velocity: 0.1,
+            velocity: 0.2,
             time: MILLISECONDS_PER_SECOND / FRAME_RATE
         },
 
@@ -28,9 +28,11 @@ export const config = {
             frameRate: FRAME_RATE,
             fillFactor: 0.8,
             ballRelativeRadius: 0.05,
-            relativeBallOffset: [0.15, 0.1],
-            relativeBallVelocity: [0.02, 0.005],
-            ballVelocity: [0.1, 0.025]
+            //relativeBallOffset: [0.15, 0.1],
+            //relativeBallVelocity: [0.01, 0.005],
+            ballVelocity: [0.03, 0.01],
+            platformVelocity: 0.02,
+            minimalOffset: 1
         }
     }
-}
+};

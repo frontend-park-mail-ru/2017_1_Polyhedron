@@ -8,7 +8,7 @@ import {TriangleField} from '../game_components/triangle_field';
 import * as events from '../event_system/events';
 import {GameComponent} from "../base/game_component";
 import {EventBus} from "../event_system/event_bus";
-import {Autowired, Load} from "../experimental/decorators";
+import {Autowired} from "../experimental/decorators";
 import {getOffsetChecker} from "../base/geometry";
 import {Context} from "../experimental/context";
 
@@ -24,7 +24,7 @@ export class GameWorld {
     private _position: number[];
     private _userSectors: TriangleField[];
     private _neutralSectors: TriangleField[];
-    public _platforms: Platform[];  //TODO back to private
+    private _platforms: Platform[];
     private _ball: Ball;
     private _score: number;
 
@@ -49,19 +49,23 @@ export class GameWorld {
         this._initPlatforms();
     }
 
-    get ball() {
+    incrementScore() {
+        ++this._score;
+    }
+
+    get ball(): Ball {
         return this._ball;
     }
 
-    get userSectors() {
+    get userSectors(): TriangleField[] {
         return this._userSectors;
     }
 
-    get neutralSectors() {
+    get neutralSectors(): TriangleField[] {
         return this._neutralSectors;
     }
 
-    get platforms() {
+    get platforms(): Platform[] {
         return this._platforms;
     }
 
@@ -75,7 +79,7 @@ export class GameWorld {
     }
 
     movePlatform(platform, localOffsetVector, velocityVector?) {
-        let globalOffset = platform.toGlobalsWithoutOffset(localOffsetVector);
+        const globalOffset = platform.toGlobalsWithoutOffset(localOffsetVector);
         platform.moveByWithConstraints(globalOffset, velocityVector);
     }
 
@@ -141,7 +145,7 @@ export class GameWorld {
             ball.bounceNorm(sector.getBottomNorm());
             this._lastCollidedObject = sector;
 
-            //this.eventBus.dispatchEvent(events.gameEvents.ClientDefeatEvent.create(sector.id));
+            this.eventBus.dispatchEvent(events.gameEvents.ClientDefeatEvent.create(sector.id));
         }
     }
 
@@ -156,6 +160,8 @@ export class GameWorld {
         if (platform != this._lastCollidedObject) {
             ball.bouncePoint(point, platform.velocity);
             this._lastCollidedObject = platform;
+
+            this.eventBus.dispatchEvent(events.gameEvents.BallBounced.create(platform.id));
         }
     }
 
@@ -192,13 +198,5 @@ export class GameWorld {
         triangleField.addChild(platform);
 
         return platform;
-    }
-
-    scale(scaleFactor) {
-        //TODO fix (game world scaling sometimes kills bots and does not move objects to corresponding places)
-        this._userSectors.forEach(sector => sector.rescale(scaleFactor));
-        this._neutralSectors.forEach(sector => sector.rescale(scaleFactor));
-        this._platforms.forEach(platform => platform.rescale(scaleFactor));
-        this._ball.rescale(scaleFactor);
     }
 }

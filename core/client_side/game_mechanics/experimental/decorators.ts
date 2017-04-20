@@ -67,10 +67,15 @@ export function Load(url: string) {
 
     return (target: any, key: string) => {
         if (!target[key]) {
-
             const [head, ...tail] = url.split('/');
             const subConf = locator.getDataSource(head);
-            target[key] = getSubObj(subConf, tail);
+            const val = getSubObj(subConf, tail);
+
+            if (val) {
+                target[key] = val;
+            } else {
+                throw Error("Requested non-existing object with URL " + url);
+            }
         }
     }
 }

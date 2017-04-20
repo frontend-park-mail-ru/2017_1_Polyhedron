@@ -5,7 +5,7 @@ import {GameWorld} from './game_world';
 import {Bot} from '../ai/bot';
 import {GameComponent} from "../base/game_component";
 import {EventBus} from "../event_system/event_bus";
-import {Autowired, NewConfigurable, Load} from "../experimental/decorators";
+import {Autowired, Load} from "../experimental/decorators";
 import {Application} from "../experimental/application";
 
 
@@ -23,34 +23,15 @@ const DEFAULT_MODE = MODES.single;
 
 
 @Application()
-@NewConfigurable('game')    // TODO Ether refactor or optimize out
 export class Game {
     @Autowired(EventBus)
     private eventBus: EventBus;
 
+    @Load('game')
+    private _gameConfig: any;
+
     private _canvas: HTMLCanvasElement;
     private _context: CanvasRenderingContext2D;
-
-    @Load('game/playersNum')
-    private _playersNum: number;
-
-    @Load('game/frameRate')
-    private _frameRate: number;
-
-    @Load('game/fillFactor')
-    private _fillFactor: number;
-
-    @Load('game/relativeBallVelocity')
-    private _initialRelativeBallVelocity: number[];
-
-    @Load('game/ballRelativeRadius')
-    private _ballRelativeRadius: number;
-
-    @Load('game/defaultCanvasSize')
-    private _defaultCanvasSize: number;
-
-    @Load('game/ballVelocity')
-    private _ballVelocity: number[];
 
     private _platformVelocityDirection: number[] = [0, 0];
     private _lastCollidedObject: GameComponent;
@@ -77,12 +58,11 @@ export class Game {
         this._setListeners();
         this._initWorld();
 
-        let time = MILLISECONDS_PER_SECOND / this._frameRate;
+        const time = MILLISECONDS_PER_SECOND / this._gameConfig.frameRate;
         this._setIntervalID = setInterval(() => this._makeIteration(time), time);
 
-        //TODO remove (temporary solution while multiplayer is unavailable)
         if (this._mode === MODES.single) {
-            this._bots = [1, 2, 3].map(i => new Bot(this._getPlatformByIndex(i), this._world.ball));
+            this._createBots();
         }
     }
 
@@ -91,7 +71,7 @@ export class Game {
     }
 
     continueGame() {
-        let time = MILLISECONDS_PER_SECOND / this._frameRate;
+        let time = MILLISECONDS_PER_SECOND / this._gameConfig.frameRate;
         this._setIntervalID = setInterval(() => this._makeIteration(time), time);
     }
 
@@ -110,17 +90,17 @@ export class Game {
      * @private
      */
     _getItemIndex(index) {
-        let result = (this._playerItemsIndex + index) % this._playersNum;
+        let result = (this._playerItemsIndex + index) % this._gameConfig.playersNum;
 
-        return result >= 0 ? result : result + this._playersNum;
+        return result >= 0 ? result : result + this._gameConfig.playersNum;
     }
 
     get _playerItemsIndex() {
-        return Math.floor(this._playersNum / 2);
+        return Math.floor(this._gameConfig.playersNum / 2);
     }
 
     get _activePlatform() {
-        return this._world._platforms[this._playerItemsIndex];
+        return this._world.platforms[this._playerItemsIndex];
     }
 
     get _activeSector() {
@@ -130,17 +110,13 @@ export class Game {
     _initWorld() {
         const worldPosition = [this._canvas.width / 2, this._canvas.height / 2];
         const canvasSize = Math.min(this._canvas.width, this._canvas.height);
-        const sectorHeight = canvasSize * this._fillFactor / 2;
-        const ballRadius = this._ballRelativeRadius * sectorHeight;
-        const ballPosition = math.add(
-            worldPosition, math.multiply([1 / 2 - 1, 1 / 2 - 1], sectorHeight / 2)
-        );
+        const sectorHeight = canvasSize * this._gameConfig.fillFactor / 2;
+        const ballRadius = this._gameConfig.ballRelativeRadius * sectorHeight;
+        const ballPosition = worldPosition;
 
-        //const ballVelocity = math.multiply(this._initialRelativeBallVelocity, this._defaultCanvasSize / this._frameRate);
-
-        this._world = new GameWorld(this._playersNum, sectorHeight, ballRadius, worldPosition);
-        this._world.ball.moveTo(ballPosition);   // TODO remove. Now it just moves ball from center
-        this._world.ball.velocity = this._ballVelocity;
+        this._world = new GameWorld(this._gameConfig.playersNum, sectorHeight, ballRadius, worldPosition);
+        this._world.ball.moveTo(ballPosition);
+        this._world.ball.velocity = this._gameConfig.ballVelocity;
 
         this._activePlatform.setActive();
         this._lastPlatformPosition = this._activePlatform.position.slice();
@@ -149,31 +125,23 @@ export class Game {
     }
 
     _setListeners() {
-        window.addEventListener(events.networkEvents.DefeatEvent.eventName,
+        this.eventBus.addEventListener(events.networkEvents.DefeatEvent.eventName,
             event => this._handleDefeatEvent(event));
 
-        /*
-        window.addEventListener(events.ClientDefeatEvent.eventName,
+        this.eventBus.addEventListener(events.gameEvents.ClientDefeatEvent.eventName,
             event => this._handleClientDefeatEvent(event));
-        */
+
         this.eventBus.addEventListener(events.gameEvents.ClientDefeatEvent.eventName, event => this._handleClientDefeatEvent(event));
         this.eventBus.addEventListener(
             events.controllerEvents.ArrowDirectionEvent.eventName,
             event => this._platformVelocityDirection = event.detail
         );
 
-        window.addEventListener(events.networkEvents.WorldUpdateEvent.eventName, event => this._handleWorldUpdateEvent(event));
+        this.eventBus.addEventListener(events.networkEvents.WorldUpdateEvent.eventName, event => this._handleWorldUpdateEvent(event));
 
-        /*
-        window.addEventListener(events.BallBounced.eventName, event => {
+        this.eventBus.addEventListener(events.gameEvents.BallBounced.eventName, event => {
             if (event.detail === this._activePlatform.id) {
-                ++this._world._score;
-            }
-        });
-        */
-        window.addEventListener(events.gameEvents.BallBounced.eventName, event => {
-            if (event.detail === this._activePlatform.id) {
-                //++this._world._score;
+                this._world.incrementScore();
             }
         });
 
@@ -188,9 +156,7 @@ export class Game {
     }
 
     _makeIteration(time) {
-        this._redraw();
-
-        const timeScaleFactor = Math.min(this._canvas.height, this._canvas.width) / this._defaultCanvasSize;
+        const timeScaleFactor = Math.min(this._canvas.height, this._canvas.width) / this._gameConfig.defaultCanvasSize;
         const scaledTime = time * timeScaleFactor;
 
         this._world._makeIteration(scaledTime);
@@ -201,15 +167,16 @@ export class Game {
             this._throwPlatformMovedEvent(activePlatformOffset);
             this._lastPlatformPosition = this._activePlatform.position;
         }
+
+        this._redraw();
     }
 
     _handleUserInput (time: number) {
-        const platformVelocity = 3;
-        const localOffset = math.multiply(this._platformVelocityDirection, platformVelocity);
-        this._world.movePlatform(this._getPlatformByIndex(0), localOffset, math.divide(localOffset, 5 * time)); // TODO get rid of magic number
+        const localOffset = math.multiply(this._platformVelocityDirection, this._gameConfig.platformVelocity * time);
+        this._world.movePlatform(this._getPlatformByIndex(0), localOffset, math.divide(localOffset, time));
 
-        let offset = localOffset[0];
-        if (offset > 1) {
+        const offset = localOffset[0];
+        if (offset > this._gameConfig.minimalOffset) {
             this._throwPlatformMovedEvent(localOffset[0]);
         }
     }
@@ -223,7 +190,6 @@ export class Game {
     }
 
     _handleDefeatEvent(event) {
-        /*
         // TODO сделать что-нибудь поинтереснее
         let sectorId = this._getItemIndex(event.detail);
         if (sectorId == this._playerItemsIndex) {
@@ -234,26 +200,22 @@ export class Game {
         this._world.userSectors[sectorId].setLoser();
         this._redraw();
         this.stop();
-        */
-
     }
 
     _handleClientDefeatEvent(event) {
-        /*
         let sectorId = event.detail;
         let playerId = this._activeSector.id;
 
         if (sectorId == playerId) {
-            alert("Вы проиграли");
+            //alert("Вы проиграли");
         } else {
-            alert("Вы победили!");
+            //alert("Вы победили!");
         }
 
         this._world.userSectors.filter(sector => sector.id == sectorId).forEach(sector => sector.setLoser());
 
         this._redraw();
         this.stop();
-        */
     }
 
     _handleWorldUpdateEvent(event) {
@@ -264,6 +226,10 @@ export class Game {
         });
 
         this._world.updateBallState(gameUpdate.ballUpdate.position, gameUpdate.ballUpdate.velocity);
+    }
+
+    _createBots() {
+        this._bots = [1, 2, 3].map(i => new Bot(this._getPlatformByIndex(i), this._world.ball));
     }
 
     _redraw() {
