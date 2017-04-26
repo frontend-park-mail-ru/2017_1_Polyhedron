@@ -9,8 +9,8 @@ export class SolidBody extends CoordinateSystem {
 
     constructor(origin: number[] = [0, 0], angle: number = 0, velocity: number[] = [0, 0], angularVelocity: number = 0) {
         super(origin, angle);
-        this._velocity = velocity || [0, 0];
-        this._angularVelocity = angularVelocity || 0;
+        this._velocity = velocity;
+        this._angularVelocity = angularVelocity;
     }
 
     get velocity(): number[] {

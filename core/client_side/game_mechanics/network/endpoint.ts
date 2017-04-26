@@ -1,5 +1,7 @@
 
 import * as events from '../event_system/events';
+import {Load, Autowired} from "../experimental/decorators";
+import {EventBus} from "../event_system/event_bus";
 
 const REQUEST_TYPES = {
     roomRequest: "roomRequest",
@@ -7,15 +9,16 @@ const REQUEST_TYPES = {
     stateUpdate: "stateUpdate"
 };
 
-const DEFAULT_URL = "ws://localhost:8081";
-
-
 export class WSEndpoint {
-    private _url: string;
     private _socket: WebSocket;
 
-    constructor(url) {
-        this._url = url || DEFAULT_URL;
+    @Load('network/wsUrl')
+    private _url: string;
+
+    @Autowired(EventBus)
+    private _eventBus: EventBus;
+
+    constructor() {
         this._socket = new WebSocket(this._url);
         this._initSocket();
         this._setListeners();
@@ -31,7 +34,7 @@ export class WSEndpoint {
 
     sendMessage(messageType, data={}) {
         this._send(
-            this._getRequestJson(messageType, data)
+            WSEndpoint._getRequestJson(messageType, data)
         );
     }
 
@@ -39,41 +42,35 @@ export class WSEndpoint {
         this._socket.close();
     }
 
-    _initSocket() {
+    private _initSocket() {
         this._socket.onmessage = event => {
-            window.dispatchEvent(events.networkEvents.ServerMessageEvent.create(JSON.parse(event.data)));
+            this._eventBus.dispatchEvent(events.networkEvents.ServerMessageEvent.create(JSON.parse(event.data)));
         };
 
         this._socket.onclose = () => {
-            window.dispatchEvent(events.networkEvents.ConnectionClosedEvent.create());
+            this._eventBus.dispatchEvent(events.networkEvents.ConnectionClosedEvent.create());
         };
 
-        /*
-        this._socket.onerror = event => {
-            window.dispatchEvent(events.ServerErrorEvent.create(event.data));
-        };
-        */
-        this._socket.onerror = function (event: ErrorEvent) {
-            //window.dispatchEvent(events.ServerErrorEvent.create(event.data));
-            window.dispatchEvent(events.networkEvents.ServerErrorEvent.create()); // TODO fix
+        this._socket.onerror = (event: ErrorEvent) => {
+            this._eventBus.dispatchEvent(events.networkEvents.ServerErrorEvent.create(event.error));
         };
     }
 
-    _setListeners() {
-        window.addEventListener(events.networkEvents.ClientMessageEvent.eventName, event => {
+    private _setListeners() {
+        this._eventBus.addEventListener(events.networkEvents.ClientMessageEvent.eventName, event => {
             const detail = event.detail;
             this.sendMessage(detail.type, detail.data)
         });
     }
 
-    _getRequestJson(type, data) {
+    private static _getRequestJson(type, data) {
         return JSON.stringify({
             requestType: type,
             data: data
         });
     }
 
-    _send(data) {
+    private _send(data) {
         this._socket.send(data);
     }
 

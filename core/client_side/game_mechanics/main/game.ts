@@ -7,6 +7,8 @@ import {GameComponent} from "../base/game_component";
 import {EventBus} from "../event_system/event_bus";
 import {Autowired, Load} from "../experimental/decorators";
 import {Application} from "../experimental/application";
+import {WSEndpoint} from "../network/endpoint";
+import {ServerCommunicator} from "../network/server_communicator";
 
 
 const PLATFORM_TOLERANCE = 5;
@@ -18,7 +20,7 @@ const MODES = {
     multi: 'multi'
 };
 
-const DEFAULT_MODE = MODES.single;
+const DEFAULT_MODE = MODES.multi;
 
 
 
@@ -43,6 +45,8 @@ export class Game {
     private _bots: Bot[];
     private _world: GameWorld;
 
+    private _communicator: ServerCommunicator;
+
     constructor(canvas, mode?) {
         this._canvas = canvas;
         this._context = canvas.getContext("2d");
@@ -63,6 +67,8 @@ export class Game {
 
         if (this._mode === MODES.single) {
             this._createBots();
+        } else {
+            this._communicator = new ServerCommunicator();
         }
     }
 
@@ -132,6 +138,7 @@ export class Game {
             event => this._handleClientDefeatEvent(event));
 
         this.eventBus.addEventListener(events.gameEvents.ClientDefeatEvent.eventName, event => this._handleClientDefeatEvent(event));
+
         this.eventBus.addEventListener(
             events.controllerEvents.ArrowDirectionEvent.eventName,
             event => this._platformVelocityDirection = event.detail
