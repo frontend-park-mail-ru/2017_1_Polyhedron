@@ -2,7 +2,7 @@
 
 import {Triangle} from '../geometry_shapes/triangle';
 import {GameComponent} from '../base/game_component';
-import {getIdGenerator} from '../common/id_generator'
+import {getIdGenerator} from '../../../common/id_generator'
 import {Ball} from "./ball";
 import {Drawable} from "../experimental/interfaces";
 

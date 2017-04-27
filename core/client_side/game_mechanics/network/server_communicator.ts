@@ -27,7 +27,7 @@ export class ServerCommunicator {
             try {
                 this._eventBus.dispatchEvent(this._eventMap[gameEventClass].create(data));
             } catch (error) {
-                console.error(error);
+                console.error(error);   // TODO refactor
             }
         });
     }
@@ -40,7 +40,7 @@ export class ServerCommunicator {
     }
     
     handleWorldUpdateEvent(event: events.networkEvents.WorldUpdateEvent) {
-        console.log(event);
+        console.log(event); // TODO refactor
     }
 
     /**

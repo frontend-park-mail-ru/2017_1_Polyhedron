@@ -1,5 +1,5 @@
 'use strict';
-import {services} from '../configs/services';
+import {services} from '../../configs/services';
 import {Context} from "../experimental/context";
 import {NamedConstructible} from "../experimental/interfaces";
 

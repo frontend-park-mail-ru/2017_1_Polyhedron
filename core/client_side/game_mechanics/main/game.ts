@@ -7,7 +7,6 @@ import {GameComponent} from "../base/game_component";
 import {EventBus} from "../event_system/event_bus";
 import {Autowired, Load} from "../experimental/decorators";
 import {Application} from "../experimental/application";
-import {WSEndpoint} from "../network/endpoint";
 import {ServerCommunicator} from "../network/server_communicator";
 
 
@@ -20,7 +19,7 @@ const MODES = {
     multi: 'multi'
 };
 
-const DEFAULT_MODE = MODES.multi;
+const DEFAULT_MODE = MODES.single;
 
 
 
@@ -226,7 +225,7 @@ export class Game {
     }
 
     _handleWorldUpdateEvent(event) {
-        let gameUpdate = event.detail;
+        const gameUpdate = event.detail;
 
         gameUpdate.platformsUpdate.forEach(platformUpdate => {
             this._getPlatformByIndex(platformUpdate.index).moveTo(platformUpdate.position);

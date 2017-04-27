@@ -1,6 +1,6 @@
 'use strict';
 import {router} from './pages/main';
-import {BackendAPI} from '../../core/client_side/site_service/backend_api'
+import {BackendAPI} from '../../core/client_side/site_service/backend_api';
 import {Top} from './components/top/top';
 
 (function () {

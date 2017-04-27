@@ -1,23 +1,24 @@
 "use strict";
 
-const fs = require("fs");
 const http = require("http");
 const path = require("path");
+const promiseReadFile = require("../../common/file_operations").promiseReadFile;
 
 
 const DEFAULT_PAGE = "./static/html/error_page.html";
 
 
-function _promiseReadFile(pagePath) {
-    return new Promise((resolve, reject) => {
-        fs.readFile(pagePath, (err, data) => {
-            if (err) {
-                reject(err);
-            } else {
-                resolve(data);
-            }
-        });
-    });
+function getContentType(filePath) {
+    const typeMap = {
+        'html': 'text/html',
+        'js': 'application/javascript',
+        'json': 'application/json',
+        'css': 'text/css'
+    };
+
+    const pathParts = filePath.split('.');
+    const extension = pathParts[pathParts.length - 1];
+    return typeMap[extension] || 'text/html';
 }
 
 
@@ -31,7 +32,8 @@ function BindedFile (pagePath) {
     return function (request, response) {
         console.log("Requested URL: ", request.url);
 
-        _promiseReadFile(pagePath).then(data => {
+        promiseReadFile(pagePath).then(data => {
+            response.writeHead(200, {"Content-Type": getContentType(pagePath)});
             response.write(data);
         }).catch(err => {
             console.error(err);
@@ -64,7 +66,8 @@ function BindedFolder (folderPath, urlPrefix) {
             return;
         }
 
-        _promiseReadFile(filePath).then(data => {
+        promiseReadFile(filePath).then(data => {
+            response.writeHead(200, {"Content-Type": getContentType(filePath)});
             response.write(data);
         }).catch(err => {
             console.error(err);
@@ -94,7 +97,7 @@ const _callbackTemplates = {
     "default": function (request, response) {
         console.log("Incorrect URL requested: ", request.url);
 
-        _promiseReadFile(DEFAULT_PAGE).then(data => {
+        promiseReadFile(DEFAULT_PAGE).then(data => {
             response.write(data);
         }).catch(err => {
             console.error(err);

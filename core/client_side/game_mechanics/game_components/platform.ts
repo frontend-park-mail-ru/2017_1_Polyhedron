@@ -4,7 +4,7 @@ import {GameComponent} from '../base/game_component';
 import {Rectangle} from '../geometry_shapes/rectangle';
 import {Line} from '../geometry_shapes/line';
 import * as math from '../../../_lib/math';
-import {getIdGenerator} from '../common/id_generator'
+import {getIdGenerator} from '../../../common/id_generator'
 import {NewConfigurable} from "../experimental/decorators";
 
 

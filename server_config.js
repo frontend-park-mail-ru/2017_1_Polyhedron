@@ -1,5 +1,6 @@
 "use strict";
-let lib = require("./core/server_side/static_server/server");
+const lib = require("./core/server_side/static_server/server");
+const caching = require("./core/server_side/service/caching");
 
 const DEFAULT_PORT = 3000;
 
@@ -8,6 +9,11 @@ let router = new lib.Router();
 //router.addPlainURL("/", new lib.BindedFile("./html/index.html"));
 router.setDefault(new lib.BindedFile("./html/index.html"));
 router.addPlainURL("/api", new lib.BindedFile("./swagger.json"));
+
+router.addPlainURL("/cached_urls", lib.BindedFunction(caching.createCachedUrlsGetter('./static')));
+router.addPlainURL("/worker_script.js", new lib.BindedFile("./core/client_side/site_service/offline_mode/worker_script.js"));
+router.addPlainURL("/test", new lib.BindedFile("./core/client_side/site_service/offline_mode/test.html"));
+router.addPlainURL("/cached_page", new lib.BindedFile("./core/client_side/site_service/offline_mode/cached_page.html"));
 
 router.addRegexURL("^/lib/.*\.js$", new lib.BindedFolder("./static/_lib/js/", "/lib/"));
 router.addRegexURL("^/lib/.*\.css$", new lib.BindedFolder("./static/_lib/css/", "/lib/"));

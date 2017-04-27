@@ -1,5 +1,5 @@
 'use strict';
-import * as dataSources from "../configs/dataSources";
+import * as dataSources from "../../configs/dataSources";
 import {Context} from "../experimental/context";
 
 export const loadDataSources = (function() {
