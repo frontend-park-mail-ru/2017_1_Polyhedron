@@ -37,15 +37,19 @@ function getUrlJson(dirPath, _urlPrefix, _recursively, _dropFolderPrefix) {
 }
 
 
-function createCachedUrlsGetter(dirPath, _urlPrefix, _recursively, _dropFolderPrefix) {
-    return (request, response) => {
-        response.writeHead(200, {'Content-Type': 'application/json'});
-        response.write(getUrlJson(dirPath, _urlPrefix, _recursively, _dropFolderPrefix));
-        response.end();
-    }
+function createCachedUrlsGetterAsync(dirPath, _urlPrefix, _recursively, _dropFolderPrefix) {
+    return function() {
+        return new Promise((resolve, reject) => {
+            try {
+                resolve(getUrlJson(dirPath, _urlPrefix, _recursively, _dropFolderPrefix));
+            } catch (err) {
+                reject(err);
+            }
+        });
+    };
 }
 
 
 module.exports.getURLs = getURLs;
 module.exports.getUrlJson = getUrlJson;
-module.exports.createCachedUrlsGetter = createCachedUrlsGetter;
+module.exports.createCachedUrlsGetterAsync = createCachedUrlsGetterAsync;

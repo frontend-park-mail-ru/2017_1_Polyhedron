@@ -8,91 +8,6 @@ const promiseReadFile = require("../../common/file_operations").promiseReadFile;
 const DEFAULT_PAGE = "./static/html/error_page.html";
 
 
-function getContentType(filePath) {
-    const typeMap = {
-        'html': 'text/html',
-        'js': 'application/javascript',
-        'json': 'application/json',
-        'css': 'text/css'
-    };
-
-    const pathParts = filePath.split('.');
-    const extension = pathParts[pathParts.length - 1];
-    return typeMap[extension] || 'text/html';
-}
-
-
-/**
- *
- * @param pagePath path of the static file to return
- * @returns {Function} callback responding with predefined path
- * @constructor
- */
-function BindedFile (pagePath) {
-    return function (request, response) {
-        console.log("Requested URL: ", request.url);
-
-        promiseReadFile(pagePath).then(data => {
-            response.writeHead(200, {"Content-Type": getContentType(pagePath)});
-            response.write(data);
-        }).catch(err => {
-            console.error(err);
-            response.writeHead(404, {"Content-Type": "text/html"});
-            response.write("404 Not Found\n");
-        }).then(() => {
-            response.end();
-        });
-    };
-}
-
-
-/**
- *
- * @param folderPath path to the static root
- * @param urlPrefix: prefix which must be removed to get relative path
- * @returns {Function}
- * @constructor
- */
-function BindedFolder (folderPath, urlPrefix) {
-    return function (request, response) {
-        console.log("Requested URL: ", request.url);
-
-        let filePath = folderPath + request.url.replace(urlPrefix, "");
-        let normalizedPath = path.relative(folderPath, filePath);
-        if (normalizedPath.startsWith('..')) {
-            console.log(normalizedPath);
-            response.writeHead(404, {"Content-Type": "text/html"});
-            response.end();
-            return;
-        }
-
-        promiseReadFile(filePath).then(data => {
-            response.writeHead(200, {"Content-Type": getContentType(filePath)});
-            response.write(data);
-        }).catch(err => {
-            console.error(err);
-            response.write(err.toString());
-        }).then(() => {
-            response.end();
-        });
-    };
-}
-
-
-/**
- * This function is just a wrapper around a callback, logging requested url
- * @param handlerFunc must accept request and response as input parameters
- * @returns {Function}
- * @constructor
- */
-function BindedFunction(handlerFunc) {
-    return function (request, response) {
-        console.log("Requested URL: ", request.url);
-        handlerFunc(request, response);
-    };
-}
-
-
 const _callbackTemplates = {
     "default": function (request, response) {
         console.log("Incorrect URL requested: ", request.url);
@@ -227,8 +142,6 @@ function getStaticServer (router) {
     });
 }
 
-module.exports.BindedFile = BindedFile;
-module.exports.BindedFolder = BindedFolder;
-module.exports.BindedFunction = BindedFunction;
+
 module.exports.Router = Router;
 module.exports.getStaticServer = getStaticServer;
