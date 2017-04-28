@@ -1,10 +1,19 @@
 
 import {Game} from './game';
+import {Autowired} from "../experimental/decorators";
+import {VariableMap} from "../experimental/context";
 
 
-export function startGame(canvasId) {
-    (window as any).loop = new Game (
-        document.getElementById(canvasId)
-    );
-    (window as any).loop.start();
+export class GameStarter {
+    @Autowired(VariableMap)
+    private variableMap: VariableMap;
+
+    public start(canvasId) {
+        const loop = new Game (
+            document.getElementById(canvasId)
+        );
+        this.variableMap.setVariable('loop', loop);
+
+        loop.start();
+    }
 }
