@@ -11,7 +11,7 @@ module.exports = function(grunt) {
 
         webpack: {
 
-            build_index: {
+            pre_build_index: {
                 progress: true,
                 entry: "./static/js/main.js",
                 output: {
@@ -19,10 +19,15 @@ module.exports = function(grunt) {
                     filename: 'index_bundle.js'
                 },
 
+                resolve : {
+                    extensions: [".ts", ".js"]
+                },
+
                 module: {
-                    loaders: [
+                    rules: [
                         {
-                            loader: "babel-loader",
+                            test: /\.tsx?$/,
+                            loader: 'ts-loader',
 
                             include: [
                                 path.resolve(__dirname, 'static/js'),
@@ -30,29 +35,68 @@ module.exports = function(grunt) {
                                 path.resolve(__dirname, 'core'),
                                 path.resolve(__dirname, 'core/_lib'),
                             ],
+                        },
+
+                    ]
+                }
+            },
+
+            /*
+            build_index: {
+                progress: true,
+                entry: "./dist/temp_index_bundle.js",
+                output: {
+                    path: path.resolve(__dirname, 'dist'),
+                    filename: 'index_bundle.js'
+                },
+
+                resolve : {
+                    extensions: [".ts", ".js"]
+                },
+
+                module: {
+                    rules: [
+                        {
+                            loader: "babel-loader",
+
+                            include: [
+                                path.resolve(__dirname, 'dist')
+                            ],
 
                             test: /\.js$/,
+
 
                             query: {
                                 plugins: ['transform-runtime'],
                                 presets: ['es2015'],
+
                             }
+
                         },
+
                     ]
-                },
+                }
 
                 //plugins: [
                 //    new webpack.optimize.UglifyJsPlugin({minimize: true})
                 //],
             }
+            */
         },
 
         watch: {
             js: {
                 files: [
-                    './core/**/*.js',
-                    './static/js/*.js',
-                    './static/js/*/*.js'
+                    './core/common/*.js',
+                    './core/server_side/**/*.js',
+                ],
+                tasks: ['webpack']
+            },
+
+            ts: {
+                files: [
+                    './core/**/*.ts',
+                    './static/**/*.ts'
                 ],
                 tasks: ['webpack']
             },
@@ -71,14 +115,25 @@ module.exports = function(grunt) {
                 configFile: '.eslintrc.js'
             },
             src: [
-                'core/client_side/**/*.js',
                 'core/server_side/**/*.js',
-                'static/js/pages/*.js',
-                'static/js/components/**/*.js',
                 './tests/*.js',
                 '.pug_compiler.js',
                 '!core/server_side/ws_server/server.js'
             ]
+        },
+
+        tslint: {
+            options: {
+                configuration: "tslint.json",
+                force: false,
+                fix: false
+            },
+            files: {
+                src: [
+                    "./core/**/*.ts",
+                    "./static/**/*.ts"
+                ]
+            }
         },
 
         mochaTest: {
@@ -112,6 +167,7 @@ module.exports = function(grunt) {
     grunt.loadNpmTasks('grunt-mocha-test');
     grunt.loadNpmTasks('grunt-concurrent');
     grunt.loadNpmTasks('grunt-eslint');
+    grunt.loadNpmTasks("grunt-tslint");
     grunt.loadNpmTasks('grunt-exec');
 
     grunt.registerTask('postinstall', [
@@ -119,7 +175,7 @@ module.exports = function(grunt) {
     ]);
 
     grunt.registerTask('test', [
-        'eslint', 'mochaTest:test'
+        'eslint', 'tslint', /*'mochaTest:test'*/
     ]);
 
     grunt.registerTask('dev', ['exec:compile_pug', 'webpack', 'concurrent:watch']);

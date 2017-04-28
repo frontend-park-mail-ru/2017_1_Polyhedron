@@ -16,6 +16,7 @@
   "author": "",
   "homepage": "https://polyhedron.herokuapp.com/",
   "devDependencies": {
+    "awesome-typescript-loader": "^3.1.2",
     "babel-core": "^6.23.1",
     "babel-loader": "^6.3.2",
     "babel-plugin-transform-runtime": "^6.23.0",
@@ -29,13 +30,19 @@
     "grunt-eslint": "^19.0.0",
     "grunt-exec": "^2.0.0",
     "grunt-mocha-test": "^0.13.2",
+    "grunt-tslint": "^5.0.1",
     "grunt-webpack": "^2.0.1",
     "mocha": "^3.2.0",
     "net": "^1.0.2",
     "node-fetch": "^1.6.3",
     "path": "^0.12.7",
     "pug": "^2.0.0-beta11",
-    "webpack": "^2.2.1"
+    "source-map-loader": "^0.2.1",
+    "ts-loader": "^2.0.3",
+    "tslint": "^5.1.0",
+    "typescript": "^2.2.2",
+    "webpack": "^2.2.1",
+    "whatwg-fetch": "^2.0.3"
   },
   "dependencies": {
     "babel-runtime": "^6.23.0",
