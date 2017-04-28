@@ -18,11 +18,10 @@ import {Router} from '../../../core/client_side/site_service/router';
 const content = document.querySelector(".js-content");
 const heading = document.querySelector(".js-subheader");
 
-for (let key in pugRuntime) {
-    window['pug_' + key] = pugRuntime[key];  // TODO get rid of setting to window (temporary solution).
-}
+// TODO get rid of setting to window (temporary solution).
+Object.keys(pugRuntime).forEach(key => window['pug_' + key] = pugRuntime[key]);
 
-export let router = new Router({
+export const router = new Router({
     '^/?$': new Index(heading, content),
 
     '^/?index$': new Index(heading, content),

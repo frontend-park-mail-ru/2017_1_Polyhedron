@@ -1,9 +1,16 @@
 'use strict';
 import {BasePage} from './base';
 import {Text} from '../components/text/text';
+import {Autowired} from "../../../core/client_side/game_mechanics/experimental/decorators";
+import {VariableMap} from "../../../core/client_side/game_mechanics/experimental/context";
 
 export class Error extends BasePage {
-    constructor (heading, content, options) {
+    private text: Text;
+
+    @Autowired(VariableMap)
+    private variableMap: VariableMap;
+
+    constructor(heading, content, options?) {
         super(heading, content, options);
         this.text = new Text({
             items: [
@@ -14,9 +21,9 @@ export class Error extends BasePage {
         });
     }
 
-    render () {
+    public render() {
         this._heading.innerHTML = "Ошибка";
-        window.userpanel.render();
+        this.variableMap.getVariable('userpanel').render();
         this.text.render();
     }
 }

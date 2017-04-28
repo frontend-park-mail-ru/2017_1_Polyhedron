@@ -1,22 +1,31 @@
-"use strict";
-Object.defineProperty(exports, "__esModule", { value: true });
-class Form {
+
+export class Form {
+    protected _fields: any;   // TODO make more concrete type
+    protected _submitter: Element;
+
     constructor(fields, submitter) {
         this._fields = fields;
         this._submitter = submitter;
         this._setFieldsHook();
+
         this._submitter.addEventListener('click', (event) => {
             event.preventDefault();
             this.validateAndSubmit();
         });
     }
-    _setFieldsHook() {
-        Object.keys(this._fields).forEach(key => this._fields[key].setChangeCallBack(event => this.globalFormLogic(event)));
+
+    protected _setFieldsHook() {
+        Object.keys(this._fields).forEach(
+            key => this._fields[key].setChangeCallBack(
+                event => this.globalFormLogic(event)
+            )
+        );
         // for (const fieldName in this._fields) {
         //     this._fields[fieldName].setChangeCallBack(event => this.globalFormLogic(event));
         // }
     }
-    isValid() {
+
+    public isValid() {
         /*
         let isValid = true; // TODO replace with reduce
         for (const fieldName in this._fields) {
@@ -27,20 +36,20 @@ class Form {
         */
         return Object.keys(this._fields).reduce((curr, key) => curr && this._fields[key].isValid(), true);
     }
-    validateAndSubmit() {
+
+    public validateAndSubmit() {
         if (this.isValid()) {
             this._sendData();
-        }
-        else {
+        } else {
             alert('Пожалуйста, введите корректные данные');
         }
     }
-    _sendData() {
+
+    protected _sendData() {
         // console.log('Tried to send data');
     }
-    globalFormLogic(event) {
+
+    public globalFormLogic(event) {
         // console.log('Called global form logic');
     }
 }
-exports.Form = Form;
-//# sourceMappingURL=base_form.js.map

@@ -4,10 +4,19 @@ import {BasePage} from './base';
 import {SignInForm} from '../../../core/client_side/site_service/form_validation/custom_forms/sign_in_form';
 import {Form} from '../components/form/form';
 import {Text} from '../components/text/text';
+import {Autowired} from "../../../core/client_side/game_mechanics/experimental/decorators";
+import {VariableMap} from "../../../core/client_side/game_mechanics/experimental/context";
 
 
 export class Login extends BasePage {
-    constructor (heading, content, options) {
+    private form: Form;
+    private authorised: Text;
+    private _validator: SignInForm;
+
+    @Autowired(VariableMap)
+    private variableMap;
+
+    constructor(heading, content, options?) {
         super(heading, content, options);
         this.form = new Form({
             name: 'signInForm',
@@ -29,14 +38,13 @@ export class Login extends BasePage {
         });
     }
 
-    render () {
+    public render() {
         this._heading.innerHTML = "Вход в игру";
-        window.userpanel.render();
+        this.variableMap.getVariable('userpanel').render();
 
-        if (window.user !== null) {
+        if (this.variableMap.getVariable('user') !== null) {
             this.authorised.render();
-        }
-        else {
+        } else {
             this.form.render();
             this._validator = new SignInForm();
         }

@@ -89,15 +89,14 @@ module.exports = function(grunt) {
                 files: [
                     './core/common/*.js',
                     './core/server_side/**/*.js',
-                    './static/js/*.js',
-                    './static/js/*/*.js'
                 ],
                 tasks: ['webpack']
             },
 
             ts: {
                 files: [
-                    './core/**/*.ts'
+                    './core/**/*.ts',
+                    './static/**/*.ts'
                 ],
                 tasks: ['webpack']
             },
@@ -116,11 +115,7 @@ module.exports = function(grunt) {
                 configFile: '.eslintrc.js'
             },
             src: [
-                //'core/client_side/game_mechanics/**/*.ts',
-                //'core/client_side/site_service/**/*.js',
                 'core/server_side/**/*.js',
-                'static/js/pages/*.js',
-                'static/js/components/**/*.js',
                 './tests/*.js',
                 '.pug_compiler.js',
                 '!core/server_side/ws_server/server.js'
@@ -135,7 +130,8 @@ module.exports = function(grunt) {
             },
             files: {
                 src: [
-                    "./core/**/*.ts"
+                    "./core/**/*.ts",
+                    "./static/**/*.ts"
                 ]
             }
         },

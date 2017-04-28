@@ -1,6 +1,6 @@
 'use strict';
-Object.defineProperty(exports, "__esModule", { value: true });
-exports.MESSAGE_MAP = {
+
+export const MESSAGE_MAP = {
     VALIDATE_DATA: 'Пожалуйста, введите корректные данные',
     INVALID_CREDENTIALS: 'Некорректные данные',
     LOGIN_SUCCESS: 'Вход выполнен успешно',
@@ -8,4 +8,3 @@ exports.MESSAGE_MAP = {
     SIGN_UP_SUCCESS: 'Регистрация прошла успешно',
     SIGN_UP_FAIL: 'Регистрация не удалась'
 };
-//# sourceMappingURL=messages.js.map

@@ -41,7 +41,8 @@ jspm_packages
 .idea
 .DS_Store
 dist
-static/js/templates/*.js
+/static/**/*.map
+/static/**/*.js
 /core/server_side/ws_server/
 /swagger.json
 /core/client_side/game_mechanics/**/*.js

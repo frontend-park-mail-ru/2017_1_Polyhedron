@@ -1,3 +1,23 @@
+'use strict';
+
+import set = Reflect.set;
+
+
+export class VariableMap {
+    private _map: {};
+
+    constructor() {
+        this._map = {};
+    }
+
+    public getVariable(key: string) {
+        return this._map[key];
+    }
+
+    public setVariable(key: string, val: any) {
+        this._map[key] = val;
+    }
+}
 
 
 export class Context {

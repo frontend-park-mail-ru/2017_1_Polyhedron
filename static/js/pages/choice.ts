@@ -2,10 +2,17 @@
 
 import {BasePage} from './base';
 import {Menu} from '../components/menu/menu';
+import {Autowired} from "../../../core/client_side/game_mechanics/experimental/decorators";
+import {VariableMap} from "../../../core/client_side/game_mechanics/experimental/context";
 
 
 export class ChoiceGameMode extends BasePage {
-    constructor (heading, content, options) {
+    private menu: Menu;
+
+    @Autowired(VariableMap)
+    private variableMap: VariableMap;
+
+    constructor(heading, content, options?) {
         super(heading, content, options);
         this.menu = new Menu({
             items: [
@@ -16,9 +23,9 @@ export class ChoiceGameMode extends BasePage {
         });
     }
 
-    render () {
+    public render() {
         this._heading.innerHTML = "Выбор режима";
-        window.userpanel.render();
+        this.variableMap.getVariable('userpanel').render();
         this.menu.render();
     }
 }
