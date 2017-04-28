@@ -13,7 +13,7 @@ module.exports = function(grunt) {
 
             pre_build_index: {
                 progress: true,
-                entry: "./static/js/main.js",
+                entry: "./static/js/main.ts",
                 output: {
                     path: path.resolve(__dirname, 'dist'),
                     filename: 'index_bundle.js'
