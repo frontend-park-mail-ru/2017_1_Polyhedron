@@ -3,8 +3,8 @@ import {Game} from './game';
 
 
 export function startGame(canvasId) {
-    (<any>window).loop = new Game(
+    (window as any).loop = new Game (
         document.getElementById(canvasId)
     );
-    (<any>window).loop.start();
+    (window as any).loop.start();
 }

@@ -10,7 +10,30 @@ const router = new serverLib.Router();
 router.setDefault(new resourceBinding.BindedFile("./html/index.html"));
 router.addPlainURL("/api", new resourceBinding.BindedFile("./swagger.json"));
 
-router.addPlainURL("/cached_urls", new resourceBinding.BindedFunction(caching.createCachedUrlsGetterAsync('./static')));
+/*
+router.addPlainURL("/cached_urls", new resourceBinding.BindedFunction(caching.createCachedUrlsGetterAsync(
+    ['./static/css'],
+    ['./static/fonts'],
+    ['./static/images'],
+    ['./static/js'],
+    ['./dist', '/dist/']
+)));
+*/
+
+router.addPlainURL("/cached_urls", new resourceBinding.BindedFunction(caching.getCachedUrlGen({
+    foldersInfo: [
+        ['./static/css'],
+        ['./static/fonts'],
+        ['./static/images'],
+        ['./static/js'],
+        ['./dist', '/dist/']
+    ],
+
+    plainUrls: [
+        '/'
+    ]
+})));
+
 router.addPlainURL("/worker_script.js", new resourceBinding.BindedFile("./core/client_side/site_service/offline_mode/worker_script.js"));
 router.addPlainURL("/test", new resourceBinding.BindedFile("./core/client_side/site_service/offline_mode/test.html"));
 
@@ -22,9 +45,6 @@ router.addRegexURL(".*\.css$", new resourceBinding.BindedFolder("./static/css", 
 router.addRegexURL(".*\.ttf$", new resourceBinding.BindedFolder("./static/fonts", "/static/fonts"));
 router.addRegexURL(".*\.gif$", new resourceBinding.BindedFolder("./static/images", "/static/images"));
 
-router.addRegexURL("^/media/", new resourceBinding.BindedFolder("./static/media/", "/media/"));
-router.addRegexURL("^/core/.*\.js$", new resourceBinding.BindedFolder("./core/", "/core/"));
-router.addRegexURL("^/core/lib/.*\.js$", new resourceBinding.BindedFolder("./core/_lib/", "/core/lib/"));
 router.addRegexURL("^/dist/.*\.js$", new resourceBinding.BindedFolder("./dist/", "/dist/"));
 
 const server = serverLib.getStaticServer(router);

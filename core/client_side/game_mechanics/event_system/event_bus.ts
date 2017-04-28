@@ -5,18 +5,16 @@ import {Service} from "../experimental/decorators";
 export class EventBus {
     private _listeners: {} = {};
 
-    addEventListener(eventName, listener) {
-        console.log(eventName);
-
+    public addEventListener(eventName, listener) {
         if (!this._listeners[eventName]) {
             this._listeners[eventName] = [listener];
         } else {
-            this._listeners[eventName].push(listener)
+            this._listeners[eventName].push(listener);
         }
     }
 
-    dispatchEvent(event) {
-        const listeners =this._listeners[event.type];
+    public dispatchEvent(event) {
+        const listeners = this._listeners[event.type];
         if (listeners) {
             listeners.forEach(callback => callback(event));
         }

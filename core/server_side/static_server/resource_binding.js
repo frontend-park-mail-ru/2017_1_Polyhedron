@@ -20,7 +20,7 @@ function BindedResource(resource) {
             .then(
                 () => response.end()
             );
-    }
+    };
 }
 
 

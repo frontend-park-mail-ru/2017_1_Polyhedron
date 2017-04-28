@@ -11,15 +11,15 @@ export class Triangle {
         this._halfWidth = height * Math.tan(sectorAngle / 2);
     }
 
-    get height(): number {
+    public get height(): number {
         return this._height;
     }
 
-    get halfWidth(): number {
+    public get halfWidth(): number {
         return this._halfWidth;
     }
 
-    getPointArray(): number[][] {
+    public getPointArray(): number[][] {
         return [
             [0, 0],
             [-this._height * Math.tan(this._sectorAngle / 2), -this._height],
@@ -27,17 +27,17 @@ export class Triangle {
         ];
     }
 
-    contains(point: number[]): boolean {
+    public contains(point: number[]): boolean {
         const [x, y] = [point[0], point[1] + this.height];
         return this.isInSector(point) && this._aboveBottom(y) && this._inHorRange(x);
     }
 
-    isInSector(point: number[]): boolean {
+    public isInSector(point: number[]): boolean {
         const [x, y] = [point[0], point[1] + this.height];
         return this._underLeftSide(x, y) && this._underRightSide(x, y);
     }
 
-    getBottomDistance(point): number {
+    public getBottomDistance(point): number {
         return point[1] + this._height;
     }
 
@@ -46,11 +46,11 @@ export class Triangle {
      * @param bottomDistance
      * @returns number (width of the triangle on the specified distance from bottom)
      */
-    getWidthOnDistance(bottomDistance): number {
+    public getWidthOnDistance(bottomDistance): number {
         return 2 * (1 - bottomDistance / this._height) * this._halfWidth;
     }
 
-    scale(scaleFactor) {
+    public scale(scaleFactor) {
         this._height *= scaleFactor;
         this._halfWidth *= scaleFactor;
     }

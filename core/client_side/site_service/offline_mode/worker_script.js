@@ -20,7 +20,7 @@ self.addEventListener('install', event => {
             .then(response => response.json())
             .then(cacheURLs => {
                 caches.open(CACHE_NAME)
-                    .then(cache => cache.addAll(cacheURLs.concat(['/cached_page'])));
+                    .then(cache => cache.addAll(cacheURLs));
             })
         );
 });

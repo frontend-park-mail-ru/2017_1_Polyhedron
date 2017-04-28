@@ -1,7 +1,4 @@
 module.exports = {
-    "plugins": [
-        "typescript"
-    ],
     "env": {
         "node": true,
         "browser": true,

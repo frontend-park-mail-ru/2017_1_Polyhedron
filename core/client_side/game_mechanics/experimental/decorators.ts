@@ -4,7 +4,7 @@ import {loadDataSources} from '../loaders/dataSourceLoader';
 import {NamedConstructible} from "./interfaces";
 
 
-function getClassConfigName<T extends NamedConstructible> (constructor: T) {
+function getClassConfigName<T extends NamedConstructible>(constructor: T) {
     return constructor.name + '.config';
 }
 
@@ -14,12 +14,12 @@ function getSubObj(obj: {}, keys: string[]) {
 }
 
 
-export function Service<T extends NamedConstructible> (constructor: T) {
+export function Service<T extends NamedConstructible>(constructor: T) {
     return class extends constructor {
-        toString() {
+        public toString() {
             return constructor.name;
         }
-    }
+    };
 }
 
 
@@ -31,7 +31,7 @@ export function Autowired(constructFunc: NamedConstructible, ...args: any[]) {
 
     return (target: any, key: string) => {
         target[key] = locator.getService(constructFunc.name);
-    }
+    };
 }
 
 
@@ -42,21 +42,20 @@ export function NewConfigurable(path: string) {
     const [head, ...tail] = path.split('/');
     const localConfig = tail.reduce((subConfig, key) => subConfig[key], locator.getDataSource(head));
 
-    return function<T extends NamedConstructible> (constructor: T) {
-        const locator = Context.getInstance();
+    return <T extends NamedConstructible> (constructor: T) => {
         const configName = getClassConfigName(constructor);
         locator.addDataSource(configName, localConfig);
 
         return class extends constructor {
+            public static config = locator.getDataSource(configName);
             private config;
-            static config = locator.getDataSource(configName);
 
             constructor(...args: any[]) {
                 super(...args);
                 this.config = locator.getDataSource(configName);
             }
-        }
-    }
+        };
+    };
 }
 
 
@@ -77,6 +76,6 @@ export function Load(url: string) {
                 throw Error("Requested non-existing object with URL " + url);
             }
         }
-    }
+    };
 }
 

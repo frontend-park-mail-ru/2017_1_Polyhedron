@@ -7,7 +7,7 @@ import * as math from '../../../_lib/math';
 type validatorType = (position: number[]) => boolean;
 
 
-export abstract class GameComponent extends SolidBody implements Scalable{
+export abstract class GameComponent extends SolidBody implements Scalable {
     private _positionValidator: validatorType;
     private _children: GameComponent[];
     private _scale: number;
@@ -20,57 +20,57 @@ export abstract class GameComponent extends SolidBody implements Scalable{
         this._children = [];
     }
 
-    addChild(child: GameComponent) {
+    public addChild(child: GameComponent) {
         this._children.push(child);
     }
 
-    moveBy(offset: number[]) {
+    public moveBy(offset: number[]) {
         this._children.forEach(child => child.moveBy(offset));
         super.moveBy(offset);
     }
 
-    moveTo(position: number[]) {
+    public moveTo(position: number[]) {
         const offset = math.subtract(position, this.position);
         this._children.forEach(child => child.moveBy(offset));
         super.moveTo(position);
     }
 
-    rotateBy(angularOffset: number, parent?: GameComponent) {
+    public rotateBy(angularOffset: number, parent?: GameComponent) {
         this._children.forEach(child => child.rotateBy(angularOffset, this));
         super.rotateBy(angularOffset, parent);
     }
 
-    get scale(): number {
+    public get scale(): number {
         return this._scale;
     }
 
-    set scale(scale: number) {
+    public set scale(scale: number) {
         this._scale = scale;
     }
 
-    rotateTo(angle: number, parent?: GameComponent) {
+    public rotateTo(angle: number, parent?: GameComponent) {
         const angularOffset = angle - this.rotation;
         this._children.forEach(child => child.rotateBy(angularOffset, this));
         super.rotateBy(angularOffset, parent);
     }
 
-    set positionValidator(value: validatorType) {
+    public set positionValidator(value: validatorType) {
         this._positionValidator = value;
     }
 
-    abstract get shape(): any
+    public abstract get shape(): any
 
-    rescale(scaleFactor: number) {
+    public rescale(scaleFactor: number) {
         this.shape.rescale(scaleFactor);
     }
 
-    moveToWithConstraints(newPosition: number[]) {
+    public moveToWithConstraints(newPosition: number[]) {
         if (this._positionValidator(newPosition)) {
             this.moveTo(newPosition);
         }
     }
 
-    moveByWithConstraints(offsetVec: number[], velocityVector: number[] = [0, 0]) {
+    public moveByWithConstraints(offsetVec: number[], velocityVector: number[] = [0, 0]) {
         if (this._positionValidator(offsetVec)) {
             this.moveBy(offsetVec);
         }

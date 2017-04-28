@@ -5,32 +5,32 @@ export class Context {
     private _services: {};
     private _dataSources: {};
 
-    private constructor() {
-        this._services = {};
-        this._dataSources = {};
-    }
-
-    static getInstance(): Context {
+    public static getInstance(): Context {
         return Context._locator;
     }
 
-    addService(key: string, val: any) {
+    public addService(key: string, val: any) {
         if (!(key in this._services)) {
             this._services[key] = val;
         }
     }
 
-    addDataSource(key: string, val: any) {
+    public addDataSource(key: string, val: any) {
         if (!(key in this._dataSources)) {
             this._dataSources[key] = val;
         }
     }
 
-    getService(key: string): any {
+    public getService(key: string): any {
         return this._services[key];
     }
 
-    getDataSource(key: string): any {
+    public getDataSource(key: string): any {
         return this._dataSources[key];
+    }
+
+    private constructor() {
+        this._services = {};
+        this._dataSources = {};
     }
 }

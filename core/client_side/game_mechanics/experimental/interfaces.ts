@@ -11,13 +11,13 @@ export interface Drawable {
 
 
 export interface NamedConstructible {
-    new(...args: any[]):{};
     name?: string;
+    new(...args: any[]): {};
 }
 
 
 export interface Constructible {
-    new(...args: any[]):{};
+    new(...args: any[]): {};
 }
 
 

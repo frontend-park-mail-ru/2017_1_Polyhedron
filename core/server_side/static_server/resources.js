@@ -19,7 +19,7 @@ function getContentType(filePath) {
 
 
 class Resource {
-    access(request) {}
+    access() {}
 
     getContentType(request) {
         return getContentType(request.url);
@@ -76,7 +76,7 @@ class Folder extends Resource {
             throw new Error('Outer folder requested: ' + normalizedPath);
         }
 
-        return promiseReadFile(filePath)
+        return promiseReadFile(filePath);
     }
 }
 

@@ -9,16 +9,36 @@ export class ServerCommunicator {
     private _eventBus: EventBus;
     private _eventMap: {};
 
+    /**
+     * Function returns object mapping event names to event classes
+     * @returns {{}}
+     */
+    private static getEventMap() {
+        const namespaces = Object.keys(events)
+            .map(key => events[key])
+            .filter(obj => !obj.name);
+        const namespacePairs = namespaces.map(namespace => [namespace, Object.keys(namespace)]);
+        const eventPairsArrays = namespacePairs
+            .map(([namespace, keys]) => {
+                return keys.map(key => [key, namespace[key]]);
+            });
+
+        return []
+            .concat.apply([], eventPairsArrays)
+            .reduce((curr, [key, value]) => {
+                curr[key] = value;
+                return curr;
+            }, {});
+    }
+
     constructor() {
         this._setListeners();
         this._eventMap = ServerCommunicator.getEventMap();
     }
 
-    _setListeners() {
+    private _setListeners() {
         this._eventBus.addEventListener(events.gameEvents.PlatformMovedEvent.eventName, event => this.handlePlatformMovedEvent(event));
-        
         this._eventBus.addEventListener(events.networkEvents.WorldUpdateEvent.eventName, event => this.handleWorldUpdateEvent(event));
-        
         this._eventBus.addEventListener(events.networkEvents.ServerMessageEvent.eventName, (event: CustomEvent) => {
             const detail = event.detail;
             const gameEventClass = detail.type;
@@ -32,36 +52,14 @@ export class ServerCommunicator {
         });
     }
 
-    handlePlatformMovedEvent(event) {
+    private handlePlatformMovedEvent(event) {
         this._eventBus.dispatchEvent(events.networkEvents.ClientMessageEvent.create({
             type: events.gameEvents.PlatformMovedEvent.eventName,
             data: event.detail
         }));
     }
-    
-    handleWorldUpdateEvent(event: events.networkEvents.WorldUpdateEvent) {
-        console.log(event); // TODO refactor
-    }
 
-    /**
-     * Function returns object mapping event names to event classes
-     * @returns {{}}
-     */
-    private static getEventMap() {
-        const namespaces = Object.keys(events)
-            .map(key => events[key])
-            .filter(obj => !obj.name);
-        const namespacePairs = namespaces.map(namespace => [namespace, Object.keys(namespace)]);
-        const eventPairsArrays = namespacePairs
-            .map(([namespace, keys]) => {
-            return keys.map(key => [key, namespace[key]])
-        });
-
-        return []
-            .concat.apply([], eventPairsArrays)
-            .reduce((curr, [key, value]) => {
-                curr[key] = value;
-                return curr;
-            }, {});
+    private handleWorldUpdateEvent(event: events.networkEvents.WorldUpdateEvent) {
+        // console.log(event); // TODO refactor
     }
 }

@@ -22,7 +22,6 @@ const MODES = {
 const DEFAULT_MODE = MODES.single;
 
 
-
 @Application()
 export class Game {
     @Autowired(EventBus)
@@ -57,7 +56,7 @@ export class Game {
         this._mode = mode || DEFAULT_MODE;
     }
 
-    start() {
+    public start() {
         this._setListeners();
         this._initWorld();
 
@@ -71,20 +70,20 @@ export class Game {
         }
     }
 
-    stop() {
+    public stop() {
         clearInterval(this._setIntervalID);
     }
 
-    continueGame() {
-        let time = MILLISECONDS_PER_SECOND / this._gameConfig.frameRate;
+    public continueGame() {
+        const time = MILLISECONDS_PER_SECOND / this._gameConfig.frameRate;
         this._setIntervalID = setInterval(() => this._makeIteration(time), time);
     }
 
-    _getPlatformByIndex(index) {
+    private _getPlatformByIndex(index) {
         return this._world.platforms[this._getItemIndex(index)];
     }
 
-    _getUserSectorByIndex(index) {
+    private _getUserSectorByIndex(index) {
         return this._world.userSectors[this._getItemIndex(index)];
     }
 
@@ -94,25 +93,25 @@ export class Game {
      * @returns {number} index of the entity which can be obtained cyclically iterating clockwise
      * @private
      */
-    _getItemIndex(index) {
-        let result = (this._playerItemsIndex + index) % this._gameConfig.playersNum;
+    private _getItemIndex(index) {
+        const result = (this._playerItemsIndex + index) % this._gameConfig.playersNum;
 
         return result >= 0 ? result : result + this._gameConfig.playersNum;
     }
 
-    get _playerItemsIndex() {
+    private get _playerItemsIndex() {
         return Math.floor(this._gameConfig.playersNum / 2);
     }
 
-    get _activePlatform() {
+    private get _activePlatform() {
         return this._world.platforms[this._playerItemsIndex];
     }
 
-    get _activeSector() {
+    private get _activeSector() {
         return this._world.userSectors[this._playerItemsIndex];
     }
 
-    _initWorld() {
+    private _initWorld() {
         const worldPosition = [this._canvas.width / 2, this._canvas.height / 2];
         const canvasSize = Math.min(this._canvas.width, this._canvas.height);
         const sectorHeight = canvasSize * this._gameConfig.fillFactor / 2;
@@ -129,7 +128,7 @@ export class Game {
         this._redraw();
     }
 
-    _setListeners() {
+    private _setListeners() {
         this.eventBus.addEventListener(events.networkEvents.DefeatEvent.eventName,
             event => this._handleDefeatEvent(event));
 
@@ -161,14 +160,14 @@ export class Game {
         });
     }
 
-    _makeIteration(time) {
+    private _makeIteration(time) {
         const timeScaleFactor = Math.min(this._canvas.height, this._canvas.width) / this._gameConfig.defaultCanvasSize;
         const scaledTime = time * timeScaleFactor;
 
-        this._world._makeIteration(scaledTime);
+        this._world.makeIteration(scaledTime);
         this._handleUserInput(scaledTime);
 
-        let activePlatformOffset = math.subtract(this._activePlatform.position, this._lastPlatformPosition);
+        const activePlatformOffset = math.subtract(this._activePlatform.position, this._lastPlatformPosition);
         if (math.norm(activePlatformOffset) > PLATFORM_TOLERANCE) {
             this._throwPlatformMovedEvent(activePlatformOffset);
             this._lastPlatformPosition = this._activePlatform.position;
@@ -177,7 +176,7 @@ export class Game {
         this._redraw();
     }
 
-    _handleUserInput (time: number) {
+    private _handleUserInput(time: number) {
         const localOffset = math.multiply(this._platformVelocityDirection, this._gameConfig.platformVelocity * time);
         this._world.movePlatform(this._getPlatformByIndex(0), localOffset, math.divide(localOffset, time));
 
@@ -187,7 +186,7 @@ export class Game {
         }
     }
 
-    _throwPlatformMovedEvent(platformOffset) {
+    private _throwPlatformMovedEvent(platformOffset) {
         /*
          window.dispatchEvent(
          events.PlatformMovedEvent.create(platformOffset)
@@ -195,10 +194,10 @@ export class Game {
          */
     }
 
-    _handleDefeatEvent(event) {
+    private _handleDefeatEvent(event) {
         // TODO сделать что-нибудь поинтереснее
-        let sectorId = this._getItemIndex(event.detail);
-        if (sectorId == this._playerItemsIndex) {
+        const sectorId = this._getItemIndex(event.detail);
+        if (sectorId === this._playerItemsIndex) {
             alert("You lose");
         } else {
             alert("You win");
@@ -208,23 +207,23 @@ export class Game {
         this.stop();
     }
 
-    _handleClientDefeatEvent(event) {
-        let sectorId = event.detail;
-        let playerId = this._activeSector.id;
+    private _handleClientDefeatEvent(event) {
+        const sectorId = event.detail;
+        const playerId = this._activeSector.id;
 
-        if (sectorId == playerId) {
-            //alert("Вы проиграли");
+        if (sectorId === playerId) {
+            // alert("Вы проиграли");
         } else {
-            //alert("Вы победили!");
+            // alert("Вы победили!");
         }
 
-        this._world.userSectors.filter(sector => sector.id == sectorId).forEach(sector => sector.setLoser());
+        this._world.userSectors.filter(sector => sector.id === sectorId).forEach(sector => sector.setLoser());
 
         this._redraw();
         this.stop();
     }
 
-    _handleWorldUpdateEvent(event) {
+    private _handleWorldUpdateEvent(event) {
         const gameUpdate = event.detail;
 
         gameUpdate.platformsUpdate.forEach(platformUpdate => {
@@ -234,13 +233,12 @@ export class Game {
         this._world.updateBallState(gameUpdate.ballUpdate.position, gameUpdate.ballUpdate.velocity);
     }
 
-    _createBots() {
+    private _createBots() {
         this._bots = [1, 2, 3].map(i => new Bot(this._getPlatformByIndex(i), this._world.ball));
     }
 
-    _redraw() {
+    private _redraw() {
         this._context.clearRect(0, 0, this._canvas.width, this._canvas.height);
         this._world.draw(this._canvas);
     }
 }
-

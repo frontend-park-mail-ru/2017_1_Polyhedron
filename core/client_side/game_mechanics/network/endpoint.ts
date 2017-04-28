@@ -18,27 +18,34 @@ export class WSEndpoint {
     @Autowired(EventBus)
     private _eventBus: EventBus;
 
+    private static _getRequestJson(type, data) {
+        return JSON.stringify({
+            requestType: type,
+            data
+        });
+    }
+
     constructor() {
         this._socket = new WebSocket(this._url);
         this._initSocket();
         this._setListeners();
     }
 
-    requestRoom() {
+    public requestRoom() {
         this.sendMessage(REQUEST_TYPES.roomRequest);
     }
 
-    submitGameStart() {
+    public submitGameStart() {
         this.sendMessage(REQUEST_TYPES.gameStart);
     }
 
-    sendMessage(messageType, data={}) {
+    public sendMessage(messageType, data = {}) {
         this._send(
             WSEndpoint._getRequestJson(messageType, data)
         );
     }
 
-    close() {
+    public close() {
         this._socket.close();
     }
 
@@ -59,14 +66,7 @@ export class WSEndpoint {
     private _setListeners() {
         this._eventBus.addEventListener(events.networkEvents.ClientMessageEvent.eventName, event => {
             const detail = event.detail;
-            this.sendMessage(detail.type, detail.data)
-        });
-    }
-
-    private static _getRequestJson(type, data) {
-        return JSON.stringify({
-            requestType: type,
-            data: data
+            this.sendMessage(detail.type, detail.data);
         });
     }
 

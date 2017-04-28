@@ -4,18 +4,18 @@
  * NEVER create instances of BaseEvent class with new. ALWAYS use classname.create(...).
  */
 export abstract class BaseEvent {
-    constructor() {
-        throw new Error('NEVER create instances of BaseEvent class with new. ALWAYS use classname.create(...).');
+    public static get eventName() {
+        return (this as any).name;
     }
 
-    static get eventName() {
-        return (<any>this).name;
-    }
-
-    static create(eventDetail={}) {
+    public static create(eventDetail = {}) {
         return new CustomEvent(this.eventName, {
             detail: eventDetail,
         });
+    }
+
+    constructor() {
+        throw new Error('NEVER create instances of BaseEvent class with new. ALWAYS use classname.create(...).');
     }
 }
 
@@ -34,7 +34,7 @@ export namespace networkEvents {
 
 
     export class WorldUpdateEvent extends BaseEvent {
-        static create(eventDetail) {
+        public static create(eventDetail) {
             const detail = {
                 platformsUpdate: [],
 
@@ -52,15 +52,13 @@ export namespace networkEvents {
 
             detail.ballUpdate = eventDetail.ballUpdate;
 
-            return new CustomEvent(this.eventName, {
-                detail: detail
-            });
+            return new CustomEvent(this.eventName, {detail});
         }
     }
 
 
     export class DefeatEvent extends BaseEvent {
-        static create(eventDetail) {
+        public static create(eventDetail) {
             const playerIndex = eventDetail.playerIndex;
             const looserIndex = eventDetail.looserIndex;
 
@@ -86,9 +84,3 @@ export namespace gameEvents {
 export namespace controllerEvents {
     export class ArrowDirectionEvent extends BaseEvent {}
 }
-
-
-
-
-
-

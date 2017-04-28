@@ -13,15 +13,15 @@ export class Ball extends GameComponent implements Drawable {
         this._circle = new Circle(radius);
     }
 
-    get radius(): number {
+    public get radius(): number {
         return this._circle.radius;
     }
 
-    get shape(): Circle {
+    public get shape(): Circle {
         return this._circle;
     }
 
-    bounceNorm(normVec: number[], surfaceVelocity: number[] = [0, 0]) {
+    public bounceNorm(normVec: number[], surfaceVelocity: number[] = [0, 0]) {
         surfaceVelocity = math.multiply(surfaceVelocity, -1);
         const relativeVelocity = math.subtract(this.velocity, surfaceVelocity);
         const bounceMatrix = this._getBounceMatrix(normVec);
@@ -29,23 +29,11 @@ export class Ball extends GameComponent implements Drawable {
         this.velocity = math.add(newRelativeVelocity, surfaceVelocity).toArray();
     }
 
-    bouncePoint(point: number[], transportVelocity: number[]) {
+    public bouncePoint(point: number[], transportVelocity: number[]) {
         this.bounceNorm(math.subtract(this.position, point), transportVelocity);
     }
 
-    _getBounceMatrix(normVec: number[]) {
-        const normVec0 = math.divide(normVec, math.norm(normVec));
-
-        const normMatrix = [
-            [normVec0[0] * normVec0[0], normVec0[0] * normVec0[1]],
-            [normVec0[0] * normVec0[1], normVec0[1] * normVec0[1]]
-        ];
-
-        const identityMatrix = math.eye(2);
-        return math.subtract(identityMatrix, math.multiply(normMatrix, 2));
-    }
-
-    draw(canvas: HTMLCanvasElement) {
+    public draw(canvas: HTMLCanvasElement) {
         const context = canvas.getContext("2d");
         const position = this.position;
 
@@ -55,5 +43,17 @@ export class Ball extends GameComponent implements Drawable {
         context.fill();
         context.lineWidth = 1;
         context.stroke();
+    }
+
+    private _getBounceMatrix(normVec: number[]) {
+        const normVec0 = math.divide(normVec, math.norm(normVec));
+
+        const normMatrix = [
+            [normVec0[0] * normVec0[0], normVec0[0] * normVec0[1]],
+            [normVec0[0] * normVec0[1], normVec0[1] * normVec0[1]]
+        ];
+
+        const identityMatrix = math.eye(2);
+        return math.subtract(identityMatrix, math.multiply(normMatrix, 2));
     }
 }

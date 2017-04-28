@@ -8,6 +8,11 @@ export function join(...objects) {
 }
 
 
+export function flatten([head, ...tail]) {
+    return head.concat(...tail)
+}
+
+
 export transform(func, ...options) {
     return (prev, curr, ind, array) => {
         if (ind !== array.length) {

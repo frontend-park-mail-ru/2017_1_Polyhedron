@@ -38,10 +38,10 @@ export function scale(vector: number[], scaleFactor: number, origin: number[] = 
 
 
 export function getOffsetChecker(polygon: Polygon, area: Area) {
-    return function (offset: number[]) {
+    return (offset: number[]) => {
         return polygon.getPointArray()
             .map(point => math.add(point, offset))
             .map(point => area.containsGlobalPoint(point))
             .reduce((curr, next) => curr && next, true);
-    }
+    };
 }

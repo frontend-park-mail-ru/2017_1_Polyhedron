@@ -24,7 +24,7 @@ export class InputController {
         this._setListeners();
     }
 
-    _setListeners() {
+    private _setListeners() {
         document.addEventListener("keydown", event => {
             this._handleKeyDown(event);
             this.eventBus.dispatchEvent(events.controllerEvents.ArrowDirectionEvent.create(this._direction));
@@ -36,38 +36,38 @@ export class InputController {
         });
     }
 
-    _handleKeyDown(event) {
-        if (event.keyCode == KEY_LEFT) {
+    private _handleKeyDown(event) {
+        if (event.keyCode === KEY_LEFT) {
             this._leftPressed = true;
-        } else if (event.keyCode == KEY_RIGHT) {
+        } else if (event.keyCode === KEY_RIGHT) {
             this._rightPressed = true;
-        } else if (event.keyCode == KEY_DOWN) {
+        } else if (event.keyCode === KEY_DOWN) {
             this._downPressed = true;
-        } else if (event.keyCode == KEY_UP) {
+        } else if (event.keyCode === KEY_UP) {
             this._upPressed = true;
         }
 
         this._updatePlatformVelocityDirection();
     }
 
-    _handleKeyUp(event) {
-        if (event.keyCode == KEY_LEFT) {
+    private _handleKeyUp(event) {
+        if (event.keyCode === KEY_LEFT) {
             this._leftPressed = false;
-        } else if (event.keyCode == KEY_RIGHT) {
+        } else if (event.keyCode === KEY_RIGHT) {
             this._rightPressed = false;
-        } else if (event.keyCode == KEY_DOWN) {
+        } else if (event.keyCode === KEY_DOWN) {
             this._downPressed = false;
-        } else if (event.keyCode == KEY_UP) {
+        } else if (event.keyCode === KEY_UP) {
             this._upPressed = false;
         }
         this._updatePlatformVelocityDirection();
     }
 
-    _updatePlatformVelocityDirection() {
+    private _updatePlatformVelocityDirection() {
         return this._direction = [this._getPlatformHorDirection(), this._getPlatformVertDirection()];
     }
 
-    _getPlatformHorDirection() {
+    private _getPlatformHorDirection() {
         if (!this._leftPressed && !this._rightPressed) {
             return 0;
         } else if (this._leftPressed && !this._rightPressed) {
@@ -79,7 +79,7 @@ export class InputController {
         }
     }
 
-    _getPlatformVertDirection() {
+    private _getPlatformVertDirection() {
         if (!this._downPressed && !this._upPressed) {
             return 0;
         } else if (this._downPressed && !this._upPressed) {

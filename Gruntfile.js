@@ -126,6 +126,19 @@ module.exports = function(grunt) {
             ]
         },
 
+        tslint: {
+            options: {
+                configuration: "tslint.json",
+                force: false,
+                fix: false
+            },
+            files: {
+                src: [
+                    "./core/**/*.ts"
+                ]
+            }
+        },
+
         mochaTest: {
             test: {
                 src: ['tests/test.js']
@@ -157,6 +170,7 @@ module.exports = function(grunt) {
     grunt.loadNpmTasks('grunt-mocha-test');
     grunt.loadNpmTasks('grunt-concurrent');
     grunt.loadNpmTasks('grunt-eslint');
+    grunt.loadNpmTasks("grunt-tslint");
     grunt.loadNpmTasks('grunt-exec');
 
     grunt.registerTask('postinstall', [
@@ -164,7 +178,7 @@ module.exports = function(grunt) {
     ]);
 
     grunt.registerTask('test', [
-        'eslint', 'mochaTest:test'
+        'eslint', 'tslint', /*'mochaTest:test'*/
     ]);
 
     grunt.registerTask('dev', ['exec:compile_pug', 'webpack', 'concurrent:watch']);

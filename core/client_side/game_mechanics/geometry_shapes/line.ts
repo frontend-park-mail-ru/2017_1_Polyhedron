@@ -16,7 +16,7 @@ export class Line {
         this._coordinateSystem = new CoordinateSystem(this._startPoint, this.angle);
     }
 
-    getClosestPointDistance(globalPoint): number {
+    public getClosestPointDistance(globalPoint): number {
         const [localX, localY] = this._coordinateSystem.toLocals(globalPoint);
 
         if (localX < 0) {
@@ -28,7 +28,7 @@ export class Line {
         }
     }
 
-    getClosestPoint(globalPoint): number[] {
+    public getClosestPoint(globalPoint): number[] {
         const localX = this._coordinateSystem.toLocals(globalPoint)[0];
 
         if (localX < 0) {
@@ -40,30 +40,30 @@ export class Line {
         }
     }
 
-    getLineDistance(globalPoint): number {
+    public getLineDistance(globalPoint): number {
         return Math.abs(this._coordinateSystem.toLocals(globalPoint)[1]);
     }
 
-    _withinLineRange(localPoint): boolean {
-        return 0 <= localPoint[0] && localPoint[0] <= this.length;
-    }
-
-    get angle(): number {
+    public get angle(): number {
         return Math.atan2(
             this._endPoint[1] - this._startPoint[1],
             this._endPoint[0] - this._startPoint[0]
         );
     }
 
-    getPositiveNorm(): number[] {
+    public getPositiveNorm(): number[] {
         return this._coordinateSystem.toGlobalsWithoutOffset([0, 1]);
     }
 
-    getNegativeNorm(): number[] {
+    public getNegativeNorm(): number[] {
         return this._coordinateSystem.toGlobalsWithoutOffset([0, -1]);
     }
 
-    get length(): number {
+    public get length(): number {
         return math.norm(math.subtract(this._endPoint, this._startPoint));
+    }
+
+    private _withinLineRange(localPoint): boolean {
+        return 0 <= localPoint[0] && localPoint[0] <= this.length;
     }
 }

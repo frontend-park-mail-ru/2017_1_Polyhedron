@@ -1,9 +1,10 @@
 'use strict';
 
 const fo = require('../../common/file_operations');
+const path = require('path');
 
 
-function getURLs(dirPath, _urlPrefix, _recursively, _dropFolderPrefix) {
+function getURLsFromDir(dirPath, _urlPrefix, _recursively, _dropFolderPrefix) {
     const recursively = _recursively || true;
     const dropFolderPrefix = _dropFolderPrefix || true;
     const urlPrefix = _urlPrefix || '/';
@@ -23,25 +24,26 @@ function getURLs(dirPath, _urlPrefix, _recursively, _dropFolderPrefix) {
     }
 
     if (dropFolderPrefix) {
-        files = files.map(filepath => {
-            const pathParts = filepath.split('/');
-            return pathParts[pathParts.length - 1];
-        });
+        files = files
+            .map(filepath => path.relative(dirPath, filepath))
+            .filter(relPath => !relPath.startsWith('..'));
     }
     return files.map(str => urlPrefix + str);
 }
 
 
-function getUrlJson(dirPath, _urlPrefix, _recursively, _dropFolderPrefix) {
-    return JSON.stringify(getURLs(dirPath, _urlPrefix, _recursively, _dropFolderPrefix));
+function getFilesUrls(foldersInfo) {
+    const [head, ...tail] = foldersInfo.map(folderInfo => getURLsFromDir(...folderInfo));
+    return head.concat(...tail);
 }
 
 
-function createCachedUrlsGetterAsync(dirPath, _urlPrefix, _recursively, _dropFolderPrefix) {
-    return function() {
+function getCachedUrlGen({foldersInfo, plainUrls}) {
+    return function () {
         return new Promise((resolve, reject) => {
             try {
-                resolve(getUrlJson(dirPath, _urlPrefix, _recursively, _dropFolderPrefix));
+                const filesUrls = getFilesUrls(foldersInfo);
+                resolve(JSON.stringify(filesUrls.concat(plainUrls)));
             } catch (err) {
                 reject(err);
             }
@@ -49,7 +51,4 @@ function createCachedUrlsGetterAsync(dirPath, _urlPrefix, _recursively, _dropFol
     };
 }
 
-
-module.exports.getURLs = getURLs;
-module.exports.getUrlJson = getUrlJson;
-module.exports.createCachedUrlsGetterAsync = createCachedUrlsGetterAsync;
+module.exports.getCachedUrlGen = getCachedUrlGen;
