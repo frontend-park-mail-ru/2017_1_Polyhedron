@@ -25,17 +25,26 @@ self.addEventListener('install', event => {
         );
 });
 
+self.addEventListener('fetch', event => {
+    const lastModifiedPromise = fetch(event.request.url, {method: 'HEAD'})  // TODO maybe need to enable cors
+        .then(response => response.headers.get('Last-Modified'))
+        .catch(err => null);
+    const cachedResponsePromise = caches.match(event.request);
 
-self.addEventListener('fetch', function(event) {
     event.respondWith(
-        caches.match(event.request).then(function(cachedResponse) {
+        Promise
+            .all([lastModifiedPromise, cachedResponsePromise])
+            .then(
+                ([lastModified, cachedResponse]) => {
+                    if (cachedResponse) {
+                        if (!lastModified || new Date(lastModified).getTime() < Date.now()) {
+                            return cachedResponse;
+                        }
+                    }
 
-            if (cachedResponse) {
-                return cachedResponse;
-            }
-
-            return fetch(event.request);
-        })
+                    return fetch(event.request);
+                }
+            )
     );
 });
 

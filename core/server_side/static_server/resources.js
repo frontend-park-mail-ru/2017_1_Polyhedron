@@ -2,6 +2,7 @@
 
 const path = require("path");
 const promiseReadFile = require("../../common/file_operations").promiseReadFile;
+const fs = require('fs');
 
 
 function getContentType(filePath) {
@@ -21,8 +22,8 @@ function getContentType(filePath) {
 class Resource {
     access() {}
 
-    getContentType(request) {
-        return getContentType(request.url);
+    getHeaders() {
+        return {};
     }
 }
 
@@ -39,8 +40,10 @@ class Func extends Resource {
         return this.func(request, response, ...this.options);
     }
 
-    getContentType() {
-        return this.contentType;
+    getHeaders() {
+        return {
+            'Content-Type': this.contentType
+        };
     }
 }
 
@@ -55,8 +58,11 @@ class File extends Resource {
         return promiseReadFile(this.filePath);
     }
 
-    getContentType() {
-        return getContentType(this.filePath);
+    getHeaders() {
+        return {
+            'Last-Modified': fs.statSync(this.filePath).mtime.toString(),
+            'Content-Type': getContentType(this.filePath)
+        };
     }
 }
 
@@ -69,36 +75,26 @@ class Folder extends Resource {
     }
 
     access(request) {
-        const filePath = this.folderPath + request.url.replace(this.urlPrefix, '');
+        return promiseReadFile(this._getFilePath(request.url));
+    }
+
+    getHeaders(request) {
+        const filePath = this._getFilePath(request.url);
+        return {
+            'Last-Modified': fs.statSync(filePath).mtime.toString(),
+            'Content-Type': getContentType(request.url)
+        };
+    }
+
+    _getFilePath(url) {
+        const filePath = this.folderPath + url.replace(this.urlPrefix, '');
         const normalizedPath = path.relative(this.folderPath, filePath);
 
         if (normalizedPath.startsWith('..')) {
             throw new Error('Outer folder requested: ' + normalizedPath);
         }
 
-        return promiseReadFile(filePath);
-    }
-}
-
-
-class MultiFolder extends Resource {
-    constructor(folderPaths, urlPrefix) {
-        super();
-        this.folderPaths = folderPaths;
-        this.urlPrefix = urlPrefix;
-    }
-
-    access(request) {
-        const normalizedPaths = this.folderPaths
-            .map(dirPath => [dirPath + request.url.replace(this.urlPrefix, ''), dirPath])
-            .map(([filePath, dirPath]) => path.relative(dirPath, filePath))
-            .filter(normalizedPath => !normalizedPath.startsWith('..'));
-
-        if (normalizedPaths.length === 0) {
-            throw new Error('File by url ' + request.url + ' not found in dirs: ' + this.folderPaths);
-        }
-
-        return promiseReadFile(normalizedPaths[0]);
+        return filePath;
     }
 }
 
@@ -107,4 +103,3 @@ module.exports.Func = Func;
 module.exports.Resource = Resource;
 module.exports.File = File;
 module.exports.Folder = Folder;
-module.exports.MultiFolder = MultiFolder;

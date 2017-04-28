@@ -9,7 +9,7 @@ function BindedResource(resource) {
 
         resource.access(request, response)
             .then(data => {
-                response.writeHead(200, {"Content-Type": resource.getContentType(request)});
+                response.writeHead(200, resource.getHeaders(request));
                 response.write(data);
             })
             .catch(err => {
