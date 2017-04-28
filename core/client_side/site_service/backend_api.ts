@@ -74,6 +74,6 @@ export class BackendAPI {
             (options as any).body = requestBody ? JSON.stringify(requestBody) : '';
         }
 
-        return fetch(absURL, options);
+        return (window as any).fetch(absURL, options);
     }
 }

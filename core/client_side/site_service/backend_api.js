@@ -54,7 +54,7 @@ class BackendAPI {
         if (method === METHODS.POST) {
             options.body = requestBody ? JSON.stringify(requestBody) : '';
         }
-        return fetch(absURL, options);
+        return window.fetch(absURL, options);
     }
 }
 exports.BackendAPI = BackendAPI;
