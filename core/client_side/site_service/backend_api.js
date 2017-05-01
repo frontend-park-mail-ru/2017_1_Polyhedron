@@ -1,8 +1,6 @@
-
-require('isomorphic-fetch');
-
+"use strict";
+Object.defineProperty(exports, "__esModule", { value: true });
 const ROOT_URL = 'https://polyhedron-backend.herokuapp.com';
-
 const RELATIVE_URL_MAP = {
     register: '/api/user/registration',
     login: '/api/user/login',
@@ -12,55 +10,41 @@ const RELATIVE_URL_MAP = {
     leaders: '/api/user/leaders/',
     isLoggedIn: '/api/user/islogin'
 };
-
 const METHODS = {
     GET: "GET",
     POST: "POST"
 };
-
-
-export class BackendAPI {
-    constructor(rootURL, urlMap) {
-        this._rootURL = rootURL || ROOT_URL;
-        this._urlMap = urlMap || RELATIVE_URL_MAP;
+class BackendAPI {
+    constructor(rootURL = ROOT_URL, urlMap = RELATIVE_URL_MAP) {
+        this._rootURL = rootURL;
+        this._urlMap = urlMap;
     }
-
     register(email, login, password) {
         return this._fetchCORS(this._urlMap.register, METHODS.POST, {
-            'email': email,
-            'login': login,
-            'password': password
+            email, login, password
         });
     }
-
     login(email, password) {
         return this._fetchCORS(this._urlMap.login, METHODS.POST, {
-            'email': email,
-            'password': password
+            email, password
         });
     }
-
     getuser() {
         return this._fetchCORS(this._urlMap.getUser, METHODS.GET);
     }
-
     logout() {
         return this._fetchCORS(this._urlMap.logout, METHODS.POST);
     }
-
     getLeaders(leadersCountLimit) {
         return this._fetchCORS(this._urlMap.leaders + leadersCountLimit, METHODS.GET);
     }
-
     isLoggedIn() {
         return this._fetchCORS(this._urlMap.isLoggedIn, METHODS.POST);
     }
-
-    _fetchCORS(url, method, requestBody) {
+    _fetchCORS(url, method, requestBody = {}) {
         const absURL = this._rootURL + url;
-
-        let options = {
-            method: method,
+        const options = {
+            method,
             mode: 'cors',
             credentials: 'include',
             headers: {
@@ -70,7 +54,8 @@ export class BackendAPI {
         if (method === METHODS.POST) {
             options.body = requestBody ? JSON.stringify(requestBody) : '';
         }
-
-        return fetch(absURL,options);
+        return window.fetch(absURL, options);
     }
 }
+exports.BackendAPI = BackendAPI;
+//# sourceMappingURL=backend_api.js.map
