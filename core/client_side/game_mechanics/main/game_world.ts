@@ -10,7 +10,7 @@ import {GameComponent} from "../base/game_component";
 import {EventBus} from "../event_system/event_bus";
 import {Autowired} from "../experimental/decorators";
 import {getOffsetChecker} from "../base/geometry";
-import {Context} from "../experimental/context";
+import {ConfigContext} from "../experimental/context";
 
 
 export class GameWorld {
@@ -31,7 +31,7 @@ export class GameWorld {
     private _lastCollidedObject: GameComponent = null;
 
     private static _platformFromTriangleField(triangleField: TriangleField) {
-        const platformConfig = Context.getInstance().getDataSource('platform');
+        const platformConfig = ConfigContext.getInstance().get('platform');
 
         const relativeDistance = platformConfig.relativeDistance;
         const relativeLength = platformConfig.relativeLength;

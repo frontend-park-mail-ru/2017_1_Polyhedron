@@ -1,56 +1,53 @@
 'use strict';
 
-import set = Reflect.set;
+
+export interface IContext {
+    get(key: string): any;
+    set(key: string, val: any): void;
+    remove(key: string): any;
+}
 
 
-export class VariableMap {
-    private _map: {};
+export abstract class AbstractContext implements IContext {
+    private _map: {} = {};
 
-    constructor() {
-        this._map = {};
-    }
-
-    public getVariable(key: string) {
+    public get(key: string): any {
         return this._map[key];
     }
 
-    public setVariable(key: string, val: any) {
+    public set(key: string, val: any): void {
+        if (!this._map[key]) {
+            this._map[key] = val;
+        }
+    }
+
+    public remove(key: string): any {
+        const result = this._map[key];
+        this._map[key] = null;
+        return result;
+    }
+
+    public replace(key: string, val: any): void {
         this._map[key] = val;
     }
 }
 
 
-export class Context {
-    private static _locator = new Context();
-    private _services: {};
-    private _dataSources: {};
+export class VariableContext extends AbstractContext {}
 
-    public static getInstance(): Context {
-        return Context._locator;
+
+export class ConfigContext extends AbstractContext {
+    private static _context = new ConfigContext();
+
+    public static getInstance(): ConfigContext {
+        return ConfigContext._context;
     }
+}
 
-    public addService(key: string, val: any) {
-        if (!(key in this._services)) {
-            this._services[key] = val;
-        }
-    }
+export class ServiceContext extends AbstractContext {
+    private static _context = new ServiceContext();
 
-    public addDataSource(key: string, val: any) {
-        if (!(key in this._dataSources)) {
-            this._dataSources[key] = val;
-        }
-    }
-
-    public getService(key: string): any {
-        return this._services[key];
-    }
-
-    public getDataSource(key: string): any {
-        return this._dataSources[key];
-    }
-
-    private constructor() {
-        this._services = {};
-        this._dataSources = {};
+    public static getInstance(): ServiceContext {
+        return ServiceContext._context;
     }
 }

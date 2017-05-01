@@ -5,7 +5,7 @@ import {SignInForm} from '../../../core/client_side/site_service/form_validation
 import {Form} from '../components/form/form';
 import {Text} from '../components/text/text';
 import {Autowired} from "../../../core/client_side/game_mechanics/experimental/decorators";
-import {VariableMap} from "../../../core/client_side/game_mechanics/experimental/context";
+import {VariableContext} from "../../../core/client_side/game_mechanics/experimental/context";
 
 
 export class Login extends BasePage {
@@ -13,7 +13,7 @@ export class Login extends BasePage {
     private authorised: Text;
     private _validator: SignInForm;
 
-    @Autowired(VariableMap)
+    @Autowired(VariableContext)
     private variableMap;
 
     constructor(heading, content, options?) {
@@ -40,9 +40,9 @@ export class Login extends BasePage {
 
     public render() {
         this._heading.innerHTML = "Вход в игру";
-        this.variableMap.getVariable('userpanel').render();
+        this.variableMap.get('userpanel').render();
 
-        if (this.variableMap.getVariable('user') !== null) {
+        if (this.variableMap.get('user') !== null) {
             this.authorised.render();
         } else {
             this.form.render();

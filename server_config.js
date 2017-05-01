@@ -1,4 +1,5 @@
 "use strict";
+
 const serverLib = require("./core/server_side/static_server/server");
 const resourceBinding = require("./core/server_side/static_server/resource_binding");
 const caching = require("./core/server_side/service/caching");
@@ -9,16 +10,6 @@ const router = new serverLib.Router();
 
 router.setDefault(new resourceBinding.BindedFile("./html/index.html"));
 router.addPlainURL("/api", new resourceBinding.BindedFile("./swagger.json"));
-
-/*
-router.addPlainURL("/cached_urls", new resourceBinding.BindedFunction(caching.createCachedUrlsGetterAsync(
-    ['./static/css'],
-    ['./static/fonts'],
-    ['./static/images'],
-    ['./static/js'],
-    ['./dist', '/dist/']
-)));
-*/
 
 router.addPlainURL("/cached_urls", new resourceBinding.BindedFunction(caching.getCachedUrlGen({
     foldersInfo: [

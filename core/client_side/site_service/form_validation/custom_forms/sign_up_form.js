@@ -58,7 +58,7 @@ class SignUpForm extends base_form_1.Form {
             .then(response => {
             if (response.status === 200) {
                 alert(messages_1.MESSAGE_MAP.SIGN_UP_SUCCESS);
-                this.variableMap.getVariable('router').render("/");
+                this.variableMap.get('router').render("/");
             }
             else {
                 alert(messages_1.MESSAGE_MAP.SIGN_UP_FAIL);
@@ -75,7 +75,7 @@ __decorate([
     decorators_1.Autowired(backend_api_1.BackendAPI)
 ], SignUpForm.prototype, "backendAPI", void 0);
 __decorate([
-    decorators_1.Autowired(context_1.VariableMap)
+    decorators_1.Autowired(context_1.VariableContext)
 ], SignUpForm.prototype, "variableMap", void 0);
 exports.SignUpForm = SignUpForm;
 //# sourceMappingURL=sign_up_form.js.map

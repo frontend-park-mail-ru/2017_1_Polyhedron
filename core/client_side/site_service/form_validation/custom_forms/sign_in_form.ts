@@ -4,7 +4,7 @@ import {Form} from '../base_form';
 import {MESSAGE_MAP} from '../messages';
 import * as fields from '../form_fields';
 import {Autowired} from "../../../game_mechanics/experimental/decorators";
-import {VariableMap} from "../../../game_mechanics/experimental/context";
+import {VariableContext} from "../../../game_mechanics/experimental/context";
 
 
 const LOGIN_SELECTORS = {
@@ -27,8 +27,8 @@ export class SignInForm extends Form {
     @Autowired(BackendAPI)
     private backendAPI: BackendAPI;
 
-    @Autowired(VariableMap)
-    private variableMap: VariableMap;
+    @Autowired(VariableContext)
+    private variableMap: VariableContext;
 
     constructor() {
         const form = document.querySelector(LOGIN_SELECTORS.form);
@@ -61,7 +61,7 @@ export class SignInForm extends Form {
                     alert(MESSAGE_MAP.INVALID_CREDENTIALS);
                 } else {
                     alert(MESSAGE_MAP.LOGIN_SUCCESS);
-                    this.variableMap.getVariable('router').renderAndSave('/');
+                    this.variableMap.get('router').renderAndSave('/');
                 }
 
             })

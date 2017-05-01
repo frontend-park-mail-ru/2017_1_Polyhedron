@@ -4,7 +4,7 @@ import {Form} from '../base_form';
 import {MESSAGE_MAP} from '../messages';
 import * as fields from '../form_fields';
 import {Autowired} from "../../../game_mechanics/experimental/decorators";
-import {VariableMap} from "../../../game_mechanics/experimental/context";
+import {VariableContext} from "../../../game_mechanics/experimental/context";
 
 
 const REGISTER_SELECTORS = {
@@ -32,8 +32,8 @@ export class SignUpForm extends Form {
     @Autowired(BackendAPI)
     private backendAPI: BackendAPI;
 
-    @Autowired(VariableMap)
-    private variableMap: VariableMap;
+    @Autowired(VariableContext)
+    private variableMap: VariableContext;
 
     constructor() {
         const form = document.querySelector(REGISTER_SELECTORS.form);
@@ -76,7 +76,7 @@ export class SignUpForm extends Form {
             .then(response => {
                 if (response.status === 200) {
                     alert(MESSAGE_MAP.SIGN_UP_SUCCESS);
-                    this.variableMap.getVariable('router').render("/");
+                    this.variableMap.get('router').render("/");
                 } else {
                     alert(MESSAGE_MAP.SIGN_UP_FAIL);
                 }

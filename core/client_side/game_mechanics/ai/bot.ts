@@ -3,10 +3,9 @@
 import * as math from '../../../_lib/math';
 import {Platform} from "../game_components/platform";
 import {Ball} from "../game_components/ball";
-import {NewConfigurable, Load} from "../experimental/decorators";
+import {Load} from "../experimental/decorators";
 
 
-@NewConfigurable('bot')
 export class Bot {
     private _platform: Platform;
     private _ball: Ball;
@@ -23,10 +22,10 @@ export class Bot {
         this._ball = ball;
         this._setIntervalID = null;
 
-        this.init();
+        this._init();
     }
 
-    private init() {
+    private _init() {
         this._setIntervalID = setInterval(() => {
             this._movePlatform(this._time);
         }, this._time);

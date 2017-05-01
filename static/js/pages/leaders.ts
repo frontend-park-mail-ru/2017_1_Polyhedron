@@ -5,7 +5,7 @@ import {Text} from '../components/text/text';
 import {LeaderBoard} from '../components/leaderboard/leaderboard';
 import {BackendAPI} from '../../../core/client_side/site_service/backend_api';
 import {Autowired} from "../../../core/client_side/game_mechanics/experimental/decorators";
-import {VariableMap} from "../../../core/client_side/game_mechanics/experimental/context";
+import {VariableContext} from "../../../core/client_side/game_mechanics/experimental/context";
 
 
 const DEFAULT_LEADER_COUNT = 10;
@@ -18,8 +18,8 @@ export class Leaders extends BasePage {
     @Autowired(BackendAPI)
     private backendAPI: BackendAPI;
 
-    @Autowired(VariableMap)
-    private variableMap: VariableMap;
+    @Autowired(VariableContext)
+    private variableMap: VariableContext;
 
     constructor(heading, content, options?, leaderCount?) {
         super(heading, content, options);
@@ -36,7 +36,7 @@ export class Leaders extends BasePage {
         this._heading.innerHTML = "Топ-10";
         this.text.render();
 
-        this.variableMap.getVariable('userpanel').render();
+        this.variableMap.get('userpanel').render();
 
         this.backendAPI.getLeaders(this._leaderCount)
             .then(response => {

@@ -51,7 +51,7 @@ class SignInForm extends base_form_1.Form {
             }
             else {
                 alert(messages_1.MESSAGE_MAP.LOGIN_SUCCESS);
-                this.variableMap.getVariable('router').renderAndSave('/');
+                this.variableMap.get('router').renderAndSave('/');
             }
         })
             .catch(err => {
@@ -64,7 +64,7 @@ __decorate([
     decorators_1.Autowired(backend_api_1.BackendAPI)
 ], SignInForm.prototype, "backendAPI", void 0);
 __decorate([
-    decorators_1.Autowired(context_1.VariableMap)
+    decorators_1.Autowired(context_1.VariableContext)
 ], SignInForm.prototype, "variableMap", void 0);
 exports.SignInForm = SignInForm;
 //# sourceMappingURL=sign_in_form.js.map

@@ -1,5 +1,6 @@
 'use strict';
-import {Context} from "./context";
+
+import {ConfigContext, ServiceContext} from "./context";
 import {loadDataSources} from '../loaders/dataSourceLoader';
 import {NamedConstructible} from "./interfaces";
 
@@ -26,35 +27,11 @@ export function Service<T extends NamedConstructible>(constructor: T) {
 export function Autowired(constructFunc: NamedConstructible, ...args: any[]) {
     loadDataSources();
 
-    const locator = Context.getInstance();
-    locator.addService(constructFunc.name, new constructFunc(...args));
+    const context = ServiceContext.getInstance();
+    context.set(constructFunc.name, new constructFunc(...args));
 
     return (target: any, key: string) => {
-        target[key] = locator.getService(constructFunc.name);
-    };
-}
-
-
-export function NewConfigurable(path: string) {
-    loadDataSources();
-
-    const locator = Context.getInstance();
-    const [head, ...tail] = path.split('/');
-    const localConfig = tail.reduce((subConfig, key) => subConfig[key], locator.getDataSource(head));
-
-    return <T extends NamedConstructible> (constructor: T) => {
-        const configName = getClassConfigName(constructor);
-        locator.addDataSource(configName, localConfig);
-
-        return class extends constructor {
-            public static config = locator.getDataSource(configName);
-            private config;
-
-            constructor(...args: any[]) {
-                super(...args);
-                this.config = locator.getDataSource(configName);
-            }
-        };
+        target[key] = context.get(constructFunc.name);
     };
 }
 
@@ -62,12 +39,12 @@ export function NewConfigurable(path: string) {
 export function Load(url: string) {
     loadDataSources();
 
-    const locator = Context.getInstance();
+    const context = ConfigContext.getInstance();
 
     return (target: any, key: string) => {
         if (!target[key]) {
             const [head, ...tail] = url.split('/');
-            const subConf = locator.getDataSource(head);
+            const subConf = context.get(head);
             const val = getSubObj(subConf, tail);
 
             if (val) {

@@ -20,21 +20,11 @@ export class Form {
                 event => this.globalFormLogic(event)
             )
         );
-        // for (const fieldName in this._fields) {
-        //     this._fields[fieldName].setChangeCallBack(event => this.globalFormLogic(event));
-        // }
     }
 
     public isValid() {
-        /*
-        let isValid = true; // TODO replace with reduce
-        for (const fieldName in this._fields) {
-            isValid = isValid && this._fields[fieldName].isValid();
-        }
-
-        return isValid;
-        */
-        return Object.keys(this._fields).reduce((curr, key) => curr && this._fields[key].isValid(), true);
+        return Object.keys(this._fields)
+            .reduce((curr, key) => curr && this._fields[key].isValid(), true);
     }
 
     public validateAndSubmit() {

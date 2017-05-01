@@ -3,14 +3,14 @@
 import {BasePage} from './base';
 import {Menu} from '../components/menu/menu';
 import {Autowired} from "../../../core/client_side/game_mechanics/experimental/decorators";
-import {VariableMap} from "../../../core/client_side/game_mechanics/experimental/context";
+import {VariableContext} from "../../../core/client_side/game_mechanics/experimental/context";
 
 
 export class ChoiceGameMode extends BasePage {
     private menu: Menu;
 
-    @Autowired(VariableMap)
-    private variableMap: VariableMap;
+    @Autowired(VariableContext)
+    private variableMap: VariableContext;
 
     constructor(heading, content, options?) {
         super(heading, content, options);
@@ -25,7 +25,7 @@ export class ChoiceGameMode extends BasePage {
 
     public render() {
         this._heading.innerHTML = "Выбор режима";
-        this.variableMap.getVariable('userpanel').render();
+        this.variableMap.get('userpanel').render();
         this.menu.render();
     }
 }

@@ -6,10 +6,8 @@ import {Rectangle} from '../geometry_shapes/rectangle';
 import {Line} from '../geometry_shapes/line';
 import * as math from '../../../_lib/math';
 import {getIdGenerator} from '../../../common/id_generator';
-import {NewConfigurable} from "../experimental/decorators";
 
 
-@NewConfigurable('platform')
 export class Platform extends GameComponent {
     private static generateId = getIdGenerator();
     public readonly id: number;
@@ -39,9 +37,9 @@ export class Platform extends GameComponent {
 
     public getLineArray() {
         const pointArray = this._rectangle.getPointArray().map(point => this.toGlobals(point));
-        const indArray = pointArray.map((_, index) => index);
-        const pointPairArray = indArray
-            .map(i => [pointArray[i % pointArray.length], pointArray[(i + 1) % pointArray.length]]);
+        const pointPairArray = pointArray
+            .map((point: number[], i: number, arr: number[][]) => [arr[i % arr.length], arr[(i + 1) % arr.length]]);
+
         return pointPairArray.map(pointPair => new Line(pointPair[0], pointPair[1]));
     }
 
@@ -55,7 +53,8 @@ export class Platform extends GameComponent {
 
     public getBouncePoint(ball) {
         const lineArray = this.getLineArray();
-        const points = lineArray
+
+        const pointsData = lineArray
             .map(line => line.getClosestPoint(ball.position))
             .map(point => {
                 return {
@@ -63,11 +62,14 @@ export class Platform extends GameComponent {
                     distance: math.norm(math.subtract(point, ball.position))
                 };
             })
-            .filter(obj => obj.distance <= ball.radius)
-            .sort((obj1, obj2) => obj1.distance - obj2.distance)
-            .map(obj => obj.point);
+            .filter(obj => obj.distance <= ball.radius);
 
-        return points.length === 0 ? null : points[0];
+        if (pointsData.length === 0) {
+            return null;
+        }
+
+        return pointsData
+            .sort((obj1, obj2) => obj1.distance - obj2.distance)[0].point;
     }
 
     public draw(canvas) {

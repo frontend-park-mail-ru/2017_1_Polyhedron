@@ -5,7 +5,7 @@ import {SignUpForm} from '../../../core/client_side/site_service/form_validation
 import {Form} from '../components/form/form';
 import {Text} from '../components/text/text';
 import {Autowired} from "../../../core/client_side/game_mechanics/experimental/decorators";
-import {VariableMap} from "../../../core/client_side/game_mechanics/experimental/context";
+import {VariableContext} from "../../../core/client_side/game_mechanics/experimental/context";
 
 
 export class Signup extends BasePage {
@@ -13,8 +13,8 @@ export class Signup extends BasePage {
     private authorised: Text;
     private _validator: SignUpForm;
 
-    @Autowired(VariableMap)
-    private variableMap: VariableMap;
+    @Autowired(VariableContext)
+    private variableMap: VariableContext;
 
     constructor(heading, content, options?) {
         super(heading, content, options);
@@ -43,8 +43,8 @@ export class Signup extends BasePage {
 
     public render() {
         this._heading.innerHTML = "Регистрация";
-        this.variableMap.getVariable('userpanel').render();
-        if (this.variableMap.getVariable('user') !== null) {
+        this.variableMap.get('userpanel').render();
+        if (this.variableMap.get('user') !== null) {
             this.authorised.render();
         } else {
             this.form.render();

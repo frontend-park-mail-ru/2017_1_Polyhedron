@@ -12,20 +12,10 @@ class Form {
     }
     _setFieldsHook() {
         Object.keys(this._fields).forEach(key => this._fields[key].setChangeCallBack(event => this.globalFormLogic(event)));
-        // for (const fieldName in this._fields) {
-        //     this._fields[fieldName].setChangeCallBack(event => this.globalFormLogic(event));
-        // }
     }
     isValid() {
-        /*
-        let isValid = true; // TODO replace with reduce
-        for (const fieldName in this._fields) {
-            isValid = isValid && this._fields[fieldName].isValid();
-        }
-
-        return isValid;
-        */
-        return Object.keys(this._fields).reduce((curr, key) => curr && this._fields[key].isValid(), true);
+        return Object.keys(this._fields)
+            .reduce((curr, key) => curr && this._fields[key].isValid(), true);
     }
     validateAndSubmit() {
         if (this.isValid()) {

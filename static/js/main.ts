@@ -2,19 +2,19 @@
 import {router} from './pages/main';
 import {Top} from './components/top/top';
 import {Autowired} from "../../core/client_side/game_mechanics/experimental/decorators";
-import {VariableMap} from "../../core/client_side/game_mechanics/experimental/context";
+import {VariableContext} from "../../core/client_side/game_mechanics/experimental/context";
 import {loadWorker} from "../../core/client_side/site_service/offline_mode/worker_module";
 
 
 (() => {
     class Starter {
-        @Autowired(VariableMap)
-        private variableMap: VariableMap;
+        @Autowired(VariableContext)
+        private variableMap: VariableContext;
         private userpanel: Top = new Top();
 
         public start() {
-            this.variableMap.setVariable('userpanel', this.userpanel);
-            this.variableMap.setVariable('router', router);
+            this.variableMap.set('userpanel', this.userpanel);
+            this.variableMap.set('router', router);
 
             router.renderAndSave(window.location.pathname);
 

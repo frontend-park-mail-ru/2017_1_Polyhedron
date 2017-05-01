@@ -3,14 +3,14 @@
 import {BasePage} from './base';
 import {Text} from '../components/text/text';
 import {Autowired} from "../../../core/client_side/game_mechanics/experimental/decorators";
-import {VariableMap} from "../../../core/client_side/game_mechanics/experimental/context";
+import {VariableContext} from "../../../core/client_side/game_mechanics/experimental/context";
 
 
 export class About extends BasePage {
     private text: Text;
 
-    @Autowired(VariableMap)
-    private variableMap: VariableMap;
+    @Autowired(VariableContext)
+    private variableMap: VariableContext;
 
     constructor(heading, content, options?) {
         super(heading, content, options);
@@ -27,7 +27,7 @@ export class About extends BasePage {
 
     public render() {
         this._heading.innerHTML = "Об игре";
-        this.variableMap.getVariable('userpanel').render();
+        this.variableMap.get('userpanel').render();
         this.text.render();
     }
 }
