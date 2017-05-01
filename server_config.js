@@ -27,6 +27,7 @@ router.addPlainURL("/cached_urls", new resourceBinding.BindedFunction(caching.ge
 
 router.addPlainURL("/worker_script.js", new resourceBinding.BindedFile("./core/client_side/site_service/offline_mode/worker_script.js"));
 router.addPlainURL("/test", new resourceBinding.BindedFile("./core/client_side/site_service/offline_mode/test.html"));
+router.addPlainURL("/static/manifest.json", new resourceBinding.BindedFile("./static/manifest.json"));
 
 router.addRegexURL("^/lib/.*\.js$", new resourceBinding.BindedFolder("./static/_lib/js/", "/lib/"));
 router.addRegexURL("^/lib/.*\.css$", new resourceBinding.BindedFolder("./static/_lib/css/", "/lib/"));
@@ -35,6 +36,8 @@ router.addRegexURL(".*\.js$", new resourceBinding.BindedFolder("./static/js", "/
 router.addRegexURL(".*\.css$", new resourceBinding.BindedFolder("./static/css", "/static/css"));
 router.addRegexURL(".*\.ttf$", new resourceBinding.BindedFolder("./static/fonts", "/static/fonts"));
 router.addRegexURL(".*\.gif$", new resourceBinding.BindedFolder("./static/images", "/static/images"));
+router.addRegexURL(".*\.png$", new resourceBinding.BindedFolder("./static/images", "/static/images"));
+router.addRegexURL(".*\.ico$", new resourceBinding.BindedFolder("./static/images", "/static/images"));
 
 router.addRegexURL("^/dist/.*\.js$", new resourceBinding.BindedFolder("./dist/", "/dist/"));
 
