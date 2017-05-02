@@ -131,20 +131,14 @@ module.exports = function(grunt) {
     grunt.loadNpmTasks('grunt-exec');
 
     grunt.registerTask('postinstall', [
-        'exec:compile_pug', 'exec:compile_swagger', 'webpack'
+        'exec:compile_pug', 'exec:compile_swagger', 'webpack', 'exec:minify_bundle'
     ]);
 
     grunt.registerTask('test', [
         'eslint', 'tslint'
     ]);
 
-    if (process.env.NO_MINIFY) {
-        console.log('NO MINIFICATION');
-        grunt.registerTask('dev', ['exec:compile_pug', 'webpack:pre_build_index', 'concurrent:watch']);
-    } else {
-        console.log('WITH MINIFICATION');
-        grunt.registerTask('dev', ['exec:compile_pug', 'webpack', 'exec:minify_bundle']);
-    }
+    grunt.registerTask('dev', ['exec:compile_pug', 'webpack:pre_build_index', 'concurrent:watch']);
 };
 
 
