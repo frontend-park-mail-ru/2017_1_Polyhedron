@@ -1,0 +1,33 @@
+$text-primary-color: white;
+$text-accented-color: red;
+$text-error-color: red;
+$text-border-color: black;
+$text-accented-bigger: 120%;
+$glow-outer-color: #aa0101;
+$glow-inner-color: red;
+$border-primary-color: gray;
+$border-accented-color: white;
+$min-width: 20rem;
+
+@define-mixin bordered $color, $width {
+  text-shadow: -$(width) -$(width) 0 $(color),
+    $(width) -$(width) 0 $(color),
+    -$(width) $(width) 0 $(color),
+    $(width) $(width) 0 $(color);
+}
+
+@define-mixin glow {
+  text-shadow: 1px 1px 2px $text-border-color,
+    0 0 10px $glow-outer-color,
+    0 0 5px $glow-inner-color;
+}
+
+@define-mixin glow-more {
+  text-shadow: 1px 1px 2px $text-border-color,
+  0 0 30px $glow-outer-color,
+  0 0 1px $glow-inner-color;
+}
+
+@define-mixin underlined $color {
+  border-bottom: 1px dashed $(color);
+}

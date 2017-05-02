@@ -1,21 +1,20 @@
+
 .menu__item {
-    display: block;
-    height: 2.8rem;
-    margin: .5rem;
-    padding: 0;
-    line-height: 2.8rem;
-    border-bottom: 1px dashed gray;
+  display: block;
+  height: 2.8rem;
+  margin: .5rem;
+  padding: 0;
+  line-height: 2.8rem;
+  @mixin underlined $border-primary-color;
 }
 
 .menu__item:hover, .menu__item:active {
-    font-size: 120%;
-    font-weight: bold;
-    border-bottom: 1px dashed white;
+  font-size: $text-accented-bigger;
+  font-weight: bold;
+  @mixin underlined $border-accented-color;
 }
 
 .menu__item_accented {
-    color: red;
-    font-size: 120%;
+  color: $text-accented-color;
+  font-size: $text-accented-bigger;
 }
-
-

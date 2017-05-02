@@ -1,29 +1,26 @@
+
 .leaderboard {
-    width: 0;
-    min-width: 20rem;
-    margin: 3rem auto auto;
+  width: 0;
+  min-width: $min-width;
+  margin: 3rem auto auto;
 }
 
 .leaderboard__leader_current {
-    font-weight: bold;
-    text-shadow: 1px 1px 2px black,
-        0 0 30px #aa0101,
-        0 0 10px red;
+  font-weight: bold;
+  @mixin glow-more;
 }
 
 .leader__info {
-    height: 2.8rem;
-    line-height: 2.8rem;
-    border-bottom: 1px dashed gray;
+  height: 2.8rem;
+  line-height: 2.8rem;
+  @mixin underlined $border-primary-color;
 }
 
 .leader__info_w10 {
-    width: 10%;
+  width: 10%;
 }
 
 .leader:hover .leader__info {
-    border-bottom: 1px dashed white;
-    text-shadow: 1px 1px 2px black,
-        0 0 30px #aa0101,
-        0 0 10px red;
+  border-bottom: 1px dashed white;
+  @mixin glow-more;
 }

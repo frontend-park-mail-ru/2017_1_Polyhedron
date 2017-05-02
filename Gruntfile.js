@@ -70,7 +70,12 @@ module.exports = function(grunt) {
                 processors: [
                     require('autoprefixer')(),
                     require('precss')(),
-                    require('postcss-sorting')()
+                    require('postcss-focus')(),
+                    require('postcss-sorting')({
+                        'order': ["custom-properties", "dollar-variables", "declarations", "rules", "at-rules"],
+                        'properties-order': "alphabetical",
+                        'clean-empty-lines': true,
+                    })
                 ]
             },
             dist: {
@@ -102,6 +107,13 @@ module.exports = function(grunt) {
                     './templates/*.pug'
                 ],
                 tasks: ['exec:compile_pug', 'webpack']
+            },
+
+            css: {
+                files: [
+                    './static/css/*.css'
+                ],
+                tasks: ['build_css']
             }
         },
 
