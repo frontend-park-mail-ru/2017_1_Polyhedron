@@ -43,6 +43,21 @@ module.exports = function(grunt) {
 
         },
 
+        postcss: {
+            options: {
+                processors: [
+                    require('autoprefixer')(),
+                    require('precss')(),
+                    require('postcss-sorting')()
+                ]
+            },
+            dist: {
+                src: './static/css/main.css',
+                dest: './static/css/postcss/main.css'
+            }
+
+        },
+
         watch: {
             js: {
                 files: [
@@ -129,6 +144,7 @@ module.exports = function(grunt) {
     grunt.loadNpmTasks('grunt-eslint');
     grunt.loadNpmTasks("grunt-tslint");
     grunt.loadNpmTasks('grunt-exec');
+    grunt.loadNpmTasks('grunt-postcss');
 
     grunt.registerTask('postinstall', [
         'exec:compile_pug', 'exec:compile_swagger', 'webpack', 'exec:minify_bundle'
