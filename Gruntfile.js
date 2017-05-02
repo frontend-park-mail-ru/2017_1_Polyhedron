@@ -13,7 +13,7 @@ module.exports = function(grunt) {
         webpack: {
 
             build_css: {
-                entry: "./static/js/css_loader.js",
+                entry: "./static/js/css_loader.ts",
                 output: {
                     path: path.resolve(__dirname, 'dist'),
                     filename: 'css_bundle.css'
