@@ -1,6 +1,7 @@
 'use strict';
 
 import {CoordinateSystem} from './coordinate_system';
+import * as math from './../../../_lib/math';
 
 
 export class SolidBody extends CoordinateSystem {
@@ -21,6 +22,10 @@ export class SolidBody extends CoordinateSystem {
         if (velocity) {
             this._velocity = velocity;
         }
+    }
+
+    public getRelativeVelocity(body: SolidBody): number[] {
+        return math.subtract(this._velocity, body._velocity);
     }
 
     get angularVelocity(): number {

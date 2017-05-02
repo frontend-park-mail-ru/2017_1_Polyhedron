@@ -22,9 +22,11 @@ exports.config = {
             ballRelativeRadius: 0.05,
             // relativeBallOffset: [0.15, 0.1],
             // relativeBallVelocity: [0.01, 0.005],
-            ballVelocity: [0.05, 0.00],
-            platformVelocity: 0.02,
-            minimalOffset: 1
+            ballVelocity: [0.05, 0.04],
+            platformVelocity: 0.03,
+            minimalOffset: 1,
+            platformCollisionAccuracy: 1,
+            sectorCollisionAccuracy: 0.5
         },
         network: {
             wsUrl: "ws://localhost:8081"

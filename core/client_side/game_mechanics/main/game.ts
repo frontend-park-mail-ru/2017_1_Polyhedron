@@ -165,6 +165,7 @@ export class Game {
         const scaledTime = time * timeScaleFactor;
 
         this._world.makeIteration(scaledTime);
+
         this._handleUserInput(scaledTime);
 
         const activePlatformOffset = math.subtract(this._activePlatform.position, this._lastPlatformPosition);

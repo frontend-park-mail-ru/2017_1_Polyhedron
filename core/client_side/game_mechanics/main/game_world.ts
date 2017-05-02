@@ -8,9 +8,10 @@ import {TriangleField} from '../game_components/triangle_field';
 import * as events from '../event_system/events';
 import {GameComponent} from "../base/game_component";
 import {EventBus} from "../event_system/event_bus";
-import {Autowired} from "../experimental/decorators";
+import {Autowired, Load} from "../experimental/decorators";
 import {getOffsetChecker} from "../base/geometry";
 import {ConfigContext} from "../experimental/context";
+import {getNearestCollisionMultiObstacle} from "../base/collision_handling";
 
 
 export class GameWorld {
@@ -28,6 +29,9 @@ export class GameWorld {
     private _ball: Ball;
     private _score: number;
 
+    @Load('game')
+    private _gameConfig;
+
     private _lastCollidedObject: GameComponent = null;
 
     private static _platformFromTriangleField(triangleField: TriangleField) {
@@ -40,7 +44,6 @@ export class GameWorld {
 
         const platformWidth = platformConfig.aspectRatio * platformLength;
         const platform = new Platform(platformLength, platformWidth);
-
 
         // using such coordinates because triangleField coordinate system origin is in the topmost corner.
         const position = triangleField.toGlobals([0, -triangleField.height * (1 - relativeDistance)]);
@@ -119,26 +122,62 @@ export class GameWorld {
     }
 
     public makeIteration(time) {
+        let restTime = time;
+        let updateTime = this._innerMakeIteration(restTime);
+        while (updateTime) {
+            restTime -= updateTime;
+            updateTime = this._innerMakeIteration(restTime);
+        }
+    }
+
+    private _innerMakeIteration(time) {
+        const platformCollision = getNearestCollisionMultiObstacle(
+            this.ball, this.platforms, 0, time, this.ball.radius / this._gameConfig.platformCollisionAccuracy
+        );
+        const userSectorCollision = getNearestCollisionMultiObstacle(
+            this.ball, this.userSectors, 0, time, this.ball.radius / this._gameConfig.sectorCollisionAccuracy
+        );
+        const neutralSectorCollision = getNearestCollisionMultiObstacle(
+            this.ball, this.neutralSectors, 0, time, this.ball.radius / this._gameConfig.sectorCollisionAccuracy
+        );
+
+        const firstCollisionData = [
+            {
+                collision: platformCollision,
+                tag: 'platform'
+            },
+            {
+                collision: userSectorCollision,
+                tag: 'userSector'
+            },
+            {
+                collision: neutralSectorCollision,
+                tag: 'neutralSector'
+            }
+        ]
+            .filter(({collision}) => collision)
+            .sort((data1, data2) => data1.collision.time - data2.collision.time)[0];
+
+        if (firstCollisionData) {
+            this.ball.moveBy(math.multiply(this.ball.velocity, firstCollisionData.collision.time));
+
+            if (firstCollisionData.tag === 'platform') {
+                this._handlePlatformCollision(
+                    firstCollisionData.collision.obstacle,
+                    this.ball,
+                    firstCollisionData.collision.point
+                );
+            } else if (firstCollisionData.tag === 'userSector') {
+                this._handleUserSectorCollision(firstCollisionData.collision.obstacle, this.ball);
+            } else if (firstCollisionData.tag === 'neutralSector') {
+                this._handleNeutralSectorCollision(firstCollisionData.collision.obstacle, this.ball);
+            }
+
+            return firstCollisionData.collision.time;
+        }
+
         this.ball.moveBy(math.multiply(this.ball.velocity, time));
-
-        this.userSectors.forEach(sector => {
-            if (sector.isInSector(this.ball.position) && sector.reachesBottomLevel(this.ball)) {
-                this._handleUserSectorCollision(sector, this.ball);
-            }
-        });
-
-        this.neutralSectors.forEach(sector => {
-            if (sector.isInSector(this.ball.position) && sector.reachesBottomLevel(this.ball)) {
-                this._handleNeutralSectorCollision(sector, this.ball);
-            }
-        });
-
-        this.platforms.forEach(platform => {
-            const point = platform.getBouncePoint(this.ball);
-            if (point) {
-                this._handlePlatformCollision(platform, this.ball, point);
-            }
-        });
+        return null;
     }
 
     private _initSectors() {
@@ -170,7 +209,7 @@ export class GameWorld {
             ball.bounceNorm(sector.getBottomNorm());
             this._lastCollidedObject = sector;
 
-            this.eventBus.dispatchEvent(events.gameEvents.ClientDefeatEvent.create(sector.id));
+            this.eventBus.dispatchEvent(events.gameEvents.ClientDefeatEvent.create(sector.id));   // TODO uncomment
         }
     }
 

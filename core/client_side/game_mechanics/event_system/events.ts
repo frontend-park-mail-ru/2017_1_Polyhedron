@@ -1,7 +1,8 @@
 'use strict';
 
 /**
- * NEVER create instances of BaseEvent class with new. ALWAYS use classname.create(...).
+ * NEVER create instances of BaseEvent class or its children with new.
+ * If you try to create an instance of EventClass: EventClass extends BaseEvent, ALWAYS use EventClass.create(...).
  */
 export abstract class BaseEvent {
     public static get eventName() {
@@ -15,7 +16,13 @@ export abstract class BaseEvent {
     }
 
     constructor() {
-        throw new Error('NEVER create instances of BaseEvent class with new. ALWAYS use classname.create(...).');
+        const className = this.constructor.name;
+        throw new Error(
+            'NEVER create instances of ' +
+            className +
+            ' with new. ALWAYS use ' +
+            className +
+            '.create(...).');
     }
 }
 
