@@ -2,6 +2,7 @@
 
 const webpack = require('webpack');
 const path = require("path");
+const ExtractTextPlugin = require("extract-text-webpack-plugin");
 
 
 module.exports = function(grunt) {
@@ -10,6 +11,27 @@ module.exports = function(grunt) {
         pkg: grunt.file.readJSON('package.json'),
 
         webpack: {
+
+            build_css: {
+                entry: "./static/js/css_loader.js",
+                output: {
+                    path: path.resolve(__dirname, 'dist'),
+                    filename: 'css_bundle.css'
+                },
+
+                module: {
+                    loaders: [
+                        {
+                            test: /\.css$/,
+                            loader: ExtractTextPlugin.extract({ fallback: 'style-loader', use: 'css-loader' })
+                        },
+                    ]
+                },
+
+                plugins: [
+                    new ExtractTextPlugin("css_bundle.css")
+                ]
+            },
 
             pre_build_index: {
                 progress: true,
@@ -52,8 +74,8 @@ module.exports = function(grunt) {
                 ]
             },
             dist: {
-                src: './static/css/main.css',
-                dest: './static/css/postcss/main.css'
+                src: './dist/css_bundle.css',
+                dest: './dist/css_bundle.css'
             }
 
         },
@@ -146,15 +168,19 @@ module.exports = function(grunt) {
     grunt.loadNpmTasks('grunt-exec');
     grunt.loadNpmTasks('grunt-postcss');
 
+    grunt.registerTask('build_css', [
+        'webpack:build_css', 'postcss'
+    ]);
+
     grunt.registerTask('postinstall', [
-        'exec:compile_pug', 'exec:compile_swagger', 'webpack', 'exec:minify_bundle'
+        'exec:compile_pug', 'exec:compile_swagger', 'webpack', 'exec:minify_bundle', 'build_css'
     ]);
 
     grunt.registerTask('test', [
         'eslint', 'tslint'
     ]);
 
-    grunt.registerTask('dev', ['exec:compile_pug', 'webpack:pre_build_index', 'concurrent:watch']);
+    grunt.registerTask('dev', ['exec:compile_pug', 'webpack:pre_build_index', 'build_css', 'concurrent:watch']);
 };
 
 

@@ -1,4 +1,5 @@
 'use strict';
+
 import {router} from './pages/main';
 import {Top} from './components/top/top';
 import {Autowired} from "../../core/client_side/game_mechanics/experimental/decorators";
