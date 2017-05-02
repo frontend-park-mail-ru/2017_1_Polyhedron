@@ -8,6 +8,7 @@ import {EventBus} from "../event_system/event_bus";
 import {Autowired, Load} from "../experimental/decorators";
 import {Application} from "../experimental/application";
 import {ServerCommunicator} from "../network/server_communicator";
+import {services} from "../../configs/services";
 
 
 const PLATFORM_TOLERANCE = 5;
@@ -19,10 +20,10 @@ const MODES = {
     multi: 'multi'
 };
 
-const DEFAULT_MODE = MODES.single;
+const DEFAULT_MODE = MODES.multi;
 
 
-@Application()
+@Application(services)
 export class Game {
     @Autowired(EventBus)
     private eventBus: EventBus;
@@ -129,6 +130,10 @@ export class Game {
     }
 
     private _setListeners() {
+        setInterval(() => this.eventBus.dispatchEvent(events.networkEvents.ClientMessageEvent.create({
+            data: 'some data'
+        })), 1000); // TODO remove
+
         this.eventBus.addEventListener(events.networkEvents.DefeatEvent.eventName,
             event => this._handleDefeatEvent(event));
 
