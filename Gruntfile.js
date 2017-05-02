@@ -144,6 +144,10 @@ module.exports = function(grunt) {
             }
         },
 
+        stylelint: {
+            all: ['static/css/*.css']
+        },
+
         mochaTest: {
             test: {
                 src: ['tests/test.js']
@@ -176,7 +180,8 @@ module.exports = function(grunt) {
     grunt.loadNpmTasks('grunt-mocha-test');
     grunt.loadNpmTasks('grunt-concurrent');
     grunt.loadNpmTasks('grunt-eslint');
-    grunt.loadNpmTasks("grunt-tslint");
+    grunt.loadNpmTasks('grunt-tslint');
+    grunt.loadNpmTasks('grunt-stylelint');
     grunt.loadNpmTasks('grunt-exec');
     grunt.loadNpmTasks('grunt-postcss');
 
@@ -189,7 +194,7 @@ module.exports = function(grunt) {
     ]);
 
     grunt.registerTask('test', [
-        'eslint', 'tslint'
+        'eslint', 'tslint', 'stylelint'
     ]);
 
     grunt.registerTask('dev', ['exec:compile_pug', 'webpack:pre_build_index', 'build_css', 'concurrent:watch']);

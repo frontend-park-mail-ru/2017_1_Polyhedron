@@ -2,15 +2,18 @@
 .menu__item {
   display: block;
   height: 2.8rem;
-  margin: .5rem;
+  margin: 0.5rem;
   padding: 0;
   line-height: 2.8rem;
+
   @mixin underlined $border-primary-color;
 }
 
-.menu__item:hover, .menu__item:active {
+.menu__item:hover,
+.menu__item:active {
   font-size: $text-accented-bigger;
   font-weight: bold;
+
   @mixin underlined $border-accented-color;
 }
 

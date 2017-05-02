@@ -7,12 +7,14 @@
 
 .leaderboard__leader_current {
   font-weight: bold;
+
   @mixin glow-more;
 }
 
 .leader__info {
   height: 2.8rem;
   line-height: 2.8rem;
+
   @mixin underlined $border-primary-color;
 }
 
@@ -21,6 +23,6 @@
 }
 
 .leader:hover .leader__info {
-  border-bottom: 1px dashed white;
+  @mixin underlined $border-accented-color;
   @mixin glow-more;
 }
