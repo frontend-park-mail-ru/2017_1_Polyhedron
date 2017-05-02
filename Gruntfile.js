@@ -75,7 +75,8 @@ module.exports = function(grunt) {
                         'order': ["custom-properties", "dollar-variables", "declarations", "rules", "at-rules"],
                         'properties-order': "alphabetical",
                         'clean-empty-lines': true,
-                    })
+                    }),
+                    require('cssnano')()
                 ]
             },
             dist: {
