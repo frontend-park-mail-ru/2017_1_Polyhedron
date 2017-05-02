@@ -125,8 +125,7 @@ function divideTime(
 function arange(begin: number, end: number, step: number): number[] {
     const range = end - begin;
     const checkPointNum = Math.floor(range / step);
-
-    const checkPointArray = Array.from(Array(checkPointNum)).map((_, index) => {
+    const checkPointArray = checkPointNum === 0 ? [] : Array.from(Array(checkPointNum)).map((_, index) => {
         return begin + range / checkPointNum * (index + 1);
     });
 

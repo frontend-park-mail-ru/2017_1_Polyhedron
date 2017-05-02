@@ -126,6 +126,10 @@ export class GameWorld {
         let updateTime = this._innerMakeIteration(restTime);
         while (updateTime) {
             restTime -= updateTime;
+            if (restTime === 0) {
+                break;
+            }
+
             updateTime = this._innerMakeIteration(restTime);
         }
     }

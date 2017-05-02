@@ -16,6 +16,7 @@
     "quotemark": false,
     "arrow-parens": false,
     "no-namespace": false,
+    "no-trailing-whitespace": false,
 
     "callable-types": true,
     "interface-name": false,
