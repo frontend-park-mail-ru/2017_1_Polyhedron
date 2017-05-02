@@ -139,8 +139,10 @@ module.exports = function(grunt) {
     ]);
 
     if (process.env.NO_MINIFY) {
+        console.log('NO MINIFICATION');
         grunt.registerTask('dev', ['exec:compile_pug', 'webpack:pre_build_index', 'concurrent:watch']);
     } else {
+        console.log('WITH MINIFICATION');
         grunt.registerTask('dev', ['exec:compile_pug', 'webpack', 'exec:minify_bundle']);
     }
 };
