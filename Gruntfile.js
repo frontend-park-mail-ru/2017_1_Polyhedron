@@ -41,17 +41,17 @@ module.exports = function(grunt) {
                 }
             },
 
-            /*
+
             build_index: {
                 progress: true,
-                entry: "./dist/temp_index_bundle.js",
+                entry: "./dist/index_bundle.js",
                 output: {
                     path: path.resolve(__dirname, 'dist'),
                     filename: 'index_bundle.js'
                 },
 
                 resolve : {
-                    extensions: [".ts", ".js"]
+                    extensions: [".js"]
                 },
 
                 module: {
@@ -75,13 +75,12 @@ module.exports = function(grunt) {
                         },
 
                     ]
-                }
+                },
 
-                //plugins: [
-                //    new webpack.optimize.UglifyJsPlugin({minimize: true})
-                //],
+                plugins: [
+                    new webpack.optimize.UglifyJsPlugin({minimize: true})
+                ],
             }
-            */
         },
 
         watch: {
@@ -175,10 +174,14 @@ module.exports = function(grunt) {
     ]);
 
     grunt.registerTask('test', [
-        'eslint', 'tslint', /*'mochaTest:test'*/
+        'eslint', 'tslint'
     ]);
 
-    grunt.registerTask('dev', ['exec:compile_pug', 'webpack', 'concurrent:watch']);
+    if (process.env.NO_MINIFY) {
+        grunt.registerTask('dev', ['exec:compile_pug', 'webpack:pre_build_index', 'concurrent:watch']);
+    } else {
+        grunt.registerTask('dev', ['exec:compile_pug', 'webpack', 'concurrent:watch']);
+    }
 };
 
 
