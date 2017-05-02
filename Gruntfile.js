@@ -10,45 +10,61 @@ module.exports = function(grunt) {
         pkg: grunt.file.readJSON('package.json'),
 
         webpack: {
-            build: {
+
+            pre_build_index: {
                 progress: true,
-                entry: "./core/game_start.js",
+                entry: "./static/js/main.ts",
                 output: {
-                    path: './dist',
-                    filename: 'bundle.js'
+                    path: path.resolve(__dirname, 'dist'),
+                    filename: 'index_bundle.js'
+                },
+
+                resolve : {
+                    extensions: [".ts", ".js"]
                 },
 
                 module: {
-                    loaders: [
+                    rules: [
                         {
-                            loader: "babel-loader",
+                            test: /\.tsx?$/,
+                            loader: 'ts-loader',
 
                             include: [
-                                path.resolve(__dirname, "core"),
+                                path.resolve(__dirname, 'static/js'),
+                                path.resolve(__dirname, 'static/js/templates'),
+                                path.resolve(__dirname, 'core'),
+                                path.resolve(__dirname, 'core/_lib'),
                             ],
-
-                            test: /\.js$/,
-
-                            query: {
-                                plugins: ['transform-runtime'],
-                                presets: ['es2015'],
-                            }
                         },
-                    ]
-                },
 
-                plugins: [
-                    new webpack.optimize.UglifyJsPlugin({minimize: true})
-                ]
+                    ]
+                }
             },
+
         },
 
         watch: {
             js: {
                 files: [
-                    './core/*.js'
+                    './core/common/*.js',
+                    './core/server_side/**/*.js',
                 ],
                 tasks: ['webpack']
+            },
+
+            ts: {
+                files: [
+                    './core/**/*.ts',
+                    './static/**/*.ts'
+                ],
+                tasks: ['webpack']
+            },
+
+            pug: {
+                files: [
+                    './templates/*.pug'
+                ],
+                tasks: ['exec:compile_pug', 'webpack']
             }
         },
 
@@ -57,12 +73,35 @@ module.exports = function(grunt) {
             options: {
                 configFile: '.eslintrc.js'
             },
-            src: ['core/*.js']
+            src: [
+                'core/server_side/**/*.js',
+                './tests/*.js',
+                '.pug_compiler.js',
+                '!core/server_side/ws_server/server.js'
+            ]
+        },
+
+        tslint: {
+            options: {
+                configuration: "tslint.json",
+                force: false,
+                fix: false
+            },
+            files: {
+                src: [
+                    "./core/**/*.ts",
+                    "./static/**/*.ts"
+                ]
+            }
         },
 
         mochaTest: {
             test: {
                 src: ['tests/test.js']
+            },
+
+            backend_test: {
+                src: ['tests/backend_test.js']
             }
         },
 
@@ -73,7 +112,13 @@ module.exports = function(grunt) {
                     logConcurrentOutput: true
                 }
             }
-        }
+        },
+
+        exec: {
+            compile_pug: 'node compilers/pug_compiler.js',
+            compile_swagger: 'node compilers/swagger_compiler.js',
+            minify_bundle: 'node compilers/minificator.js'
+        },
 
     });
 
@@ -81,27 +126,19 @@ module.exports = function(grunt) {
     grunt.loadNpmTasks('grunt-contrib-watch');
     grunt.loadNpmTasks('grunt-mocha-test');
     grunt.loadNpmTasks('grunt-concurrent');
-    grunt.loadNpmTasks("grunt-eslint");
-
-    grunt.registerTask('eslintStarted', () => {console.log('*** Static analysis ***');});
-    grunt.registerTask('mochaStarted', () => {console.log('*** Testing ***');});
-    grunt.registerTask('webpackStarted', () => {console.log('*** Minification ***');});
+    grunt.loadNpmTasks('grunt-eslint');
+    grunt.loadNpmTasks("grunt-tslint");
+    grunt.loadNpmTasks('grunt-exec');
 
     grunt.registerTask('postinstall', [
-        'webpackStarted', 'webpack'
+        'exec:compile_pug', 'exec:compile_swagger', 'webpack', 'exec:minify_bundle'
     ]);
 
     grunt.registerTask('test', [
-        'eslintStarted', 'eslint',
-        'mochaStarted', 'mochaTest'
+        'eslint', 'tslint'
     ]);
 
-    grunt.registerTask('default', [
-        'eslintStarted', 'eslint',
-        'mochaStarted', 'mochaTest',
-        'webpackStarted', 'webpack', 'concurrent:watch'
-    ]);
-
-    grunt.registerTask('dev', ['webpackStarted', 'webpack', 'concurrent:watch']);
+    grunt.registerTask('dev', ['exec:compile_pug', 'webpack:pre_build_index', 'concurrent:watch']);
 };
+
 

@@ -8,11 +8,11 @@ const HTTP_CODE_OK = 200;
 
 let assert = require('assert');
 let http = require('http');
-let lib = require('../core/server.js');
+let lib = require('../core/server_side/static_server/server.js');
 
 
 function _getHtmlFilePath(filename) {
-	return `${__dirname}/../html/${filename}`;
+    return `${__dirname}/../html/${filename}`;
 }
 
 
@@ -24,16 +24,16 @@ let staticServer = lib.getStaticServer(router);
 
 
 describe('Static server testing', () => {
-	before(() => staticServer.listen(PORT));
+    before(() => staticServer.listen(PORT));
 
-	describe('/', () => {
-		it('should return 200', (done) => {
-		    http.get(SERVER_URL, (result) => {
-				assert.equal(HTTP_CODE_OK, result.statusCode);
-				done();
-			});
-		});
-	});
+    describe('/', () => {
+        it('should return 200', (done) => {
+            http.get(SERVER_URL, (result) => {
+                assert.equal(HTTP_CODE_OK, result.statusCode);
+                done();
+            });
+        });
+    });
 
-	after(() => staticServer.close());
+    after(() => staticServer.close());
 });

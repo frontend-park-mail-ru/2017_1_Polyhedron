@@ -41,3 +41,11 @@ jspm_packages
 .idea
 .DS_Store
 dist
+/static/**/*.map
+/static/**/*.js
+/core/server_side/ws_server/
+/swagger.json
+/core/client_side/game_mechanics/**/*.js
+/core/client_side/game_mechanics/**/*.map
+/core/common/id_generator.js
+/core/common/id_generator.js.map
