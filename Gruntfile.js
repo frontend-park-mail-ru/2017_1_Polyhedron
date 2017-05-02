@@ -41,46 +41,6 @@ module.exports = function(grunt) {
                 }
             },
 
-
-            build_index: {
-                progress: true,
-                entry: "./dist/index_bundle.js",
-                output: {
-                    path: path.resolve(__dirname, 'dist'),
-                    filename: 'index_bundle.js'
-                },
-
-                resolve : {
-                    extensions: [".js"]
-                },
-
-                module: {
-                    rules: [
-                        {
-                            loader: "babel-loader",
-
-                            include: [
-                                path.resolve(__dirname, 'dist')
-                            ],
-
-                            test: /\.js$/,
-
-
-                            query: {
-                                plugins: ['transform-runtime'],
-                                presets: ['es2015'],
-
-                            }
-
-                        },
-
-                    ]
-                },
-
-                plugins: [
-                    new webpack.optimize.UglifyJsPlugin({minimize: true})
-                ],
-            }
         },
 
         watch: {
@@ -156,7 +116,8 @@ module.exports = function(grunt) {
 
         exec: {
             compile_pug: 'node compilers/pug_compiler.js',
-            compile_swagger: 'node compilers/swagger_compiler.js'
+            compile_swagger: 'node compilers/swagger_compiler.js',
+            minify_bundle: 'node compilers/minificator.js'
         },
 
     });
@@ -180,7 +141,7 @@ module.exports = function(grunt) {
     if (process.env.NO_MINIFY) {
         grunt.registerTask('dev', ['exec:compile_pug', 'webpack:pre_build_index', 'concurrent:watch']);
     } else {
-        grunt.registerTask('dev', ['exec:compile_pug', 'webpack', 'concurrent:watch']);
+        grunt.registerTask('dev', ['exec:compile_pug', 'webpack', 'exec:minify_bundle']);
     }
 };
 
