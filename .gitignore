@@ -43,7 +43,6 @@ jspm_packages
 dist
 /static/**/*.map
 /static/**/*.js
-/core/server_side/ws_server/
 /swagger.json
 /core/client_side/game_mechanics/**/*.js
 /core/client_side/game_mechanics/**/*.map
