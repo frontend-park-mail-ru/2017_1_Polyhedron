@@ -1,0 +1,21 @@
+{
+  "name": "Polyhedron Ping-Pong Game",
+  "short_name": "Polyhedron",
+  "description": "A multiplayer ping-pong game.",
+  "lang": "ru-RU",
+  "start_url": "/index",
+  "display": "standalone",
+  "orientation": "portrait",
+  "background_color": "black",
+  "theme_color": "black",
+  "icons": [
+    {
+      "src": "/static/images/emblem.ico",
+      "sizes": "16x16 32x32 48x48 64x64 128x128 256x256"
+    },
+    {
+    "src": "/static/images/emblem.png",
+    "sizes": "144x144"
+    }
+  ]
+}
