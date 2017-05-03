@@ -49,4 +49,3 @@ dist
 /core/client_side/game_mechanics/**/*.map
 /core/common/id_generator.js
 /core/common/id_generator.js.map
-static/css/postcss
