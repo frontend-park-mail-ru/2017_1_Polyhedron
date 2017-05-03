@@ -8,7 +8,9 @@ import {EventBus} from "../event_system/event_bus";
 import {Autowired, Load} from "../experimental/decorators";
 import {Application} from "../experimental/application";
 import {ServerCommunicator} from "../network/server_communicator";
-import {services} from "../../configs/services";
+import {clientSideServices, serverSideServices} from "../../configs/services";
+import {networkEvents} from "../event_system/events";
+import TestWorldUpdateEvent = networkEvents.TestWorldUpdateEvent;
 
 
 const PLATFORM_TOLERANCE = 5;
@@ -17,13 +19,19 @@ const MILLISECONDS_PER_SECOND = 1000;
 
 const MODES = {
     single: 'single',
-    multi: 'multi'
+    multi: 'multi',
+    server: 'server'
 };
 
-const DEFAULT_MODE = MODES.multi;
+const DEFAULT_MODE = MODES.single;
 
 
-@Application(services)
+interface Rectangular {
+    height: number;
+    width: number;
+}
+
+
 export class Game {
     @Autowired(EventBus)
     private eventBus: EventBus;
@@ -31,7 +39,7 @@ export class Game {
     @Load('game')
     private _gameConfig: any;
 
-    private _canvas: HTMLCanvasElement;
+    private _canvas: HTMLCanvasElement | Rectangular;
     private _context: CanvasRenderingContext2D;
 
     private _platformVelocityDirection: number[] = [0, 0];
@@ -46,15 +54,17 @@ export class Game {
 
     private _communicator: ServerCommunicator;
 
-    constructor(canvas, mode?) {
+    constructor(canvas, mode = DEFAULT_MODE) {
         this._canvas = canvas;
-        this._context = canvas.getContext("2d");
+        if (mode !== MODES.server) {
+            this._context = canvas.getContext("2d");
+        }
 
         this._lastCollidedObject = null;
 
         this._setIntervalID = null;
         this._lastPlatformPosition = null;
-        this._mode = mode || DEFAULT_MODE;
+        this._mode = mode;
     }
 
     public start() {
@@ -78,6 +88,13 @@ export class Game {
     public continueGame() {
         const time = MILLISECONDS_PER_SECOND / this._gameConfig.frameRate;
         this._setIntervalID = setInterval(() => this._makeIteration(time), time);
+    }
+
+    public getWorldSnapshotMessage() {
+        return {
+            type: TestWorldUpdateEvent.name,
+            data: this._world.getSnapshot()
+        };
     }
 
     private _getPlatformByIndex(index) {
@@ -130,9 +147,13 @@ export class Game {
     }
 
     private _setListeners() {
-        setInterval(() => this.eventBus.dispatchEvent(events.networkEvents.ClientMessageEvent.create({
-            data: 'some data'
-        })), 1000); // TODO remove
+        this.eventBus.addEventListener(
+            events.networkEvents.TestWorldUpdateEvent.eventName,
+            event => {
+                this._world.loadSnapshot(event.data.detail);
+                console.log(event);
+            }
+        );  // TODO remove
 
         this.eventBus.addEventListener(events.networkEvents.DefeatEvent.eventName,
             event => this._handleDefeatEvent(event));
@@ -140,14 +161,20 @@ export class Game {
         this.eventBus.addEventListener(events.gameEvents.ClientDefeatEvent.eventName,
             event => this._handleClientDefeatEvent(event));
 
-        this.eventBus.addEventListener(events.gameEvents.ClientDefeatEvent.eventName, event => this._handleClientDefeatEvent(event));
+        this.eventBus.addEventListener(
+            events.gameEvents.ClientDefeatEvent.eventName,
+            event => this._handleClientDefeatEvent(event)
+        );
 
         this.eventBus.addEventListener(
             events.controllerEvents.ArrowDirectionEvent.eventName,
             event => this._platformVelocityDirection = event.detail
         );
 
-        this.eventBus.addEventListener(events.networkEvents.WorldUpdateEvent.eventName, event => this._handleWorldUpdateEvent(event));
+        this.eventBus.addEventListener(
+            events.networkEvents.WorldUpdateEvent.eventName,
+            event => this._handleWorldUpdateEvent(event)
+        );
 
         this.eventBus.addEventListener(events.gameEvents.BallBounced.eventName, event => {
             if (event.detail === this._activePlatform.id) {
@@ -155,28 +182,31 @@ export class Game {
             }
         });
 
-        window.addEventListener('dblclick', () => {
-            this._canvas.style.backgroundColor = 'black';
-            this._canvas.webkitRequestFullScreen();
-        });
-
-        window.addEventListener('webkitfullscreenchange', () => {
-            this._canvas.style.backgroundColor = 'rgba(0, 0, 0, 0)';
-        });
+        // TODO get rid of window completely
+        // window.addEventListener('dblclick', () => {
+        //     this._canvas.style.backgroundColor = 'black';
+        //     this._canvas.webkitRequestFullScreen();
+        // });
+        //
+        // window.addEventListener('webkitfullscreenchange', () => {
+        //     this._canvas.style.backgroundColor = 'rgba(0, 0, 0, 0)';
+        // });
     }
 
     private _makeIteration(time) {
-        const timeScaleFactor = Math.min(this._canvas.height, this._canvas.width) / this._gameConfig.defaultCanvasSize;
-        const scaledTime = time * timeScaleFactor;
+        if (this._mode !== MODES.multi) {   // TODO refactor
+            const timeScaleFactor = Math.min(this._canvas.height, this._canvas.width) / this._gameConfig.defaultCanvasSize;
+            const scaledTime = time * timeScaleFactor;
 
-        this._world.makeIteration(scaledTime);
+            this._world.makeIteration(scaledTime);
 
-        this._handleUserInput(scaledTime);
+            this._handleUserInput(scaledTime);
 
-        const activePlatformOffset = math.subtract(this._activePlatform.position, this._lastPlatformPosition);
-        if (math.norm(activePlatformOffset) > PLATFORM_TOLERANCE) {
-            this._throwPlatformMovedEvent(activePlatformOffset);
-            this._lastPlatformPosition = this._activePlatform.position;
+            const activePlatformOffset = math.subtract(this._activePlatform.position, this._lastPlatformPosition);
+            if (math.norm(activePlatformOffset) > PLATFORM_TOLERANCE) {
+                this._throwPlatformMovedEvent(activePlatformOffset);
+                this._lastPlatformPosition = this._activePlatform.position;
+            }
         }
 
         this._redraw();
@@ -244,7 +274,17 @@ export class Game {
     }
 
     private _redraw() {
-        this._context.clearRect(0, 0, this._canvas.width, this._canvas.height);
-        this._world.draw(this._canvas);
+        if (this._mode !== MODES.server) {
+            this._context.clearRect(0, 0, this._canvas.width, this._canvas.height);
+            this._world.draw(this._canvas);
+        }
     }
 }
+
+
+@Application(clientSideServices)
+export class ClientSideGame extends Game {}
+
+
+@Application(serverSideServices)
+export class ServerSideGame extends Game {}

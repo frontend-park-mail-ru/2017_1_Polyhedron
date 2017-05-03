@@ -29,6 +29,10 @@ export class Platform extends GameComponent implements Drawable, PolygonObstacle
         this._isActive = isActive;
     }
 
+    get isActive() {
+        return this._isActive;
+    }
+
     public getPointArray() {
         return this._rectangle.getPointArray().map(point => this.toGlobals(point));
     }

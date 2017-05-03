@@ -1,5 +1,21 @@
 'use strict';
 
+
+class MyCustomEvent {
+    public data: any;
+    public type: string;
+
+    constructor(type: string, data: any = {}) {
+        this.type = type;
+        this.data = data;
+    }
+
+    get detail() {
+        return this.data.detail;
+    }
+}
+
+
 /**
  * NEVER create instances of BaseEvent class or its children with new.
  * If you try to create an instance of EventClass: EventClass extends BaseEvent, ALWAYS use EventClass.create(...).
@@ -9,8 +25,8 @@ export abstract class BaseEvent {
         return (this as any).name;
     }
 
-    public static create(eventDetail = {}) {
-        return new CustomEvent(this.eventName, {
+    public static create(eventDetail: any = {}) {
+        return new MyCustomEvent(this.eventName, {
             detail: eventDetail,
         });
     }
@@ -59,9 +75,12 @@ export namespace networkEvents {
 
             detail.ballUpdate = eventDetail.ballUpdate;
 
-            return new CustomEvent(this.eventName, {detail});
+            return new MyCustomEvent(this.eventName, {detail});
         }
     }
+
+
+    export class TestWorldUpdateEvent extends BaseEvent {}   // TODO remove
 
 
     export class DefeatEvent extends BaseEvent {
@@ -69,7 +88,7 @@ export namespace networkEvents {
             const playerIndex = eventDetail.playerIndex;
             const looserIndex = eventDetail.looserIndex;
 
-            return new CustomEvent(this.eventName, {
+            return new MyCustomEvent(this.eventName, {
                 detail: looserIndex - playerIndex
             });
         }

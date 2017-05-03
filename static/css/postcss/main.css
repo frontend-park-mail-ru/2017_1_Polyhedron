@@ -1,0 +1,83 @@
+@font-face {
+    font-family: 'Roboto Slab';
+    src: url('/static/fonts/RobotoSlab-Regular.ttf');
+}
+
+@font-face {
+    font-family: 'Roboto Slab';
+    font-weight: bold;
+    src: url('/static/fonts/RobotoSlab-Bold.ttf');
+}
+
+* {
+    outline: none;
+}
+
+html {
+    height: 100%;
+    width: 100%;
+    min-width: 25rem;
+    overflow-x: hidden;
+    padding: 0;
+    margin: 0;
+    background: black url('/static/images/background.gif') 50% 50%;
+    color: white;
+    font-family: 'Roboto Slab', serif;
+    text-align: center;
+    text-shadow: -1px -1px 0 black,
+        1px -1px 0 black,
+        -1px 1px 0 black,
+        1px 1px 0 black;
+}
+
+body {
+    height: 100%;
+    margin: 0;
+    background: url('/static/images/emblem.gif') no-repeat 60vw 50%;
+}
+
+a {
+    color: white;
+    text-decoration: none;
+}
+
+a:hover, a:active {
+    text-shadow: 1px 1px 2px black,
+        0 0 30px #aa0101,
+        0 0 10px red;
+}
+
+.container {
+    width: 100%;
+    height: 90%;
+    display: table;
+}
+
+.container__inner {
+    display: table-cell;
+    vertical-align: middle;
+    text-align: center;
+    padding: 1rem 0;
+}
+
+.content {
+    width: 0;
+    min-width: 20rem;
+    margin: 3rem auto auto;
+}
+
+.header {
+    font-size: 400%;
+    margin-bottom: 0;
+}
+
+.header:hover {
+    text-shadow: 1px 1px 2px black,
+        0 0 10px #aa0101,
+        0 0 5px red;
+}
+
+.subheader {
+    font-size: 120%;
+    margin-top: 0;
+}

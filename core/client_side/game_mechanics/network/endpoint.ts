@@ -51,7 +51,6 @@ export class WSEndpoint {
 
     private _initSocket() {
         this._socket.onmessage = event => {
-            console.log(event.data);
             this._eventBus.dispatchEvent(events.networkEvents.ServerMessageEvent.create(JSON.parse(event.data)));
         };
 

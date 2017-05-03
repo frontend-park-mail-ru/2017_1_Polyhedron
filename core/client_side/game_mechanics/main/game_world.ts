@@ -12,9 +12,12 @@ import {Autowired, Load} from "../experimental/decorators";
 import {getOffsetChecker} from "../base/geometry";
 import {ConfigContext} from "../experimental/context";
 import {getNearestCollisionMultiObstacle} from "../base/collision_handling";
+//import * as log4js from 'log4js';
 
 
 export class GameWorld {
+    //private static logger = log4js.getLogger('GameWorldLogger', 'debug');
+
     @Autowired(EventBus)
     private eventBus: EventBus;
 
@@ -79,6 +82,32 @@ export class GameWorld {
 
     public incrementScore() {
         ++this._score;
+    }
+
+    public getSnapshot() {
+        const platformsInfo = this.platforms.map(platform => {
+            return {
+                id: platform,
+                isActive: platform.isActive,
+                angle: platform.rotation,
+                position: platform.position,
+                velocity: platform.velocity
+            };
+        });
+
+        const ballInfo = {
+            position: this.ball.position,
+            velocity: this.ball.velocity
+        };
+
+        return {platformsInfo, ballInfo};
+    }
+
+    public loadSnapshot({platformsInfo, ballInfo}) {
+        this._ball.moveTo(math.add(ballInfo.position, this._position));
+        this._ball.velocity = ballInfo.velocity;
+
+        // TODO add platforms info handling
     }
 
     public get ball(): Ball {
@@ -208,8 +237,14 @@ export class GameWorld {
         this._ball.moveTo(this._position);
     }
 
-    private _handleUserSectorCollision(sector, ball) {
+    private _handleUserSectorCollision(sector: TriangleField, ball: Ball) {
         if (sector !== this._lastCollidedObject) {
+            // GameWorld.logger.debug(  // TODO remove or import correctly
+            //     'User sector collided' +
+            //     '; id = ' + sector.id +
+            //     '; angle = ' + sector.rotation / Math.PI * 180
+            // );
+
             ball.bounceNorm(sector.getBottomNorm());
             this._lastCollidedObject = sector;
 
@@ -219,6 +254,12 @@ export class GameWorld {
 
     private _handleNeutralSectorCollision(sector, ball) {
         if (sector !== this._lastCollidedObject) {
+            // GameWorld.logger.debug(  // TODO remove or import correctly
+            //     'Neutral sector collided' +
+            //     '; id = ' + sector.id +
+            //     '; angle = ' + sector.rotation / Math.PI * 180
+            // );
+
             ball.bounceNorm(sector.getBottomNorm());
             this._lastCollidedObject = sector;
         }
@@ -226,6 +267,12 @@ export class GameWorld {
 
     private _handlePlatformCollision(platform, ball, point) {
         if (platform !== this._lastCollidedObject) {
+            // GameWorld.logger.debug(  // TODO remove or import correctly
+            //     'Platform collided' +
+            //     '; id = ' + platform.id +
+            //     '; angle = ' + platform.rotation / Math.PI * 180
+            // );
+
             ball.bouncePoint(point, platform.velocity);
             this._lastCollidedObject = platform;
 

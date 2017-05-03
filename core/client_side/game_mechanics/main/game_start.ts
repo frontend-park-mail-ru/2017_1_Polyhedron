@@ -1,5 +1,5 @@
 
-import {Game} from './game';
+import {Game, ClientSideGame} from './game';
 import {Autowired} from "../experimental/decorators";
 import {VariableContext} from "../experimental/context";
 
@@ -9,7 +9,7 @@ export class GameStarter {
     private variableMap: VariableContext;
 
     public start(canvasId) {
-        const loop = new Game (
+        const loop = new ClientSideGame (
             document.getElementById(canvasId)
         );
         this.variableMap.set('loop', loop);
