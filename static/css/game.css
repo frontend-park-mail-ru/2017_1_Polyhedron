@@ -7,3 +7,41 @@
   text-align: center;
   width: 100%;
 }
+
+.controls {
+  position: fixed;
+  z-index: 2;
+  bottom: 0;
+  right: 0;
+}
+
+.controls__button {
+  width: 3rem;
+  height: @width;
+  margin: 0.5rem;
+  color: $text-primary-color;
+  text-align: center;
+  font-weight: bold;
+  font-size: 200%;
+  background: $text-accented-color;
+
+  @mixin glow;
+  border: 1px dashed $border-primary-color;
+}
+
+.controls__button.controls__button-left {
+  left: 0;
+  top: 50%;
+}
+.controls__button.controls__button-up {
+  left: 50%;
+  top: 0;
+}
+.controls__button.controls__button-down {
+  left: 50%;
+  bottom: 0;
+}
+.controls__button.controls__button-right {
+  top: 50%;
+  right: 0;
+}
