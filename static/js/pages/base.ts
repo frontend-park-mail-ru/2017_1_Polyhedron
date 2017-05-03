@@ -7,6 +7,18 @@ export abstract class BasePage {
     protected _alert: any;
     protected _options: any;
 
+    public static launchIntoFullscreen(element) {
+        if (element.requestFullscreen) {
+            element.requestFullscreen();
+        } else if (element.mozRequestFullScreen) {
+            element.mozRequestFullScreen();
+        } else if (element.webkitRequestFullscreen) {
+            element.webkitRequestFullscreen();
+        } else if (element.msRequestFullscreen) {
+            element.msRequestFullscreen();
+        }
+    }
+
     constructor(heading, container, alert, options?) {
         this._heading = heading;
         this._content = container;
