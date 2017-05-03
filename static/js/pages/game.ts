@@ -20,6 +20,17 @@ export class Game extends BasePage {
         this.variableMap.get('userpanel').render();
         this._content.innerHTML = renderGame.template(this._options);
 
+        window.addEventListener('dblclick', () => {
+            this._content.style.backgroundColor = 'black';
+            this.launchIntoFullscreen(this._content);
+        });
+
+        window.addEventListener('webkitfullscreenchange', () => {
+            this._content.style.backgroundColor = 'rgba(0, 0, 0, 0)';
+        });
+
+        this.launchIntoFullscreen(this._content);
+
         const gameStarter = new GameStarter();
         gameStarter.start('game');
     }
@@ -27,4 +38,17 @@ export class Game extends BasePage {
     public reset() {
         this.variableMap.get('loop').stop();
     }
+
+    private launchIntoFullscreen(element) {
+        if (element.requestFullscreen) {
+            element.requestFullscreen();
+        } else if (element.mozRequestFullScreen) {
+            element.mozRequestFullScreen();
+        } else if (element.webkitRequestFullscreen) {
+            element.webkitRequestFullscreen();
+        } else if (element.msRequestFullscreen) {
+            element.msRequestFullscreen();
+        }
+    }
+
 }

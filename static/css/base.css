@@ -49,6 +49,7 @@ a:active {
 .container {
   width: 100%;
   min-height: 90%;
+  height: 0;
   display: table;
 }
 

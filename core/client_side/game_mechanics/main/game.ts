@@ -149,15 +149,6 @@ export class Game {
                 this._world.incrementScore();
             }
         });
-
-        window.addEventListener('dblclick', () => {
-            this._canvas.style.backgroundColor = 'black';
-            this._canvas.webkitRequestFullScreen();
-        });
-
-        window.addEventListener('webkitfullscreenchange', () => {
-            this._canvas.style.backgroundColor = 'rgba(0, 0, 0, 0)';
-        });
     }
 
     private _makeIteration(time) {
