@@ -1,61 +1,10 @@
 'use strict';
 
 import * as WebSocket from 'ws';
-import * as randomString from 'randomstring';
-import {Game, ServerSideGame} from "../../client_side/game_mechanics/main/game";
+import {ServerSideGame} from "../../client_side/game_mechanics/main/game";
 import * as log4js from 'log4js';
-
-
-const SESSION_NAME = 'SESSIONID';
-
-
-function createSession(idLength: number = 20) {
-    return randomString.generate(idLength);
-}
-
-
-function createSessionCookie(session: string) {
-    return SESSION_NAME + '=' + session;
-}
-
-
-function getCookieVal(cookie: string, key: string): string {
-    const result = cookie
-        .replace(/\s/g, "")
-        .split(';')
-        .map(part => part.split('='))
-        .filter(([_key, _val]) => _key === key);
-
-    if (result.length === 0) {
-        return null;
-    } else {
-        return result[0][1];
-    }
-}
-
-
-function getUserSession(ws): string {
-    return getCookieVal(
-        ws.upgradeReq.headers.cookie,
-        SESSION_NAME
-    );
-}
-
-
-function getUsersBySession(session, wsArray) {
-    return wsArray
-        .filter(ws => getUserSession(ws) === session);
-}
-
-
-function dispatchMessage(message: string, wsArray) {
-    wsArray.forEach(ws => ws.send(message));
-}
-
-
-function getServerClients(server) {
-    return Array.from(server.clients.values());
-}
+import {createSession, getUsersBySession, getUserSession} from "./session_handling";
+import {dispatchMessage, getServerClients} from "./ws_generics";
 
 
 class FakeCanvas {
@@ -126,7 +75,7 @@ class GameServer {
     private _userHolder: UserHolder;
     private _server: WebSocket.Server;
     private _playerNum: number;
-    private _gameMap: Map<string, Game>;
+    private _gameMap: Map<string, ServerSideGame>;
 
     constructor(port: number, playerNum: number) {
         this._playerNum = playerNum;
@@ -145,7 +94,7 @@ class GameServer {
 
     private _startGame(session: string) {
         const canvas = new FakeCanvas(100, 100);
-        const game = new Game(canvas, 'server');
+        const game = new ServerSideGame(canvas, 'server');
         this._gameMap.set(session, game);
         game.start();
     }
