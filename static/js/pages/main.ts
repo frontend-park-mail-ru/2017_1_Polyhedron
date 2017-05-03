@@ -26,13 +26,14 @@ Object.keys(pugRuntime).forEach(key => window['pug_' + key] = pugRuntime[key]);
 export const router = new Router({
     '^/?$': new Index(heading, content, alert),
 
-    '^/?index$': new Index(heading, content, alert),
-    '^/?about$': new About(heading, content, alert),
-    '^/?choice$': new ChoiceGameMode(heading, content, alert),
-    '^/?game$': new Game(heading, content, alert),
-    '^/?gameover$': new GameOver(heading, content, alert),
+    '^/?index$': new Index(heading, content, alert, {}),
+    '^/?about$': new About(heading, content, alert, {}),
+    '^/?choice$': new ChoiceGameMode(heading, content, alert, {}),
+    '^/?game$': new Game(heading, content, alert, {}),
+    '^/?battle$': new Game(heading, content, alert, {multi: true}),
+    '^/?gameover$': new GameOver(heading, content, alert, {}),
     '^/?leaders$': new Leaders(heading, content, alert, {count: 10}),
-    '^/?login$': new Login(heading, content, alert),
-    '^/?signup$': new Signup(heading, content, alert),
-    '^/?waiting$': new Waiting(heading, content, alert),
-}, new Error(heading, content, alert));
+    '^/?login$': new Login(heading, content, alert, {}),
+    '^/?signup$': new Signup(heading, content, alert, {}),
+    '^/?waiting$': new Waiting(heading, content, alert, {}),
+}, new Error(heading, content, alert, {}));
