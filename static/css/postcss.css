@@ -7,6 +7,8 @@ $glow-outer-color: #aa0101;
 $glow-inner-color: red;
 $border-primary-color: gray;
 $border-accented-color: white;
+
+$game-width: 600px;
 $min-width: 20rem;
 
 @define-mixin bordered $color, $width {
@@ -33,4 +35,9 @@ $min-width: 20rem;
 
 @define-mixin underlined $color {
   border-bottom: 1px dashed $(color);
+}
+
+@define-mixin closer {
+  position: relative;
+  z-index: 2;
 }

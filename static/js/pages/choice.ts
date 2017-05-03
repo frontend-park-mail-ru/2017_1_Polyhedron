@@ -12,8 +12,8 @@ export class ChoiceGameMode extends BasePage {
     @Autowired(VariableContext)
     private variableMap: VariableContext;
 
-    constructor(heading, content, options?) {
-        super(heading, content, options);
+    constructor(heading, content, alert, options?) {
+        super(heading, content, alert, options);
         this.menu = new Menu({
             items: [
                 {text: 'Одиночная игра', page: 'game', accented: true},

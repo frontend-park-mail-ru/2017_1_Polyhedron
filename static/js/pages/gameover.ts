@@ -6,28 +6,34 @@ import {Autowired} from "../../../core/client_side/game_mechanics/experimental/d
 import {VariableContext} from "../../../core/client_side/game_mechanics/experimental/context";
 
 
-export class About extends BasePage {
-    private text: Text;
+export class GameOver extends BasePage {
+    private winnerText: Text;
+    private loserText: Text;
 
     @Autowired(VariableContext)
     private variableMap: VariableContext;
 
     constructor(heading, content, alert, options?) {
         super(heading, content, alert, options);
-        this.text = new Text({
+        this.winnerText = new Text({
             items: [
-                {text: 'Наша игра - сетевой пинг-понг для трёх пользователей.'},
-                {text: 'Мы используем JavaScript + Java.'},
-                {text: 'Проект является семестровым заданием нашей команды из&nbsp;' +
-                '<a href="http://park.mail.ru"> Технопарка@mail.ru</a>.'},
+                {text: 'Вы победили!'},
+                {text: '<a href="/choice">Еще партию?</a>'},
+            ],
+            parent: this._content
+        });
+        this.loserText = new Text({
+            items: [
+                {text: 'К сожалению, Вы проиграли.'},
+                {text: '<a href="/choice">Отыграемся?</a>'},
             ],
             parent: this._content
         });
     }
 
     public render() {
-        this._heading.innerHTML = "Об игре";
+        this._heading.innerHTML = "Партия завершена";
         this.variableMap.get('userpanel').render();
-        this.text.render();
+        this.winnerText.render();
     }
 }

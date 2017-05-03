@@ -12,8 +12,8 @@ export class Waiting extends BasePage {
     @Autowired(VariableContext)
     private variableMap: VariableContext;
 
-    constructor(heading, content, options?) {
-        super(heading, content, options);
+    constructor(heading, content, alert, options?) {
+        super(heading, content, alert, options);
         this.text = new Text({
             items: [
                 {text: 'Пожалуйста, подождите'},

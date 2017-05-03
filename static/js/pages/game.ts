@@ -11,8 +11,8 @@ export class Game extends BasePage {
     @Autowired(VariableContext)
     private variableMap: VariableContext;
 
-    constructor(heading, content, options?) {
-        super(heading, content, options);
+    constructor(heading, content, alert, options?) {
+        super(heading, content, alert, options);
     }
 
     public render() {
