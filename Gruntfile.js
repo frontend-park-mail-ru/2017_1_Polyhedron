@@ -2,7 +2,6 @@
 
 const webpack = require('webpack');
 const path = require("path");
-const ExtractTextPlugin = require("extract-text-webpack-plugin");
 
 
 module.exports = function(grunt) {
@@ -11,28 +10,6 @@ module.exports = function(grunt) {
         pkg: grunt.file.readJSON('package.json'),
 
         webpack: {
-
-            build_css: {
-                entry: "./static/js/css_loader.ts",
-                output: {
-                    path: path.resolve(__dirname, 'dist'),
-                    filename: 'css_bundle.css'
-                },
-
-                module: {
-                    loaders: [
-                        {
-                            test: /\.css$/,
-                            loader: ExtractTextPlugin.extract({ fallback: 'style-loader', use: 'css-loader' })
-                        },
-                    ]
-                },
-
-                plugins: [
-                    new ExtractTextPlugin("css_bundle.css")
-                ]
-            },
-
             pre_build_index: {
                 progress: true,
                 entry: "./static/js/main.ts",
@@ -68,8 +45,8 @@ module.exports = function(grunt) {
         postcss: {
             options: {
                 processors: [
-                    require('autoprefixer')(),
                     require('precss')(),
+                    require('autoprefixer')(),
                     require('postcss-focus')(),
                     require('postcss-sorting')({
                         'order': ["custom-properties", "dollar-variables", "declarations", "rules", "at-rules"],
@@ -80,7 +57,7 @@ module.exports = function(grunt) {
                 ]
             },
             dist: {
-                src: './dist/css_bundle.css',
+                src: './static/css/main.css',
                 dest: './dist/css_bundle.css'
             }
 
@@ -114,7 +91,7 @@ module.exports = function(grunt) {
                 files: [
                     './static/css/*.css'
                 ],
-                tasks: ['build_css']
+                tasks: ['postcss']
             }
         },
 
@@ -186,19 +163,14 @@ module.exports = function(grunt) {
     grunt.loadNpmTasks('grunt-exec');
     grunt.loadNpmTasks('grunt-postcss');
 
-    grunt.registerTask('build_css', [
-        'webpack:build_css', 'postcss'
-    ]);
 
     grunt.registerTask('postinstall', [
-        'exec:compile_pug', 'exec:compile_swagger', 'webpack', 'exec:minify_bundle', 'build_css'
+        'exec:compile_pug', 'exec:compile_swagger', 'webpack', 'exec:minify_bundle', 'postcss'
     ]);
 
     grunt.registerTask('test', [
         'eslint', 'tslint', 'stylelint'
     ]);
 
-    grunt.registerTask('dev', ['exec:compile_pug', 'webpack:pre_build_index', 'build_css', 'concurrent:watch']);
+    grunt.registerTask('dev', ['exec:compile_pug', 'webpack:pre_build_index', 'postcss', 'concurrent:watch']);
 };
-
-
