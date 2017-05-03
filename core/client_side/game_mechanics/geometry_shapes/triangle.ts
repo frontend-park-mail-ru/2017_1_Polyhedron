@@ -1,7 +1,6 @@
 
 
-import {Line} from "./line";
-import {Point} from "../base/collision_handling";
+import {Point} from "../base/base_types";
 export class Triangle {
     private _height: number;
     private _sectorAngle: number;

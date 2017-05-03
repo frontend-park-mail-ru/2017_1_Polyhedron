@@ -2,11 +2,7 @@
 
 import {SolidBody} from "./solid_body";
 import * as math from './../../../_lib/math';
-import {Platform} from "../game_components/platform";
-import {Ball} from "../game_components/ball";
-
-
-export type Point = number[];
+import {Point} from "./base_types";
 
 
 export interface CircleCollider extends SolidBody {

@@ -9,8 +9,9 @@ import {Autowired, Load} from "../experimental/decorators";
 import {Application} from "../experimental/application";
 import {ServerCommunicator} from "../network/server_communicator";
 import {clientSideServices, serverSideServices} from "../../configs/services";
-import {networkEvents} from "../event_system/events";
+import {gameEvents, networkEvents} from "../event_system/events";
 import TestWorldUpdateEvent = networkEvents.TestWorldUpdateEvent;
+import DrawEvent = gameEvents.DrawEvent;
 
 
 const PLATFORM_TOLERANCE = 5;
@@ -93,7 +94,7 @@ export class Game {
     public getWorldSnapshotMessage() {
         return {
             type: TestWorldUpdateEvent.name,
-            data: this._world.getSnapshot()
+            data: this._world.getState()
         };
     }
 
@@ -150,7 +151,7 @@ export class Game {
         this.eventBus.addEventListener(
             events.networkEvents.TestWorldUpdateEvent.eventName,
             event => {
-                this._world.loadSnapshot(event.data.detail);
+                this._world.loadState(event.data.detail);
                 console.log(event);
             }
         );  // TODO remove
@@ -276,7 +277,9 @@ export class Game {
     private _redraw() {
         if (this._mode !== MODES.server) {
             this._context.clearRect(0, 0, this._canvas.width, this._canvas.height);
-            this._world.draw(this._canvas);
+
+            const event = DrawEvent.create(this._world.getDrawing());
+            this.eventBus.dispatchEvent(event);
         }
     }
 }

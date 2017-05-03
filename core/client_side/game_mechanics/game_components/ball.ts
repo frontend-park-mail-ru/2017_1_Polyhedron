@@ -2,16 +2,29 @@
 import * as math from '../../../_lib/math';
 import {Circle} from '../geometry_shapes/circle';
 import {GameComponent} from '../base/game_component';
-import {Drawable} from '../experimental/interfaces';
+import {NewDrawable, Serializable} from '../experimental/interfaces';
 import {CircleCollider} from "../base/collision_handling";
+import {BallState} from "../event_system/messages";
 
 
-export class Ball extends GameComponent implements Drawable, CircleCollider {
+export class Ball extends GameComponent implements CircleCollider, Serializable<BallState>, NewDrawable {
     private _circle: Circle;
 
     constructor(radius: number) {
         super();
         this._circle = new Circle(radius);
+    }
+
+    public getState(): BallState {
+        return {
+            velocity: this.velocity,
+            position: this.position
+        };
+    }
+
+    public setState(state: BallState) {
+        this._velocity = state.velocity;
+        this._origin = state.position;
     }
 
     public get radius(): number {
@@ -34,16 +47,18 @@ export class Ball extends GameComponent implements Drawable, CircleCollider {
         this.bounceNorm(math.subtract(this.position, point), transportVelocity);
     }
 
-    public draw(canvas: HTMLCanvasElement) {
-        const context = canvas.getContext("2d");
-        const position = this.position;
+    public getDrawing() {
+        return (canvas) => {
+            const context = canvas.getContext("2d");
+            const position = this.position;
 
-        context.beginPath();
-        context.arc(position[0], position[1], this.radius, 0, 2 * Math.PI, false);
-        context.fillStyle = 'green';
-        context.fill();
-        context.lineWidth = 1;
-        context.stroke();
+            context.beginPath();
+            context.arc(position[0], position[1], this.radius, 0, 2 * Math.PI, false);
+            context.fillStyle = 'green';
+            context.fill();
+            context.lineWidth = 1;
+            context.stroke();
+        };
     }
 
     private _getBounceMatrix(normVec: number[]) {

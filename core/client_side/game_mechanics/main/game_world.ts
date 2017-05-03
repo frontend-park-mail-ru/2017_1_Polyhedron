@@ -12,11 +12,11 @@ import {Autowired, Load} from "../experimental/decorators";
 import {getOffsetChecker} from "../base/geometry";
 import {ConfigContext} from "../experimental/context";
 import {getNearestCollisionMultiObstacle} from "../base/collision_handling";
-//import * as log4js from 'log4js';
+import {GameWorldState} from "../event_system/messages";
+import {NewDrawable} from "../experimental/interfaces";
 
 
-export class GameWorld {
-    //private static logger = log4js.getLogger('GameWorldLogger', 'debug');
+export class GameWorld implements NewDrawable {
 
     @Autowired(EventBus)
     private eventBus: EventBus;
@@ -84,26 +84,14 @@ export class GameWorld {
         ++this._score;
     }
 
-    public getSnapshot() {
-        const platformsInfo = this.platforms.map(platform => {
-            return {
-                id: platform,
-                isActive: platform.isActive,
-                angle: platform.rotation,
-                position: platform.position,
-                velocity: platform.velocity
-            };
-        });
-
-        const ballInfo = {
-            position: this.ball.position,
-            velocity: this.ball.velocity
+    public getState(): GameWorldState {
+        return {
+            ballState: this._ball.getState(),
+            platformsState: this._platforms.map(platform => platform.getState())
         };
-
-        return {platformsInfo, ballInfo};
     }
 
-    public loadSnapshot({platformsInfo, ballInfo}) {
+    public loadState({platformsInfo, ballInfo}) {
         this._ball.moveTo(math.add(ballInfo.position, this._position));
         this._ball.velocity = ballInfo.velocity;
 
@@ -126,13 +114,15 @@ export class GameWorld {
         return this._platforms;
     }
 
-    public draw(canvas) {
-        this._userSectors.forEach(sector => sector.draw(canvas));
-        this._neutralSectors.forEach(sector => sector.draw(canvas));
-        this._platforms.forEach(platform => platform.draw(canvas));
-        this._ball.draw(canvas);
+    public getDrawing() {
+        return canvas => {
+            (this._userSectors as NewDrawable[])
+                .concat(this._neutralSectors, this._platforms, [this._ball])
+                .map(drawable => drawable.getDrawing())
+                .forEach(draw => draw(canvas));
 
-        this._writeScore(canvas);
+            this._writeScore(canvas);
+        };
     }
 
     public movePlatform(platform, localOffsetVector, velocityVector?) {

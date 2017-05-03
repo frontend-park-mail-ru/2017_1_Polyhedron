@@ -104,6 +104,9 @@ export namespace gameEvents {
 
 
     export class BallBounced extends BaseEvent {}
+
+
+    export class DrawEvent extends BaseEvent {}
 }
 
 

@@ -5,8 +5,14 @@ export interface Scalable {
 }
 
 
-export interface Drawable {
-    draw(canvas: HTMLCanvasElement);
+export interface NewDrawable {
+    getDrawing(): (canvas) => void;
+}
+
+
+export interface Serializable<T> {
+    getState(): T;
+    setState(state: T): void;
 }
 
 
