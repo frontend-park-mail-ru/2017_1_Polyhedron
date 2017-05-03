@@ -4,10 +4,10 @@ import {Triangle} from '../geometry_shapes/triangle';
 import {GameComponent} from '../base/game_component';
 import {getIdGenerator} from '../../../common/id_generator';
 import {Ball} from "./ball";
-import {NewDrawable} from "../experimental/interfaces";
 import {PolygonObstacle} from "../base/collision_handling";
 import {Line} from "../geometry_shapes/line";
 import {Point} from "../base/base_types";
+import {NewDrawable, Rectangular, specificToCanvasCS} from "../base/drawing";
 
 
 export class TriangleField extends GameComponent implements NewDrawable, PolygonObstacle {
@@ -101,9 +101,10 @@ export class TriangleField extends GameComponent implements NewDrawable, Polygon
     }
 
     public getDrawing() {
-        return canvas => {
+        return (canvas, initialRectangle?: Rectangular) => {
             const context = canvas.getContext("2d");
-            const points = this.getPointArray();
+            const points = this.getPointArray()
+                .map(point => specificToCanvasCS(point, canvas, initialRectangle));
 
             context.beginPath();
             for (let i = 0; i !== points.length; ++i) {

@@ -6,9 +6,10 @@ import {Rectangle} from '../geometry_shapes/rectangle';
 import {Line} from '../geometry_shapes/line';
 import * as math from '../../../_lib/math';
 import {getIdGenerator} from '../../../common/id_generator';
-import {NewDrawable, Serializable} from "../experimental/interfaces";
+import {Serializable} from "../experimental/interfaces";
 import {PolygonObstacle} from "../base/collision_handling";
 import {PlatformState} from "../event_system/messages";
+import {NewDrawable, Rectangular, specificToCanvasCS} from "../base/drawing";
 
 
 export class Platform extends GameComponent implements NewDrawable, PolygonObstacle, Serializable<PlatformState> {
@@ -101,9 +102,10 @@ export class Platform extends GameComponent implements NewDrawable, PolygonObsta
     }
 
     public getDrawing() {
-        return canvas => {
+        return (canvas, initialRectangle?: Rectangular) => {
             const context = canvas.getContext("2d");
-            const points = this.getPointArray();
+            const points = this.getPointArray()
+                .map(point => specificToCanvasCS(point, canvas, initialRectangle));
             context.beginPath();
 
             context.moveTo(points[0][0], points[0][1]);
@@ -116,6 +118,6 @@ export class Platform extends GameComponent implements NewDrawable, PolygonObsta
             context.fill();
             context.lineWidth = 1;
             context.stroke();
-        }
+        };
     }
 }

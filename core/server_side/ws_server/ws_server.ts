@@ -3,7 +3,7 @@
 import * as WebSocket from 'ws';
 import {ServerSideGame} from "../../client_side/game_mechanics/main/game";
 import * as log4js from 'log4js';
-import {createSession, getUsersBySession, getUserSession} from "./session_handling";
+import {getUsersBySession, getUserSession} from "./session_handling";
 import {dispatchMessage, getServerClients} from "./ws_generics";
 import {FakeCanvas, UserHolder} from "./game_related_objects";
 import {Autowired} from "../../client_side/game_mechanics/experimental/decorators";
@@ -34,7 +34,7 @@ class GameServer {
 
     private _startGame(session: string) {
         const canvas = new FakeCanvas(100, 100);
-        const game = new ServerSideGame(canvas, 'server');
+        const game = new ServerSideGame('server');
         this._gameMap.set(session, game);
         game.start();
     }

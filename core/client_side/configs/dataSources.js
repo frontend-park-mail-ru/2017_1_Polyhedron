@@ -15,7 +15,7 @@ exports.config = {
             aspectRatio: 0.25
         },
         game: {
-            defaultCanvasSize: 100,
+            fieldSize: 100,
             playersNum: 4,
             frameRate: FRAME_RATE,
             fillFactor: 0.8,

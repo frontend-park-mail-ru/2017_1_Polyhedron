@@ -12,6 +12,7 @@ import {clientSideServices, serverSideServices} from "../../configs/services";
 import {gameEvents, networkEvents} from "../event_system/events";
 import TestWorldUpdateEvent = networkEvents.TestWorldUpdateEvent;
 import DrawEvent = gameEvents.DrawEvent;
+import {Rectangular} from "../base/drawing";
 
 
 const PLATFORM_TOLERANCE = 5;
@@ -24,13 +25,7 @@ const MODES = {
     server: 'server'
 };
 
-const DEFAULT_MODE = MODES.single;
-
-
-interface Rectangular {
-    height: number;
-    width: number;
-}
+const DEFAULT_MODE = MODES.server;
 
 
 export class Game {
@@ -40,8 +35,7 @@ export class Game {
     @Load('game')
     private _gameConfig: any;
 
-    private _canvas: HTMLCanvasElement | Rectangular;
-    private _context: CanvasRenderingContext2D;
+    private _field: Rectangular;
 
     private _platformVelocityDirection: number[] = [0, 0];
     private _lastCollidedObject: GameComponent;
@@ -55,11 +49,11 @@ export class Game {
 
     private _communicator: ServerCommunicator;
 
-    constructor(canvas, mode = DEFAULT_MODE) {
-        this._canvas = canvas;
-        if (mode !== MODES.server) {
-            this._context = canvas.getContext("2d");
-        }
+    constructor(mode = DEFAULT_MODE) {
+        this._field = {
+            height: this._gameConfig.fieldSize,
+            width: this._gameConfig.fieldSize
+        };
 
         this._lastCollidedObject = null;
 
@@ -131,14 +125,10 @@ export class Game {
     }
 
     private _initWorld() {
-        const worldPosition = [this._canvas.width / 2, this._canvas.height / 2];
-        const canvasSize = Math.min(this._canvas.width, this._canvas.height);
-        const sectorHeight = canvasSize * this._gameConfig.fillFactor / 2;
+        const sectorHeight = this._gameConfig.fieldSize * this._gameConfig.fillFactor / 2;
         const ballRadius = this._gameConfig.ballRelativeRadius * sectorHeight;
-        const ballPosition = worldPosition;
 
-        this._world = new GameWorld(this._gameConfig.playersNum, sectorHeight, ballRadius, worldPosition);
-        this._world.ball.moveTo(ballPosition);
+        this._world = new GameWorld(this._gameConfig.playersNum, sectorHeight, ballRadius);
         this._world.ball.velocity = this._gameConfig.ballVelocity;
 
         this._activePlatform.setActive();
@@ -196,12 +186,9 @@ export class Game {
 
     private _makeIteration(time) {
         if (this._mode !== MODES.multi) {   // TODO refactor
-            const timeScaleFactor = Math.min(this._canvas.height, this._canvas.width) / this._gameConfig.defaultCanvasSize;
-            const scaledTime = time * timeScaleFactor;
+            this._world.makeIteration(time);
 
-            this._world.makeIteration(scaledTime);
-
-            this._handleUserInput(scaledTime);
+            this._handleUserInput(time);
 
             const activePlatformOffset = math.subtract(this._activePlatform.position, this._lastPlatformPosition);
             if (math.norm(activePlatformOffset) > PLATFORM_TOLERANCE) {
@@ -275,12 +262,14 @@ export class Game {
     }
 
     private _redraw() {
-        if (this._mode !== MODES.server) {
-            this._context.clearRect(0, 0, this._canvas.width, this._canvas.height);
+        const draw = canvas => {
+            const context = canvas.getContext("2d");
+            context.clearRect(0, 0, canvas.width, canvas.height);
+            this._world.getDrawing()(canvas, this._field);
+        };
 
-            const event = DrawEvent.create(this._world.getDrawing());
-            this.eventBus.dispatchEvent(event);
-        }
+        const event = DrawEvent.create(draw);
+        this.eventBus.dispatchEvent(event);
     }
 }
 

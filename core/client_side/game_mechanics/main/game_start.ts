@@ -13,9 +13,7 @@ export class GameStarter {
     public start(canvasId) {
         this.drawer = new Drawer(document.getElementById(canvasId) as HTMLCanvasElement);
 
-        const loop = new ClientSideGame (
-            document.getElementById(canvasId)
-        );
+        const loop = new ClientSideGame();
         this.variableMap.set('loop', loop);
 
         loop.start();

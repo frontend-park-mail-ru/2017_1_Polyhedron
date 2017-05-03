@@ -13,11 +13,10 @@ import {getOffsetChecker} from "../base/geometry";
 import {ConfigContext} from "../experimental/context";
 import {getNearestCollisionMultiObstacle} from "../base/collision_handling";
 import {GameWorldState} from "../event_system/messages";
-import {NewDrawable} from "../experimental/interfaces";
+import {NewDrawable, Rectangular} from "../base/drawing";
 
 
 export class GameWorld implements NewDrawable {
-
     @Autowired(EventBus)
     private eventBus: EventBus;
 
@@ -61,7 +60,7 @@ export class GameWorld implements NewDrawable {
         return platform;
     }
 
-    constructor(userNum: number, sectorHeight: number, ballRadius: number, position: number[]) {
+    constructor(userNum: number, sectorHeight: number, ballRadius: number, position: number[] = [0, 0]) {
         this._userNum = userNum;
         this._sectorAngle = Math.PI / userNum;
         this._sectorHeight = sectorHeight;
@@ -115,11 +114,11 @@ export class GameWorld implements NewDrawable {
     }
 
     public getDrawing() {
-        return canvas => {
+        return (canvas, initialRectangle?: Rectangular) => {
             (this._userSectors as NewDrawable[])
                 .concat(this._neutralSectors, this._platforms, [this._ball])
                 .map(drawable => drawable.getDrawing())
-                .forEach(draw => draw(canvas));
+                .forEach(draw => draw(canvas, initialRectangle));
 
             this._writeScore(canvas);
         };
@@ -229,12 +228,6 @@ export class GameWorld implements NewDrawable {
 
     private _handleUserSectorCollision(sector: TriangleField, ball: Ball) {
         if (sector !== this._lastCollidedObject) {
-            // GameWorld.logger.debug(  // TODO remove or import correctly
-            //     'User sector collided' +
-            //     '; id = ' + sector.id +
-            //     '; angle = ' + sector.rotation / Math.PI * 180
-            // );
-
             ball.bounceNorm(sector.getBottomNorm());
             this._lastCollidedObject = sector;
 
@@ -244,12 +237,6 @@ export class GameWorld implements NewDrawable {
 
     private _handleNeutralSectorCollision(sector, ball) {
         if (sector !== this._lastCollidedObject) {
-            // GameWorld.logger.debug(  // TODO remove or import correctly
-            //     'Neutral sector collided' +
-            //     '; id = ' + sector.id +
-            //     '; angle = ' + sector.rotation / Math.PI * 180
-            // );
-
             ball.bounceNorm(sector.getBottomNorm());
             this._lastCollidedObject = sector;
         }
@@ -257,12 +244,6 @@ export class GameWorld implements NewDrawable {
 
     private _handlePlatformCollision(platform, ball, point) {
         if (platform !== this._lastCollidedObject) {
-            // GameWorld.logger.debug(  // TODO remove or import correctly
-            //     'Platform collided' +
-            //     '; id = ' + platform.id +
-            //     '; angle = ' + platform.rotation / Math.PI * 180
-            // );
-
             ball.bouncePoint(point, platform.velocity);
             this._lastCollidedObject = platform;
 

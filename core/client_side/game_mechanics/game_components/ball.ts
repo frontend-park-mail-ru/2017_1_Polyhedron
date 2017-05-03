@@ -2,9 +2,11 @@
 import * as math from '../../../_lib/math';
 import {Circle} from '../geometry_shapes/circle';
 import {GameComponent} from '../base/game_component';
-import {NewDrawable, Serializable} from '../experimental/interfaces';
+import {Serializable} from '../experimental/interfaces';
 import {CircleCollider} from "../base/collision_handling";
 import {BallState} from "../event_system/messages";
+import {specificToCanvasCS, NewDrawable, Rectangular, toCanvasCS, getCanvasScaleFactor} from "../base/drawing";
+import {Point, Vector} from "../base/base_types";
 
 
 export class Ball extends GameComponent implements CircleCollider, Serializable<BallState>, NewDrawable {
@@ -48,12 +50,13 @@ export class Ball extends GameComponent implements CircleCollider, Serializable<
     }
 
     public getDrawing() {
-        return (canvas) => {
+        return (canvas, initialRectangle?: Rectangular) => {
             const context = canvas.getContext("2d");
-            const position = this.position;
+            const position = specificToCanvasCS(this.position, canvas, initialRectangle);
+            const radius = this.radius * getCanvasScaleFactor(canvas, initialRectangle);
 
             context.beginPath();
-            context.arc(position[0], position[1], this.radius, 0, 2 * Math.PI, false);
+            context.arc(position[0], position[1], radius, 0, 2 * Math.PI, false);
             context.fillStyle = 'green';
             context.fill();
             context.lineWidth = 1;

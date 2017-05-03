@@ -23,7 +23,7 @@ export const config = {
         },
 
         game: {
-            defaultCanvasSize: 100,
+            fieldSize: 100,
             playersNum: 4,
             frameRate: FRAME_RATE,
             fillFactor: 0.8,
