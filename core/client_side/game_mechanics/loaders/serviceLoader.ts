@@ -1,11 +1,11 @@
 'use strict';
-import {services} from '../../configs/services';
 import {ServiceContext} from "../experimental/context";
 import {NamedConstructible} from "../experimental/interfaces";
 
 export const loadServices = (() => {
     let loaded = false;
-    return () => {
+
+    return (services) => {
         if (!loaded) {
             const context = ServiceContext.getInstance();
 

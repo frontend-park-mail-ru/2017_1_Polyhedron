@@ -3,9 +3,10 @@ import * as math from '../../../_lib/math';
 import {Circle} from '../geometry_shapes/circle';
 import {GameComponent} from '../base/game_component';
 import {Drawable} from '../experimental/interfaces';
+import {CircleCollider} from "../base/collision_handling";
 
 
-export class Ball extends GameComponent implements Drawable {
+export class Ball extends GameComponent implements Drawable, CircleCollider {
     private _circle: Circle;
 
     constructor(radius: number) {

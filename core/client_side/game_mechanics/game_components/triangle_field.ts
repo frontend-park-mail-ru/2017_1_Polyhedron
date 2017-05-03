@@ -5,9 +5,11 @@ import {GameComponent} from '../base/game_component';
 import {getIdGenerator} from '../../../common/id_generator';
 import {Ball} from "./ball";
 import {Drawable} from "../experimental/interfaces";
+import {Point, PolygonObstacle} from "../base/collision_handling";
+import {Line} from "../geometry_shapes/line";
 
 
-export class TriangleField extends GameComponent implements Drawable {
+export class TriangleField extends GameComponent implements Drawable, PolygonObstacle {
     private static idGenerator = getIdGenerator();
     private _triangle: Triangle;
     private _isNeutral: boolean;
@@ -88,6 +90,13 @@ export class TriangleField extends GameComponent implements Drawable {
 
     public getWidthOnRelativeDistance(relativeDistance: number): number {
         return this._triangle.getWidthOnDistance(relativeDistance * this._triangle.height);
+    }
+
+    public getClosestPoint(origin: Point): Point {
+        const localBasePoints = this.shape.getBasePoints();
+        const globalBasePoints = localBasePoints.map(point => this.toGlobals(point));
+        const baseLine = new Line(globalBasePoints[0], globalBasePoints[1]);
+        return baseLine.getClosestPoint(origin);
     }
 
     public draw(canvas: HTMLCanvasElement) {

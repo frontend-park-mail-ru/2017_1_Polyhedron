@@ -1,5 +1,7 @@
 
 
+import {Line} from "./line";
+import {Point} from "../base/collision_handling";
 export class Triangle {
     private _height: number;
     private _sectorAngle: number;
@@ -22,6 +24,13 @@ export class Triangle {
     public getPointArray(): number[][] {
         return [
             [0, 0],
+            [-this._height * Math.tan(this._sectorAngle / 2), -this._height],
+            [this._height * Math.tan(this._sectorAngle / 2), -this._height],
+        ];
+    }
+
+    public getBasePoints(): Point[] {
+        return [
             [-this._height * Math.tan(this._sectorAngle / 2), -this._height],
             [this._height * Math.tan(this._sectorAngle / 2), -this._height],
         ];

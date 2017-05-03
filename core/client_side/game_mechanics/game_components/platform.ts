@@ -6,9 +6,11 @@ import {Rectangle} from '../geometry_shapes/rectangle';
 import {Line} from '../geometry_shapes/line';
 import * as math from '../../../_lib/math';
 import {getIdGenerator} from '../../../common/id_generator';
+import {Drawable} from "../experimental/interfaces";
+import {PolygonObstacle} from "../base/collision_handling";
 
 
-export class Platform extends GameComponent {
+export class Platform extends GameComponent implements Drawable, PolygonObstacle {
     private static generateId = getIdGenerator();
     public readonly id: number;
     private _rectangle: Rectangle;
@@ -23,12 +25,8 @@ export class Platform extends GameComponent {
         this.id = Platform.generateId();
     }
 
-    public setActive() {
-        this._isActive = true;
-    }
-
-    public setPassive() {
-        this._isActive = false;
+    public setActive(isActive: boolean = true) {
+        this._isActive = isActive;
     }
 
     public getPointArray() {
@@ -47,8 +45,16 @@ export class Platform extends GameComponent {
         return this._rectangle;
     }
 
-    public getNorm() {
-        return this.toGlobalsWithoutOffset([0, 1]);
+    public getClosestPoint(origin: number[]) {
+        return this.getLineArray()
+            .map(line => line.getClosestPoint(origin))
+            .map(point => {
+                return {
+                    point,
+                    distance: math.norm(math.subtract(point, origin))
+                };
+            })
+            .sort((obj1, obj2) => obj1.distance - obj2.distance)[0].point;
     }
 
     public getBouncePoint(ball) {
