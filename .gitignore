@@ -46,5 +46,7 @@ dist
 /swagger.json
 /core/client_side/game_mechanics/**/*.js
 /core/client_side/game_mechanics/**/*.map
+/core/server_side/ws_server/*.js
+/core/server_side/ws_server/*.map
 /core/common/id_generator.js
 /core/common/id_generator.js.map
