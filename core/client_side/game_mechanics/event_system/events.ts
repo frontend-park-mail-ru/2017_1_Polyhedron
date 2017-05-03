@@ -1,9 +1,5 @@
 'use strict';
 
-/**
- * NEVER create instances of BaseEvent class or its children with new.
- * If you try to create an instance of EventClass: EventClass extends BaseEvent, ALWAYS use EventClass.create(...).
- */
 export abstract class BaseEvent {
     public static get eventName() {
         return (this as any).name;

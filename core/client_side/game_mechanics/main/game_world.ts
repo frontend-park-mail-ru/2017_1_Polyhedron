@@ -213,7 +213,7 @@ export class GameWorld {
             ball.bounceNorm(sector.getBottomNorm());
             this._lastCollidedObject = sector;
 
-            this.eventBus.dispatchEvent(events.gameEvents.ClientDefeatEvent.create(sector.id));   // TODO uncomment
+            this.eventBus.dispatchEvent(events.gameEvents.ClientDefeatEvent.create(sector.id));
         }
     }
 
