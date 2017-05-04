@@ -9,6 +9,24 @@
     src: url('/static/fonts/RobotoSlab-Bold.ttf');
 }
 
+$text-main-color: white;
+$text-border-color: black;
+$glow-outer-color: #aa0101;
+$glow-inner-color: red;
+
+@define-mixin bordered $color, $width {
+    text-shadow: -$(width) -$(width) 0 $(color),
+        $(width) -$(width) 0 $(color),
+        -$(width) $(width) 0 $(color),
+        $(width) $(width) 0 $(color);
+}
+
+@define-mixin glow $width-outer, $width-inner {
+    text-shadow: 1px 1px 2px $text-border-color,
+        0 0 $(width-outer) $glow-outer-color,
+        0 0 $(width-inner) $glow-inner-color;
+}
+
 * {
     outline: none;
 }
@@ -21,13 +39,10 @@ html {
     padding: 0;
     margin: 0;
     background: black url('/static/images/background.gif') 50% 50%;
-    color: white;
+    color: $text-main-color;
     font-family: 'Roboto Slab', serif;
     text-align: center;
-    text-shadow: -1px -1px 0 #000,
-        1px -1px 0 #000,
-        -1px 1px 0 #000,
-        1px 1px 0 #000;
+    @mixin bordered $text-border-color, 1px;
 }
 
 body {
@@ -37,14 +52,12 @@ body {
 }
 
 a {
-    color: white;
+    color: $text-main-color;
     text-decoration: none;
 }
 
 a:hover, a:active {
-    text-shadow: 1px 1px 2px black,
-    0 0 30px #aa0101,
-    0 0 10px red;
+    @mixin glow 30px, 10px;
 }
 
 .container {
@@ -72,9 +85,7 @@ a:hover, a:active {
 }
 
 .header:hover {
-    text-shadow: 1px 1px 2px black,
-        0 0 10px #aa0101,
-        0 0 5px red;
+    @mixin glow 10px, 5px;
 }
 
 .subheader {
