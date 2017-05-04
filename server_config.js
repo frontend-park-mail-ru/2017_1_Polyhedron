@@ -38,6 +38,7 @@ router.addRegexURL(".*\.ttf$", new resourceBinding.BindedFolder("./static/fonts"
 router.addRegexURL(".*\.gif$", new resourceBinding.BindedFolder("./static/images", "/static/images"));
 router.addRegexURL(".*\.png$", new resourceBinding.BindedFolder("./static/images", "/static/images"));
 router.addRegexURL(".*\.ico$", new resourceBinding.BindedFolder("./static/images", "/static/images"));
+router.addRegexURL(".*\.jpg$", new resourceBinding.BindedFolder("./static/images", "/static/images"));
 
 router.addRegexURL("^/dist/.*\.js$", new resourceBinding.BindedFolder("./dist/", "/dist/"));
 router.addRegexURL("^/dist/.*\.css$", new resourceBinding.BindedFolder("./dist/", "/dist/"));
