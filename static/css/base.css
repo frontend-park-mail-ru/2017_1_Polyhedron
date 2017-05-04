@@ -68,18 +68,24 @@ a:active {
 
 .header {
   font-size: 400%;
-  margin-bottom: 0;
-
-  @mixin closer;
 }
 
 .header:hover {
   @mixin glow;
 }
 
+.header_main {
+  margin-bottom: 0;
+
+  @mixin closer;
+}
+
 .subheader {
   font-size: $text-accented-bigger;
-  margin-top: 0;
+}
+
+.subheader_main {
+  margin: 0;
 
   @mixin closer;
 }
