@@ -33,7 +33,6 @@ class GameServer {
     }
 
     private _startGame(session: string) {
-        const canvas = new FakeCanvas(100, 100);
         const game = new ServerSideGame('server');
         this._gameMap.set(session, game);
         game.start();
@@ -47,16 +46,16 @@ class GameServer {
             this._userHolder.addUser(ws, session);
             const sessionPlayers = getUsersBySession(session, getServerClients(this._server));
 
-            if (this._isCompleteParty(sessionPlayers)) {
+            if (/*this._isCompleteParty(sessionPlayers)*/ true) {
                 this._dispatchGameStartMessage(sessionPlayers);
                 this._startGame(session);
 
                 setInterval(() => {
                     const users = getUsersBySession(session, getServerClients(this._server));
                     const game = this._gameMap.get(session);
-                    const snapshot = game.getWorldSnapshotMessage();
+                    const snapshot = game.getWorldState();
                     dispatchMessage(JSON.stringify(snapshot), users);
-                }, 100);
+                }, 50);
             }
         });
     }

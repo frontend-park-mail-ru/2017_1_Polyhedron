@@ -1,9 +1,4 @@
-
-
-export interface Scalable {
-    rescale(scaleFactor: number);
-}
-
+'use strict';
 
 export interface Serializable<T> {
     getState(): T;
@@ -19,18 +14,6 @@ export interface NamedConstructible {
 
 export interface Constructible {
     new(...args: any[]): {};
-}
-
-
-interface ServiceInfo {
-    cls: NamedConstructible;
-    args?: any[];
-}
-
-
-export interface ContextConfig {
-    services?: ServiceInfo[];
-    dataSources?: {};
 }
 
 

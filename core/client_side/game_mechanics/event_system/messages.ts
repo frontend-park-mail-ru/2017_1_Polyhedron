@@ -1,6 +1,6 @@
 'use strict';
 
-import {Point, Vector} from "../base/base_types";
+import {Point, Vector} from "../base/common";
 
 
 export interface BallState {
@@ -10,7 +10,6 @@ export interface BallState {
 
 
 export interface PlatformState {
-    id: number;
     position: Point;
     angle: number;
     velocity: Vector;

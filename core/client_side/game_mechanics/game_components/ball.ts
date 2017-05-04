@@ -5,11 +5,12 @@ import {GameComponent} from '../base/game_component';
 import {Serializable} from '../experimental/interfaces';
 import {CircleCollider} from "../base/collision_handling";
 import {BallState} from "../event_system/messages";
-import {specificToCanvasCS, NewDrawable, Rectangular, toCanvasCS, getCanvasScaleFactor} from "../base/drawing";
-import {Point, Vector} from "../base/base_types";
+import {Drawable, Rectangular} from "../drawing/interfaces";
+import {specificToCanvasCS, getCanvasScaleFactor} from "../drawing/canvas_transform";
+import {getReflectionMatrix} from "../base/geometry";
 
 
-export class Ball extends GameComponent implements CircleCollider, Serializable<BallState>, NewDrawable {
+export class Ball extends GameComponent implements CircleCollider, Serializable<BallState>, Drawable {
     private _circle: Circle;
 
     constructor(radius: number) {
@@ -40,7 +41,7 @@ export class Ball extends GameComponent implements CircleCollider, Serializable<
     public bounceNorm(normVec: number[], surfaceVelocity: number[] = [0, 0]) {
         surfaceVelocity = math.multiply(surfaceVelocity, -1);
         const relativeVelocity = math.subtract(this.velocity, surfaceVelocity);
-        const bounceMatrix = this._getBounceMatrix(normVec);
+        const bounceMatrix = getReflectionMatrix(normVec);
         const newRelativeVelocity = math.multiply(bounceMatrix, relativeVelocity);
         this.velocity = math.add(newRelativeVelocity, surfaceVelocity).toArray();
     }
@@ -62,17 +63,5 @@ export class Ball extends GameComponent implements CircleCollider, Serializable<
             context.lineWidth = 1;
             context.stroke();
         };
-    }
-
-    private _getBounceMatrix(normVec: number[]) {
-        const normVec0 = math.divide(normVec, math.norm(normVec));
-
-        const normMatrix = [
-            [normVec0[0] * normVec0[0], normVec0[0] * normVec0[1]],
-            [normVec0[0] * normVec0[1], normVec0[1] * normVec0[1]]
-        ];
-
-        const identityMatrix = math.eye(2);
-        return math.subtract(identityMatrix, math.multiply(normMatrix, 2));
     }
 }

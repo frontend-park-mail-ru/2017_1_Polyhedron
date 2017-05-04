@@ -9,15 +9,15 @@ import {getIdGenerator} from '../../../common/id_generator';
 import {Serializable} from "../experimental/interfaces";
 import {PolygonObstacle} from "../base/collision_handling";
 import {PlatformState} from "../event_system/messages";
-import {NewDrawable, Rectangular, specificToCanvasCS} from "../base/drawing";
+import {Drawable, Rectangular} from "../drawing/interfaces";
+import {specificToCanvasCS} from "../drawing/canvas_transform";
 
 
-export class Platform extends GameComponent implements NewDrawable, PolygonObstacle, Serializable<PlatformState> {
+export class Platform extends GameComponent implements Drawable, PolygonObstacle, Serializable<PlatformState> {
     private static generateId = getIdGenerator();
     public readonly id: number;
     private _rectangle: Rectangle;
     private _isActive: boolean;
-
 
     constructor(length, width, isActive = false) {
         super();
@@ -29,7 +29,6 @@ export class Platform extends GameComponent implements NewDrawable, PolygonObsta
 
     public getState(): PlatformState {
         return {
-            id: this.id,
             position: this.position,
             angle: this.rotation,
             velocity: this.velocity,

@@ -1,7 +1,6 @@
+'use strict';
 
-import {Scalable} from '../experimental/interfaces';
-
-export class Circle implements Scalable {
+export class Circle {
     private _radius;
 
     constructor(radius: number) {
@@ -14,9 +13,5 @@ export class Circle implements Scalable {
 
     public set radius(value: number) {
         this._radius = value;
-    }
-
-    public rescale(scaleFactor: number) {
-        this._radius *= scaleFactor;
     }
 }

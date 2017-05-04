@@ -7,6 +7,18 @@ export function move(vector: number[], offset: number[]) {
     return math.add(move, offset);
 }
 
+export function getReflectionMatrix(normVec: number[]) {
+    const normVec0 = math.divide(normVec, math.norm(normVec));
+
+    const normMatrix = [
+        [normVec0[0] * normVec0[0], normVec0[0] * normVec0[1]],
+        [normVec0[0] * normVec0[1], normVec0[1] * normVec0[1]]
+    ];
+
+    const identityMatrix = math.eye(2);
+    return math.subtract(identityMatrix, math.multiply(normMatrix, 2));
+}
+
 
 export function getRotationMatrix(angle: number): number[][] {
     return math.matrix([

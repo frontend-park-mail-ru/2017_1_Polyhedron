@@ -1,13 +1,12 @@
 
 import {SolidBody} from './solid_body';
-import {Scalable} from '../experimental/interfaces';
 import * as math from '../../../_lib/math';
 
 
 type validatorType = (position: number[]) => boolean;
 
 
-export abstract class GameComponent extends SolidBody implements Scalable {
+export abstract class GameComponent extends SolidBody {
     private _positionValidator: validatorType;
     private _children: GameComponent[];
     private _scale: number;
@@ -59,10 +58,6 @@ export abstract class GameComponent extends SolidBody implements Scalable {
     }
 
     public abstract get shape(): any
-
-    public rescale(scaleFactor: number) {
-        this.shape.rescale(scaleFactor);
-    }
 
     public moveToWithConstraints(newPosition: number[]) {
         if (this._positionValidator(newPosition)) {

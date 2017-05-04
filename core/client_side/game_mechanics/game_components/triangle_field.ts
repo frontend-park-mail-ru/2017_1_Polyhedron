@@ -6,11 +6,12 @@ import {getIdGenerator} from '../../../common/id_generator';
 import {Ball} from "./ball";
 import {PolygonObstacle} from "../base/collision_handling";
 import {Line} from "../geometry_shapes/line";
-import {Point} from "../base/base_types";
-import {NewDrawable, Rectangular, specificToCanvasCS} from "../base/drawing";
+import {Drawable, Rectangular} from "../drawing/interfaces";
+import {specificToCanvasCS} from "../drawing/canvas_transform";
+import {Point} from "../base/common";
 
 
-export class TriangleField extends GameComponent implements NewDrawable, PolygonObstacle {
+export class TriangleField extends GameComponent implements Drawable, PolygonObstacle {
     private static idGenerator = getIdGenerator();
     private _triangle: Triangle;
     private _isNeutral: boolean;
@@ -128,6 +129,6 @@ export class TriangleField extends GameComponent implements NewDrawable, Polygon
             context.fill();
             context.lineWidth = 1;
             context.stroke();
-        }
+        };
     }
 }

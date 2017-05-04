@@ -1,23 +1,13 @@
 'use strict';
 
-import {Vector} from "./base_types";
-import * as math from "../../../_lib/math";
+import * as math from '../../../_lib/math';
+import {Vector} from "../base/common";
+import {Rectangular} from "./interfaces";
 
 
-export interface NewDrawable {
-    getDrawing(): (canvas, initialRectangle?: Rectangular) => void;
-}
-
-
-export interface Rectangular {
-    height: number;
-    width: number;
-}
-
-
-export function toCanvasCS(vec: Vector, canvas: Rectangular, scaleFactor: number = 1) {
+export function toCanvasCS([x, y]: Vector, canvas: Rectangular, scaleFactor: number = 1) {
     return math.add(
-        math.multiply(vec, scaleFactor),
+        math.multiply([x, y], scaleFactor),
         [canvas.height / 2, canvas.width / 2]
     );
 }

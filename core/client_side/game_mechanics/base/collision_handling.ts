@@ -2,7 +2,7 @@
 
 import {SolidBody} from "./solid_body";
 import * as math from './../../../_lib/math';
-import {Point} from "./base_types";
+import {Point} from "./common";
 
 
 export interface CircleCollider extends SolidBody {

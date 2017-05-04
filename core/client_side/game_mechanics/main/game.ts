@@ -12,7 +12,8 @@ import {clientSideServices, serverSideServices} from "../../configs/services";
 import {gameEvents, networkEvents} from "../event_system/events";
 import TestWorldUpdateEvent = networkEvents.TestWorldUpdateEvent;
 import DrawEvent = gameEvents.DrawEvent;
-import {Rectangular} from "../base/drawing";
+import {Rectangular} from "../drawing/interfaces";
+import {getByCircularIndex} from "../base/common";
 
 
 const PLATFORM_TOLERANCE = 5;
@@ -25,7 +26,7 @@ const MODES = {
     server: 'server'
 };
 
-const DEFAULT_MODE = MODES.server;
+const DEFAULT_MODE = MODES.multi;
 
 
 export class Game {
@@ -85,7 +86,7 @@ export class Game {
         this._setIntervalID = setInterval(() => this._makeIteration(time), time);
     }
 
-    public getWorldSnapshotMessage() {
+    public getWorldState() {
         return {
             type: TestWorldUpdateEvent.name,
             data: this._world.getState()
@@ -113,15 +114,16 @@ export class Game {
     }
 
     private get _playerItemsIndex() {
+        //return 0;
         return Math.floor(this._gameConfig.playersNum / 2);
     }
 
     private get _activePlatform() {
-        return this._world.platforms[this._playerItemsIndex];
+        return getByCircularIndex(this._world.platforms, this._playerItemsIndex);
     }
 
     private get _activeSector() {
-        return this._world.userSectors[this._playerItemsIndex];
+        return getByCircularIndex(this._world.userSectors, this._playerItemsIndex);
     }
 
     private _initWorld() {
@@ -141,10 +143,9 @@ export class Game {
         this.eventBus.addEventListener(
             events.networkEvents.TestWorldUpdateEvent.eventName,
             event => {
-                this._world.loadState(event.data.detail);
-                console.log(event);
+                this._world.setState(event.data.detail);
             }
-        );  // TODO remove
+        );
 
         this.eventBus.addEventListener(events.networkEvents.DefeatEvent.eventName,
             event => this._handleDefeatEvent(event));
@@ -162,39 +163,22 @@ export class Game {
             event => this._platformVelocityDirection = event.detail
         );
 
-        this.eventBus.addEventListener(
-            events.networkEvents.WorldUpdateEvent.eventName,
-            event => this._handleWorldUpdateEvent(event)
-        );
-
         this.eventBus.addEventListener(events.gameEvents.BallBounced.eventName, event => {
             if (event.detail === this._activePlatform.id) {
                 this._world.incrementScore();
             }
         });
-
-        // TODO get rid of window completely
-        // window.addEventListener('dblclick', () => {
-        //     this._canvas.style.backgroundColor = 'black';
-        //     this._canvas.webkitRequestFullScreen();
-        // });
-        //
-        // window.addEventListener('webkitfullscreenchange', () => {
-        //     this._canvas.style.backgroundColor = 'rgba(0, 0, 0, 0)';
-        // });
     }
 
     private _makeIteration(time) {
-        if (this._mode !== MODES.multi) {   // TODO refactor
-            this._world.makeIteration(time);
+        this._world.makeIteration(time);
 
-            this._handleUserInput(time);
+        this._handleUserInput(time);
 
-            const activePlatformOffset = math.subtract(this._activePlatform.position, this._lastPlatformPosition);
-            if (math.norm(activePlatformOffset) > PLATFORM_TOLERANCE) {
-                this._throwPlatformMovedEvent(activePlatformOffset);
-                this._lastPlatformPosition = this._activePlatform.position;
-            }
+        const activePlatformOffset = math.subtract(this._activePlatform.position, this._lastPlatformPosition);
+        if (math.norm(activePlatformOffset) > PLATFORM_TOLERANCE) {
+            this._throwPlatformMovedEvent(activePlatformOffset);
+            this._lastPlatformPosition = this._activePlatform.position;
         }
 
         this._redraw();
@@ -219,7 +203,7 @@ export class Game {
     }
 
     private _handleDefeatEvent(event) {
-        // TODO сделать что-нибудь поинтереснее
+        // TODO replace with server-dependent logic
         const sectorId = this._getItemIndex(event.detail);
         if (sectorId === this._playerItemsIndex) {
             alert("You lose");
@@ -232,29 +216,21 @@ export class Game {
     }
 
     private _handleClientDefeatEvent(event) {
-        const sectorId = event.detail;
-        const playerId = this._activeSector.id;
+        if (this._mode === MODES.single) {
+            const sectorId = event.detail;
+            const playerId = this._activeSector.id;
 
-        if (sectorId === playerId) {
-            // alert("Вы проиграли");
-        } else {
-            // alert("Вы победили!");
+            if (sectorId === playerId) {
+                // alert("Вы проиграли");
+            } else {
+                // alert("Вы победили!");
+            }
+
+            this._world.userSectors.filter(sector => sector.id === sectorId).forEach(sector => sector.setLoser());
+
+            this._redraw();
+            this.stop();
         }
-
-        this._world.userSectors.filter(sector => sector.id === sectorId).forEach(sector => sector.setLoser());
-
-        this._redraw();
-        this.stop();
-    }
-
-    private _handleWorldUpdateEvent(event) {
-        const gameUpdate = event.detail;
-
-        gameUpdate.platformsUpdate.forEach(platformUpdate => {
-            this._getPlatformByIndex(platformUpdate.index).moveTo(platformUpdate.position);
-        });
-
-        this._world.updateBallState(gameUpdate.ballUpdate.position, gameUpdate.ballUpdate.velocity);
     }
 
     private _createBots() {

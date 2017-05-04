@@ -1,8 +1,8 @@
 
-import {Game, ClientSideGame} from './game';
+import {ClientSideGame} from './game';
 import {Autowired} from "../experimental/decorators";
 import {VariableContext} from "../experimental/context";
-import {Drawer} from "../experimental/drawer";
+import {Drawer, FullScreenDrawer} from "../drawing/drawer";
 
 
 export class GameStarter {
@@ -11,7 +11,7 @@ export class GameStarter {
     private drawer: Drawer;
 
     public start(canvasId) {
-        this.drawer = new Drawer(document.getElementById(canvasId) as HTMLCanvasElement);
+        this.drawer = new FullScreenDrawer(document.getElementById(canvasId) as HTMLCanvasElement);
 
         const loop = new ClientSideGame();
         this.variableMap.set('loop', loop);

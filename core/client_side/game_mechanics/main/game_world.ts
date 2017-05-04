@@ -9,14 +9,14 @@ import * as events from '../event_system/events';
 import {GameComponent} from "../base/game_component";
 import {EventBus} from "../event_system/event_bus";
 import {Autowired, Load} from "../experimental/decorators";
-import {getOffsetChecker} from "../base/geometry";
-import {ConfigContext} from "../experimental/context";
 import {getNearestCollisionMultiObstacle} from "../base/collision_handling";
 import {GameWorldState} from "../event_system/messages";
-import {NewDrawable, Rectangular} from "../base/drawing";
+import {Serializable} from "../experimental/interfaces";
+import {Drawable, Rectangular} from "../drawing/interfaces";
+import {platformFromTriangleField} from "../game_components/helper_functions";
 
 
-export class GameWorld implements NewDrawable {
+export class GameWorld implements Drawable, Serializable<GameWorldState> {
     @Autowired(EventBus)
     private eventBus: EventBus;
 
@@ -30,35 +30,10 @@ export class GameWorld implements NewDrawable {
     private _platforms: Platform[];
     private _ball: Ball;
     private _score: number;
-
     @Load('game')
     private _gameConfig;
 
     private _lastCollidedObject: GameComponent = null;
-
-    private static _platformFromTriangleField(triangleField: TriangleField) {
-        const platformConfig = ConfigContext.getInstance().get('platform');
-
-        const relativeDistance = platformConfig.relativeDistance;
-        const relativeLength = platformConfig.relativeLength;
-        const totalLength = triangleField.getWidthOnRelativeDistance(relativeDistance);
-        const platformLength = totalLength * relativeLength;
-
-        const platformWidth = platformConfig.aspectRatio * platformLength;
-        const platform = new Platform(platformLength, platformWidth);
-
-        // using such coordinates because triangleField coordinate system origin is in the topmost corner.
-        const position = triangleField.toGlobals([0, -triangleField.height * (1 - relativeDistance)]);
-        const rotation = triangleField.rotation;
-
-        platform.moveTo(position);
-        platform.rotateTo(rotation);
-
-        platform.positionValidator = getOffsetChecker(platform, triangleField);
-        triangleField.addChild(platform);
-
-        return platform;
-    }
 
     constructor(userNum: number, sectorHeight: number, ballRadius: number, position: number[] = [0, 0]) {
         this._userNum = userNum;
@@ -90,9 +65,10 @@ export class GameWorld implements NewDrawable {
         };
     }
 
-    public loadState({platformsInfo, ballInfo}) {
-        this._ball.moveTo(math.add(ballInfo.position, this._position));
-        this._ball.velocity = ballInfo.velocity;
+    public setState(state: GameWorldState) {
+        this._ball.setState(state.ballState);
+
+        const platformsState = state.platformsState.sort((state1, state2) => state1.angle - state2.angle);
 
         // TODO add platforms info handling
     }
@@ -115,7 +91,7 @@ export class GameWorld implements NewDrawable {
 
     public getDrawing() {
         return (canvas, initialRectangle?: Rectangular) => {
-            (this._userSectors as NewDrawable[])
+            (this._userSectors as Drawable[])
                 .concat(this._neutralSectors, this._platforms, [this._ball])
                 .map(drawable => drawable.getDrawing())
                 .forEach(draw => draw(canvas, initialRectangle));
@@ -127,16 +103,6 @@ export class GameWorld implements NewDrawable {
     public movePlatform(platform, localOffsetVector, velocityVector?) {
         const globalOffset = platform.toGlobalsWithoutOffset(localOffsetVector);
         platform.moveByWithConstraints(globalOffset, velocityVector);
-    }
-
-    public updateBallState(position, velocity) {
-        if (position) {
-            this._ball.moveTo(position);
-        }
-
-        if (velocity) {
-            this._ball.velocity = velocity;
-        }
     }
 
     public makeIteration(time) {
@@ -218,7 +184,7 @@ export class GameWorld implements NewDrawable {
     }
 
     private _initPlatforms() {
-        this._platforms = this._userSectors.map(sector => GameWorld._platformFromTriangleField(sector));
+        this._platforms = this._userSectors.map(sector => platformFromTriangleField(sector));
     }
 
     private _initBall() {
@@ -231,7 +197,7 @@ export class GameWorld implements NewDrawable {
             ball.bounceNorm(sector.getBottomNorm());
             this._lastCollidedObject = sector;
 
-            //this.eventBus.dispatchEvent(events.gameEvents.ClientDefeatEvent.create(sector.id));   // TODO uncomment
+            this.eventBus.dispatchEvent(events.gameEvents.ClientDefeatEvent.create(sector.id));
         }
     }
 

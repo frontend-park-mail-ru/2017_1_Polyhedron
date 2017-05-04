@@ -1,6 +1,8 @@
+'use strict';
+
+import {Point} from "../base/common";
 
 
-import {Point} from "../base/base_types";
 export class Triangle {
     private _height: number;
     private _sectorAngle: number;
