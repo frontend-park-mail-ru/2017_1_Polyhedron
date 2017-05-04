@@ -1,13 +1,4 @@
-@font-face {
-  font-family: 'Roboto Slab';
-  src: url('/static/fonts/RobotoSlab-Regular.ttf');
-}
-
-@font-face {
-  font-family: 'Roboto Slab';
-  font-weight: bold;
-  src: url('/static/fonts/RobotoSlab-Bold.ttf');
-}
+@mixin importFont $font-primary, $font-primary-file;
 
 * {
   outline: none;
@@ -22,7 +13,7 @@ html {
   margin: 0;
   background: black url('/static/images/background.jpg') 50% 50%;
   color: $text-primary-color;
-  font-family: 'Roboto Slab', serif;
+  font-family: '$font-primary', serif;
   font-size: 1rem;
   text-align: center;
 

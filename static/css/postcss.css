@@ -1,3 +1,6 @@
+$font-primary: Roboto Slab;
+$font-primary-file: RobotoSlab;
+$font-url: /static/fonts;
 $text-primary-color: white;
 $text-accented-color: red;
 $text-error-color: red;
@@ -10,6 +13,24 @@ $border-accented-color: white;
 
 $game-width: 600px;
 $min-width: 20rem;
+
+
+@define-mixin importFont $font, $file {
+  @font-face {
+    font-family: $(font);
+    $weight: Regular;
+    $ff: $(file);
+    src: url('$(font-url)/$(ff)-$(weight).ttf');
+  }
+
+  @font-face {
+    font-family: $(font);
+    font-weight: bold;
+    $weight: Bold;
+    $ff: $(file);
+    src: url('$(font-url)/$(ff)-$(weight).ttf');
+  }
+}
 
 @define-mixin bordered $color, $width {
   text-shadow:
