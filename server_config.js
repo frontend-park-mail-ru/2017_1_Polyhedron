@@ -13,10 +13,8 @@ router.addPlainURL("/api", new resourceBinding.BindedFile("./swagger.json"));
 
 router.addPlainURL("/cached_urls", new resourceBinding.BindedFunction(caching.getCachedUrlGen({
     foldersInfo: [
-        ['./static/css'],
         ['./static/fonts'],
         ['./static/images'],
-        ['./static/js'],
         ['./dist', '/dist/']
     ],
 
@@ -33,7 +31,7 @@ router.addRegexURL("^/lib/.*\.js$", new resourceBinding.BindedFolder("./static/_
 router.addRegexURL("^/lib/.*\.css$", new resourceBinding.BindedFolder("./static/_lib/css/", "/lib/"));
 
 router.addRegexURL(".*\.ttf$", new resourceBinding.BindedFolder("./static/fonts", "/static/fonts"));
-router.addRegexURL(".*\.(gif|jpg|png|ico)$", new resourceBinding.BindedFolder("./static/images", "/static/images"));
+router.addRegexURL(".*\.(gif|jp?g|png|ico)$", new resourceBinding.BindedFolder("./static/images", "/static/images"));
 
 router.addRegexURL("^/dist/.*\.(js|css)$", new resourceBinding.BindedFolder("./dist/", "/dist/"));
 
