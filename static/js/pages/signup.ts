@@ -16,8 +16,8 @@ export class Signup extends BasePage {
     @Autowired(VariableContext)
     private variableMap: VariableContext;
 
-    constructor(heading, content, options?) {
-        super(heading, content, options);
+    constructor(heading, content, alert, options?) {
+        super(heading, content, alert, options);
         this.form = new Form({
             name: 'signUpForm',
             inputs: [

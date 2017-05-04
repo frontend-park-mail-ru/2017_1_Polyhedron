@@ -21,8 +21,8 @@ export class Leaders extends BasePage {
     @Autowired(VariableContext)
     private variableMap: VariableContext;
 
-    constructor(heading, content, options?, leaderCount?) {
-        super(heading, content, options);
+    constructor(heading, content, alert, options?, leaderCount?) {
+        super(heading, content, alert, options);
         this.text = new Text({
             items: [
                 {text: 'Список лидеров загружается...'},

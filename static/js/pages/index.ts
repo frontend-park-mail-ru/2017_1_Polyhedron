@@ -12,8 +12,8 @@ export class Index extends BasePage {
     @Autowired(VariableContext)
     private variableMap: VariableContext;
 
-    constructor(heading, content, options?) {
-        super(heading, content, options);
+    constructor(heading, content, alert, options?) {
+        super(heading, content, alert, options);
         this.menu = new Menu({
             items: [
                 {text: 'Играть', page: 'choice', accented: true},

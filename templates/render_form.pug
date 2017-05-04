@@ -2,7 +2,7 @@ form.form(autocomplete="off", id=locals.name)
     each item, index in locals.inputs
         div.input-block
             label.input-block__label(for=item.name)= item.text + ':'
-            input.input-block__input(id=item.name type=item.type name=item.name placeholder=item.placeholder autofocus=(index===1))
+            input.input-block__input(id=item.name type=item.type name=item.name placeholder=item.placeholder autofocus=(index===0))
             label.input-block__label.input-block__label_error(id='error-'+item.name for=item.name)
     each item in locals.controls
         if item.type !== 'link'

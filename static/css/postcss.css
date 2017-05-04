@@ -1,0 +1,65 @@
+$font-primary: Roboto Slab;
+$font-primary-file: RobotoSlab;
+$font-url: /static/fonts;
+$text-primary-color: white;
+$text-accented-color: red;
+$text-error-color: red;
+$text-border-color: black;
+$text-accented-bigger: 120%;
+$glow-outer-color: #aa0101;
+$glow-inner-color: red;
+$border-primary-color: gray;
+$border-accented-color: white;
+
+$game-width: 600px;
+$min-width: 20rem;
+
+@define-mixin importFont $font, $file {
+  @font-face {
+    font-family: $(font);
+    $weight: Regular;
+    $ff: $(file);
+
+    src: url('$(font-url)/$(ff)-$(weight).ttf');
+  }
+
+  @font-face {
+    font-family: $(font);
+    font-weight: bold;
+    $weight: Bold;
+    $ff: $(file);
+
+    src: url('$(font-url)/$(ff)-$(weight).ttf');
+  }
+}
+
+@define-mixin bordered $color, $width {
+  text-shadow:
+    -$(width) -$(width) 0 $(color),
+    $(width) -$(width) 0 $(color),
+    -$(width) $(width) 0 $(color),
+    $(width) $(width) 0 $(color);
+}
+
+@define-mixin glow {
+  text-shadow:
+    1px 1px 2px $text-border-color,
+    0 0 10px $glow-outer-color,
+    0 0 5px $glow-inner-color;
+}
+
+@define-mixin glow-more {
+  text-shadow:
+    1px 1px 2px $text-border-color,
+    0 0 30px $glow-outer-color,
+    0 0 1px $glow-inner-color;
+}
+
+@define-mixin underlined $color {
+  border-bottom: 1px dashed $(color);
+}
+
+@define-mixin closer {
+  position: relative;
+  z-index: 2;
+}

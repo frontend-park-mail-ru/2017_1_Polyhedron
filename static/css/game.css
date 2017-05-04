@@ -1,6 +1,9 @@
 .game {
-    position: relative;
-    left: -125px;
-    top: -70px;
-    margin-bottom: -70px;
+  position: absolute;
+  z-index: 1;
+  top: 0;
+  left: 0;
+  margin: 3rem 0 0;
+  min-width: $game-width;
+  width: 100%;
 }

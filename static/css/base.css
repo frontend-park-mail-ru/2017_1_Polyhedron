@@ -1,0 +1,86 @@
+@mixin importFont $font-primary, $font-primary-file;
+
+* {
+  outline: none;
+}
+
+html {
+  height: 100%;
+  width: 100%;
+  min-width: $game-width;
+  overflow-x: hidden;
+  padding: 0;
+  margin: 0;
+  background: black url('/static/images/background.jpg') 50% 50%;
+  color: $text-primary-color;
+  font-family: '$font-primary', serif;
+  font-size: 1rem;
+  text-align: center;
+
+  @mixin bordered $text-border-color, 1px;
+}
+
+body {
+  min-height: 100%;
+  height: 100%;
+  margin: 0;
+  background: url('/static/images/emblem.jpg') no-repeat 60vw 50%;
+}
+
+a {
+  color: $text-primary-color;
+  text-decoration: none;
+
+  &:hover,
+  &:active {
+    @mixin glow-more;
+  }
+}
+
+.container {
+  width: 100%;
+  min-height: 90%;
+  height: 0;
+  display: table;
+}
+
+.container__inner {
+  display: table-cell;
+  vertical-align: middle;
+  text-align: center;
+  padding: 1rem 0;
+}
+
+.content {
+  width: 0;
+  min-width: $min-width;
+  margin: 3rem auto auto;
+}
+
+.header {
+  font-size: 400%;
+}
+
+.header_main {
+  margin-bottom: 0;
+
+  @mixin closer;
+}
+
+.subheader {
+  font-size: $text-accented-bigger;
+}
+
+.subheader_main {
+  margin: 0;
+
+  @mixin closer;
+}
+
+.alert {
+  font-size: $text-accented-bigger;
+  color: $text-accented-color;
+  height: 0;
+
+  @mixin closer;
+}

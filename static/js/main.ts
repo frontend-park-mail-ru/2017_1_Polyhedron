@@ -1,4 +1,5 @@
 'use strict';
+
 import {router} from './pages/main';
 import {Top} from './components/top/top';
 import {Autowired} from "../../core/client_side/game_mechanics/experimental/decorators";
@@ -29,28 +30,12 @@ import {loadWorker} from "../../core/client_side/site_service/offline_mode/worke
                     } else {
                         router.renderAndSave(target.dataset.page);
                     }
-
-                    if (target.dataset.page === "game") {
-                        this.launchIntoFullscreen(document.querySelector('#game'));
-                    }
                 }
             });
 
             window.addEventListener('popstate', event => {
                 router.render(event.state.url, event.state);
             });
-        }
-
-        private launchIntoFullscreen(element) {
-            if (element.requestFullscreen) {
-                element.requestFullscreen();
-            } else if (element.mozRequestFullScreen) {
-                element.mozRequestFullScreen();
-            } else if (element.webkitRequestFullscreen) {
-                element.webkitRequestFullscreen();
-            } else if (element.msRequestFullscreen) {
-                element.msRequestFullscreen();
-            }
         }
     }
 

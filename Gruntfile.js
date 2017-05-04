@@ -10,7 +10,6 @@ module.exports = function(grunt) {
         pkg: grunt.file.readJSON('package.json'),
 
         webpack: {
-
             pre_build_index: {
                 progress: true,
                 entry: "./static/js/main.ts",
@@ -43,6 +42,27 @@ module.exports = function(grunt) {
 
         },
 
+        postcss: {
+            options: {
+                processors: [
+                    require('precss')(),
+                    require('autoprefixer')(),
+                    require('postcss-focus')(),
+                    require('postcss-sorting')({
+                        'order': ["custom-properties", "dollar-variables", "declarations", "rules", "at-rules"],
+                        'properties-order': "alphabetical",
+                        'clean-empty-lines': true,
+                    }),
+                    require('cssnano')()
+                ]
+            },
+            dist: {
+                src: './static/css/main.css',
+                dest: './dist/css_bundle.css'
+            }
+
+        },
+
         watch: {
             js: {
                 files: [
@@ -65,6 +85,13 @@ module.exports = function(grunt) {
                     './templates/*.pug'
                 ],
                 tasks: ['exec:compile_pug', 'webpack']
+            },
+
+            css: {
+                files: [
+                    './static/css/*.css'
+                ],
+                tasks: ['postcss']
             }
         },
 
@@ -93,6 +120,10 @@ module.exports = function(grunt) {
                     "./static/**/*.ts"
                 ]
             }
+        },
+
+        stylelint: {
+            all: ['static/css/*.css']
         },
 
         mochaTest: {
@@ -127,18 +158,19 @@ module.exports = function(grunt) {
     grunt.loadNpmTasks('grunt-mocha-test');
     grunt.loadNpmTasks('grunt-concurrent');
     grunt.loadNpmTasks('grunt-eslint');
-    grunt.loadNpmTasks("grunt-tslint");
+    grunt.loadNpmTasks('grunt-tslint');
+    grunt.loadNpmTasks('grunt-stylelint');
     grunt.loadNpmTasks('grunt-exec');
+    grunt.loadNpmTasks('grunt-postcss');
+
 
     grunt.registerTask('postinstall', [
-        'exec:compile_pug', 'exec:compile_swagger', 'webpack', 'exec:minify_bundle'
+        'exec:compile_pug', 'exec:compile_swagger', 'webpack', 'exec:minify_bundle', 'postcss'
     ]);
 
     grunt.registerTask('test', [
-        'eslint', 'tslint'
+        'eslint', 'tslint', 'stylelint'
     ]);
 
-    grunt.registerTask('dev', ['exec:compile_pug', 'webpack:pre_build_index', 'concurrent:watch']);
+    grunt.registerTask('dev', ['exec:compile_pug', 'webpack:pre_build_index', 'postcss', 'concurrent:watch']);
 };
-
-
