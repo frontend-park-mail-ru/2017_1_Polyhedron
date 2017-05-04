@@ -7,7 +7,7 @@ import {Rectangular} from "./interfaces";
 
 export function toCanvasCS([x, y]: Vector, canvas: Rectangular, scaleFactor: number = 1) {
     return math.add(
-        math.multiply([x, y], scaleFactor),
+        math.multiply([x, -y], scaleFactor),
         [canvas.height / 2, canvas.width / 2]
     );
 }

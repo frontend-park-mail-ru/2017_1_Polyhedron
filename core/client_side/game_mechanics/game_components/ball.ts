@@ -7,7 +7,7 @@ import {CircleCollider} from "../base/collision_handling";
 import {BallState} from "../event_system/messages";
 import {Drawable, Rectangular} from "../drawing/interfaces";
 import {specificToCanvasCS, getCanvasScaleFactor} from "../drawing/canvas_transform";
-import {getReflectionMatrix} from "../base/geometry";
+import {getProjectionMatrix, getReflectionMatrix} from "../base/geometry";
 
 
 export class Ball extends GameComponent implements CircleCollider, Serializable<BallState>, Drawable {
@@ -39,8 +39,8 @@ export class Ball extends GameComponent implements CircleCollider, Serializable<
     }
 
     public bounceNorm(normVec: number[], surfaceVelocity: number[] = [0, 0]) {
-        surfaceVelocity = math.multiply(surfaceVelocity, -1);
-        const relativeVelocity = math.subtract(this.velocity, surfaceVelocity);
+        const normSurfaceVelocity = math.multiply(getProjectionMatrix(normVec), surfaceVelocity);
+        const relativeVelocity = math.subtract(this.velocity, normSurfaceVelocity);
         const bounceMatrix = getReflectionMatrix(normVec);
         const newRelativeVelocity = math.multiply(bounceMatrix, relativeVelocity);
         this.velocity = math.add(newRelativeVelocity, surfaceVelocity).toArray();

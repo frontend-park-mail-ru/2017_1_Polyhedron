@@ -39,14 +39,6 @@ export abstract class GameComponent extends SolidBody {
         super.rotateBy(angularOffset, parent);
     }
 
-    public get scale(): number {
-        return this._scale;
-    }
-
-    public set scale(scale: number) {
-        this._scale = scale;
-    }
-
     public rotateTo(angle: number, parent?: GameComponent) {
         const angularOffset = angle - this.rotation;
         this._children.forEach(child => child.rotateBy(angularOffset, this));

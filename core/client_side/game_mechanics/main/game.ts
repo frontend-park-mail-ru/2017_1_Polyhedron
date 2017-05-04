@@ -13,7 +13,9 @@ import {gameEvents, networkEvents} from "../event_system/events";
 import TestWorldUpdateEvent = networkEvents.TestWorldUpdateEvent;
 import DrawEvent = gameEvents.DrawEvent;
 import {Rectangular} from "../drawing/interfaces";
-import {getByCircularIndex} from "../base/common";
+import {getByCircularIndex, revertYAxis} from "../base/common";
+import {Platform} from "../game_components/platform";
+import {TriangleField} from "../game_components/triangle_field";
 
 
 const PLATFORM_TOLERANCE = 5;
@@ -93,37 +95,20 @@ export class Game {
         };
     }
 
-    private _getPlatformByIndex(index) {
-        return this._world.platforms[this._getItemIndex(index)];
+    private _getPlatformByIndex(index): Platform {
+        return getByCircularIndex(this._world.platforms, index);
     }
 
-    private _getUserSectorByIndex(index) {
-        return this._world.userSectors[this._getItemIndex(index)];
-    }
-
-    /**
-     *
-     * @param index {number}: index relative to player's one
-     * @returns {number} index of the entity which can be obtained cyclically iterating clockwise
-     * @private
-     */
-    private _getItemIndex(index) {
-        const result = (this._playerItemsIndex + index) % this._gameConfig.playersNum;
-
-        return result >= 0 ? result : result + this._gameConfig.playersNum;
-    }
-
-    private get _playerItemsIndex() {
-        //return 0;
-        return Math.floor(this._gameConfig.playersNum / 2);
+    private _getUserSectorByIndex(index): TriangleField {
+        return getByCircularIndex(this._world.userSectors, index);
     }
 
     private get _activePlatform() {
-        return getByCircularIndex(this._world.platforms, this._playerItemsIndex);
+        return this._world.platforms[0];
     }
 
     private get _activeSector() {
-        return getByCircularIndex(this._world.userSectors, this._playerItemsIndex);
+        return this._world.userSectors[0];
     }
 
     private _initWorld() {
@@ -185,8 +170,11 @@ export class Game {
     }
 
     private _handleUserInput(time: number) {
+        // don't know why, but need to revert velocity
+        // TODO find correct way to represent platform velocity
+        const velocity = math.multiply(this._platformVelocityDirection, this._gameConfig.platformVelocity);
         const localOffset = math.multiply(this._platformVelocityDirection, this._gameConfig.platformVelocity * time);
-        this._world.movePlatform(this._getPlatformByIndex(0), localOffset, math.divide(localOffset, time));
+        this._world.movePlatform(this._getPlatformByIndex(0), localOffset, velocity);
 
         const offset = localOffset[0];
         if (offset > this._gameConfig.minimalOffset) {
@@ -204,15 +192,15 @@ export class Game {
 
     private _handleDefeatEvent(event) {
         // TODO replace with server-dependent logic
-        const sectorId = this._getItemIndex(event.detail);
-        if (sectorId === this._playerItemsIndex) {
-            alert("You lose");
-        } else {
-            alert("You win");
-        }
-        this._world.userSectors[sectorId].setLoser();
-        this._redraw();
-        this.stop();
+        // const sectorId = this._getItemIndex(event.detail);
+        // if (sectorId === this._playerItemsIndex) {
+        //     alert("You lose");
+        // } else {
+        //     alert("You win");
+        // }
+        // this._world.userSectors[sectorId].setLoser();
+        // this._redraw();
+        // this.stop();
     }
 
     private _handleClientDefeatEvent(event) {
