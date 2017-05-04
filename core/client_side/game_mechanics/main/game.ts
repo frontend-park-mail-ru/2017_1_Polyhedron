@@ -209,26 +209,13 @@ export class Game {
     }
 
     private _handleClientDefeatEvent(event) {
-        if (this._running) {
-            router.renderAndSave('/gameover', {isWinner: false});
+        if (this._running && this._mode === MODES.single) {
+            const isWinner = event.detail !== this._activePlatform.id;
+
+            router.renderAndSave('/gameover', {isWinner});
             this._running = false;
+            this.stop();
         }
-        this.stop();
-        // if (this._mode === MODES.single) {
-        //     const sectorId = event.detail;
-        //     const playerId = this._activeSector.id;
-        //
-        //     if (sectorId === playerId) {
-        //         // alert("Вы проиграли");
-        //     } else {
-        //         // alert("Вы победили!");
-        //     }
-        //
-        //     this._world.userSectors.filter(sector => sector.id === sectorId).forEach(sector => sector.setLoser());
-        //
-        //     this._redraw();
-        //     this.stop();
-        // }
     }
 
     private _createBots() {

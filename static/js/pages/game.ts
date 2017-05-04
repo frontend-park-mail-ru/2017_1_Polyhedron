@@ -12,10 +12,12 @@ export class Game extends BasePage {
     @Autowired(VariableContext)
     private variableMap: VariableContext;
     private gamepad: Gamepad;
+    private mode: string;
 
-    constructor(heading, content, alert, options?) {
+    constructor(heading, content, alert, options) {
         super(heading, content, alert, options);
         this.gamepad = new Gamepad({});
+        this.mode = options.mode;
     }
 
     public async render() {
@@ -25,25 +27,13 @@ export class Game extends BasePage {
             // TODO add error handling
         }
 
-        this._heading.innerHTML = this._options.multi ? "Сражение" : "Игра";
+        this._heading.innerHTML = this._options.mode === 'multi' ? "Сражение" : "Игра";
         this.variableMap.get('userpanel').render();
         this._content.innerHTML = renderGame.template(this._options);
         this.gamepad.render(this._content.querySelector('.game'));
 
-        // TODO uncomment (maybe)
-        // window.addEventListener('dblclick', () => {
-        //     this._content.style.backgroundColor = 'black';
-        //     Game.launchIntoFullscreen(this._content);
-        // });
-        //
-        // window.addEventListener('webkitfullscreenchange', () => {
-        //     this._content.style.backgroundColor = 'rgba(0, 0, 0, 0)';
-        // });
-
-        //Game.launchIntoFullscreen(this._content); // TODO uncomment (maybe)
-
         const gameStarter = new GameStarter();
-        gameStarter.start('game');
+        gameStarter.start('game', this.mode);
     }
 
     public reset() {

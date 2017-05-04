@@ -6,7 +6,7 @@ exports.config = {
     services: [],
     dataSources: {
         bot: {
-            velocity: 0.2,
+            velocity: 0.15,
             time: MILLISECONDS_PER_SECOND / FRAME_RATE
         },
         platform: {

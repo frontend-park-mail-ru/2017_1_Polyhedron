@@ -10,10 +10,10 @@ export class GameStarter {
     private variableMap: VariableContext;
     private drawer: Drawer;
 
-    public start(canvasId) {
+    public start(canvasId: string, mode: string) {
         this.drawer = new FullScreenDrawer(document.getElementById(canvasId) as HTMLCanvasElement);
 
-        const loop = new ClientSideGame();
+        const loop = new ClientSideGame(mode);
         this.variableMap.set('loop', loop);
 
         loop.start();
