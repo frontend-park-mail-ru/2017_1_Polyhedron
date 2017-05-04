@@ -16,8 +16,8 @@ export class Signup extends BasePage {
     @Autowired(VariableContext)
     private variableMap: VariableContext;
 
-    constructor(heading, content, options?) {
-        super(heading, content, options);
+    constructor(heading, content, alert, options?) {
+        super(heading, content, alert, options);
         this.form = new Form({
             name: 'signUpForm',
             inputs: [
@@ -41,7 +41,7 @@ export class Signup extends BasePage {
         });
     }
 
-    public render() {
+    public async render() {
         this._heading.innerHTML = "Регистрация";
         this.variableMap.get('userpanel').render();
         if (this.variableMap.get('user') !== null) {

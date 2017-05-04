@@ -50,4 +50,5 @@ dist
 /core/server_side/ws_server/*.map
 /core/common/id_generator.js
 /core/common/id_generator.js.map
-static/css/postcss
+!/static/js/css_loader.js
+/static/css/postcss/

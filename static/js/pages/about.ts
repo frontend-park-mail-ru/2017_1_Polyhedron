@@ -12,11 +12,11 @@ export class About extends BasePage {
     @Autowired(VariableContext)
     private variableMap: VariableContext;
 
-    constructor(heading, content, options?) {
-        super(heading, content, options);
+    constructor(heading, content, alert, options?) {
+        super(heading, content, alert, options);
         this.text = new Text({
             items: [
-                {text: 'Наша игра - сетевой пинг-понг для трёх пользователей.'},
+                {text: 'Наша игра - сетевой пинг-понг для четырёх пользователей.'},
                 {text: 'Мы используем JavaScript + Java.'},
                 {text: 'Проект является семестровым заданием нашей команды из&nbsp;' +
                 '<a href="http://park.mail.ru"> Технопарка@mail.ru</a>.'},
@@ -25,7 +25,7 @@ export class About extends BasePage {
         });
     }
 
-    public render() {
+    public async render() {
         this._heading.innerHTML = "Об игре";
         this.variableMap.get('userpanel').render();
         this.text.render();

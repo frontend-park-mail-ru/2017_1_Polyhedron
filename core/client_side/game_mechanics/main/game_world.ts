@@ -153,7 +153,6 @@ export class GameWorld implements Drawable, Serializable<GameWorldState> {
                 this._handlePlatformCollision(
                     firstCollisionData.collision.obstacle,
                     this.ball,
-                    //firstCollisionData.collision.point
                     firstCollisionData.collision.direction
                 );
             } else if (firstCollisionData.tag === 'userSector') {
@@ -209,7 +208,7 @@ export class GameWorld implements Drawable, Serializable<GameWorldState> {
         }
     }
 
-    private _handlePlatformCollision(platform, ball, /*point*/norm) {
+    private _handlePlatformCollision(platform, ball, norm) {
         if (platform !== this._lastCollidedObject) {
             ball.bounceNorm(norm, platform.velocity);
             this._lastCollidedObject = platform;

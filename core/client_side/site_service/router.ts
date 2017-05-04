@@ -20,19 +20,30 @@ export class Router {
         return viewWrapper;
     }
 
-    public render(url, options) {
+    public async render(url, options) {
         const view = this._getViewByURL(url);
 
         if (this._currView) {
             this._currView.reset();
         }
-        view.render(options);
-        this._currView = view;
+        return view.render(options)
+            .then(() => {
+                this._currView = view;
+                return;
+            })
+            .catch((err) => {
+                throw err;
+            });
     }
 
     public renderAndSave(url, options?) {
-        this._saveChange(url, options);
-        this.render(url, options);
+        this.render(url, options)
+            .then(() => this._saveChange(url, options))
+            .catch(err => {
+                console.error(err);
+                this.renderAndSave('404');
+            });
+
     }
 
     private _getViewByURL(url) {

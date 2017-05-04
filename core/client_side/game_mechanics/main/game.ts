@@ -16,6 +16,7 @@ import {Rectangular} from "../drawing/interfaces";
 import {getByCircularIndex, revertYAxis} from "../base/common";
 import {Platform} from "../game_components/platform";
 import {TriangleField} from "../game_components/triangle_field";
+import {router} from "../../../../static/js/pages/main";
 
 
 const PLATFORM_TOLERANCE = 5;
@@ -52,6 +53,8 @@ export class Game {
 
     private _communicator: ServerCommunicator;
 
+    private _running: boolean;
+
     constructor(mode = DEFAULT_MODE) {
         this._field = {
             height: this._gameConfig.fieldSize,
@@ -63,11 +66,13 @@ export class Game {
         this._setIntervalID = null;
         this._lastPlatformPosition = null;
         this._mode = mode;
+        this._running = false;
     }
 
     public start() {
         this._setListeners();
         this._initWorld();
+        this._running = true;
 
         const time = MILLISECONDS_PER_SECOND / this._gameConfig.frameRate;
         this._setIntervalID = setInterval(() => this._makeIteration(time), time);
@@ -80,10 +85,12 @@ export class Game {
     }
 
     public stop() {
+        this._running = false;
         clearInterval(this._setIntervalID);
     }
 
     public continueGame() {
+        this._running = true;
         const time = MILLISECONDS_PER_SECOND / this._gameConfig.frameRate;
         this._setIntervalID = setInterval(() => this._makeIteration(time), time);
     }
@@ -170,8 +177,6 @@ export class Game {
     }
 
     private _handleUserInput(time: number) {
-        // don't know why, but need to revert velocity
-        // TODO find correct way to represent platform velocity
         const velocity = math.multiply(this._platformVelocityDirection, this._gameConfig.platformVelocity);
         const localOffset = math.multiply(this._platformVelocityDirection, this._gameConfig.platformVelocity * time);
         this._world.movePlatform(this._getPlatformByIndex(0), localOffset, velocity);
@@ -204,21 +209,26 @@ export class Game {
     }
 
     private _handleClientDefeatEvent(event) {
-        if (this._mode === MODES.single) {
-            const sectorId = event.detail;
-            const playerId = this._activeSector.id;
-
-            if (sectorId === playerId) {
-                // alert("Вы проиграли");
-            } else {
-                // alert("Вы победили!");
-            }
-
-            this._world.userSectors.filter(sector => sector.id === sectorId).forEach(sector => sector.setLoser());
-
-            this._redraw();
-            this.stop();
+        if (this._running) {
+            router.renderAndSave('/gameover', {isWinner: false});
+            this._running = false;
         }
+        this.stop();
+        // if (this._mode === MODES.single) {
+        //     const sectorId = event.detail;
+        //     const playerId = this._activeSector.id;
+        //
+        //     if (sectorId === playerId) {
+        //         // alert("Вы проиграли");
+        //     } else {
+        //         // alert("Вы победили!");
+        //     }
+        //
+        //     this._world.userSectors.filter(sector => sector.id === sectorId).forEach(sector => sector.setLoser());
+        //
+        //     this._redraw();
+        //     this.stop();
+        // }
     }
 
     private _createBots() {

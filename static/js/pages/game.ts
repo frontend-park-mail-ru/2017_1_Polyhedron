@@ -11,14 +11,32 @@ export class Game extends BasePage {
     @Autowired(VariableContext)
     private variableMap: VariableContext;
 
-    constructor(heading, content, options?) {
-        super(heading, content, options);
+    constructor(heading, content, alert, options?) {
+        super(heading, content, alert, options);
     }
 
-    public render() {
-        this._heading.innerHTML = "Игра";
+    public async render() {
+        try {
+            this.reset();
+        } catch (err) {
+            // TODO add error handling
+        }
+
+        this._heading.innerHTML = this._options.multi ? "Сражение" : "Игра";
         this.variableMap.get('userpanel').render();
         this._content.innerHTML = renderGame.template(this._options);
+
+        // TODO uncomment (maybe)
+        // window.addEventListener('dblclick', () => {
+        //     this._content.style.backgroundColor = 'black';
+        //     Game.launchIntoFullscreen(this._content);
+        // });
+        //
+        // window.addEventListener('webkitfullscreenchange', () => {
+        //     this._content.style.backgroundColor = 'rgba(0, 0, 0, 0)';
+        // });
+
+        //Game.launchIntoFullscreen(this._content); // TODO uncomment (maybe)
 
         const gameStarter = new GameStarter();
         gameStarter.start('game');

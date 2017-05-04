@@ -16,8 +16,8 @@ export class Login extends BasePage {
     @Autowired(VariableContext)
     private variableMap;
 
-    constructor(heading, content, options?) {
-        super(heading, content, options);
+    constructor(heading, content, alert, options?) {
+        super(heading, content, alert, options);
         this.form = new Form({
             name: 'signInForm',
             inputs: [
@@ -38,7 +38,7 @@ export class Login extends BasePage {
         });
     }
 
-    public render() {
+    public async render() {
         this._heading.innerHTML = "Вход в игру";
         this.variableMap.get('userpanel').render();
 

@@ -10,8 +10,8 @@ export class Error extends BasePage {
     @Autowired(VariableContext)
     private variableMap: VariableContext;
 
-    constructor(heading, content, options?) {
-        super(heading, content, options);
+    constructor(heading, content, alert, options?) {
+        super(heading, content, alert, options);
         this.text = new Text({
             items: [
                 {text: 'Запрашиваемая страница не найдена.'},
@@ -21,9 +21,11 @@ export class Error extends BasePage {
         });
     }
 
-    public render() {
+    public async render() {
         this._heading.innerHTML = "Ошибка";
         this.variableMap.get('userpanel').render();
         this.text.render();
+
+        return true;
     }
 }

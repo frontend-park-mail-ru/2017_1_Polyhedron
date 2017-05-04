@@ -12,8 +12,8 @@ export class Index extends BasePage {
     @Autowired(VariableContext)
     private variableMap: VariableContext;
 
-    constructor(heading, content, options?) {
-        super(heading, content, options);
+    constructor(heading, content, alert, options?) {
+        super(heading, content, alert, options);
         this.menu = new Menu({
             items: [
                 {text: 'Играть', page: 'choice', accented: true},
@@ -24,7 +24,7 @@ export class Index extends BasePage {
         });
     }
 
-    public render() {
+    public async render() {
         this._heading.innerHTML = "Многопользовательский пинг-понг";
         this.variableMap.get('userpanel').render();
         this.menu.render();

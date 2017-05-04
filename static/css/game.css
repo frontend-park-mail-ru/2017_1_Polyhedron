@@ -1,6 +1,64 @@
+$control-size: 3rem;
+$control-margin: 0.5rem;
+$control-shift: calc($control-size + $control-margin);
+
 .game {
-    position: relative;
-    left: -125px;
-    top: -70px;
-    margin-bottom: -70px;
+  position: absolute;
+  z-index: 1;
+  top: 0;
+  left: 0;
+  margin: 3rem 0 0;
+  min-width: $game-width;
+  width: 100%;
+}
+
+.controls {
+  position: absolute;
+  z-index: 2;
+  bottom: $control-margin;
+  right: $control-margin;
+  width: calc(3 * $control-size + 4 * $control-margin);
+  height: @width;
+}
+
+.controls__button {
+  position: absolute;
+  width: $control-size;
+  height: @width;
+  margin: $control-margin;
+  color: $text-primary-color;
+  text-align: center;
+  line-height: calc(0.85 * @width);
+  font-weight: bold;
+  font-size: @width;
+  background: $glow-outer-color;
+  border: 1px dashed $border-primary-color;
+  border-radius: 0.5rem;
+
+  @mixin glow;
+}
+
+.controls__button:active {
+  background: $text-accented-color;
+  border: 1px dashed $border-accented-color;
+}
+
+.controls__button.controls__button-left {
+  left: 0;
+  top: $control-shift;
+}
+
+.controls__button.controls__button-up {
+  left: $control-shift;
+  top: 0;
+}
+
+.controls__button.controls__button-down {
+  left: $control-shift;
+  bottom: 0;
+}
+
+.controls__button.controls__button-right {
+  top: $control-shift;
+  right: 0;
 }
