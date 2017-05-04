@@ -30,11 +30,11 @@ body {
 a {
   color: $text-primary-color;
   text-decoration: none;
-}
 
-a:hover,
-a:active {
-  @mixin glow-more;
+  &:hover,
+  &:active {
+    @mixin glow-more;
+  }
 }
 
 .container {
@@ -59,10 +59,6 @@ a:active {
 
 .header {
   font-size: 400%;
-}
-
-.header:hover {
-  @mixin glow;
 }
 
 .header_main {

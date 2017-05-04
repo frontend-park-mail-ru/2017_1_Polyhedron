@@ -14,12 +14,12 @@ $border-accented-color: white;
 $game-width: 600px;
 $min-width: 20rem;
 
-
 @define-mixin importFont $font, $file {
   @font-face {
     font-family: $(font);
     $weight: Regular;
     $ff: $(file);
+
     src: url('$(font-url)/$(ff)-$(weight).ttf');
   }
 
@@ -28,6 +28,7 @@ $min-width: 20rem;
     font-weight: bold;
     $weight: Bold;
     $ff: $(file);
+
     src: url('$(font-url)/$(ff)-$(weight).ttf');
   }
 }

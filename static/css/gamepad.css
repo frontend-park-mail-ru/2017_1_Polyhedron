@@ -26,11 +26,11 @@ $control-shift: calc($control-size + $control-margin);
   border-radius: 0.5rem;
 
   @mixin glow;
-}
 
-.controls__button:active {
-  background: $text-accented-color;
-  border: 1px dashed $border-accented-color;
+  &:active {
+    background: $text-accented-color;
+    border: 1px dashed $border-accented-color;
+  }
 }
 
 .controls__button.controls__button_left {

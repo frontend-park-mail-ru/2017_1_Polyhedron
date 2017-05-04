@@ -3,11 +3,11 @@
 import * as renderGamepad from '../../templates/render_gamepad';
 
 export class Gamepad {
-    private template: (options: {}) => string;
     public cotrolLeft;
     public controlUp;
     public controlRight;
     public controlDown;
+    private template: (options: {}) => string;
     private element;
 
     constructor(options) {

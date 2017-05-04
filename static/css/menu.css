@@ -1,4 +1,3 @@
-
 .menu__item {
   display: block;
   height: 2.8rem;
@@ -7,14 +6,14 @@
   line-height: 2.8rem;
 
   @mixin underlined $border-primary-color;
-}
 
-.menu__item:hover,
-.menu__item:active {
-  font-size: $text-accented-bigger;
-  font-weight: bold;
+  &:hover,
+  &:active {
+    font-size: $text-accented-bigger;
+    font-weight: bold;
 
-  @mixin underlined $border-accented-color;
+    @mixin underlined $border-accented-color;
+  }
 }
 
 .menu__item_accented {
