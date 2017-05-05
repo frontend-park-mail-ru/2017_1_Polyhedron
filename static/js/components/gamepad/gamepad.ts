@@ -7,6 +7,7 @@ import {controllerEvents} from "../../../../core/client_side/game_mechanics/even
 import ArrowDirectionEvent = controllerEvents.ArrowDirectionEvent;
 
 export class Gamepad {
+
     public controlLeft;
     public controlUp;
     public controlRight;
