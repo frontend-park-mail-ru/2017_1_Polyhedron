@@ -66,7 +66,7 @@ export class Gamepad {
         Array.from(this.element.children).forEach(
             child => {
                 (child as any).onpointerup = () => this.eventBus.dispatchEvent(ArrowDirectionEvent.create([0, 0]));
-                (child as any).ontouchend = () => this.eventBus.dispatchEvent(ArrowDirectionEvent.create([0, 0]))
+                (child as any).ontouchend = () => this.eventBus.dispatchEvent(ArrowDirectionEvent.create([0, 0]));
             }
         );
     }
