@@ -32,7 +32,6 @@ router.addPlainURL("/static/manifest.json", new resourceBinding.BindedFile("./st
 router.addRegexURL("^/lib/.*\.js$", new resourceBinding.BindedFolder("./static/_lib/js/", "/lib/"));
 router.addRegexURL("^/lib/.*\.css$", new resourceBinding.BindedFolder("./static/_lib/css/", "/lib/"));
 
-//router.addRegexURL(".*\.js|css|ttf|gif|png|ico$", new resourceBinding.BindedFolder("./static", '/static'));
 router.addRegexURL(".*\.js$", new resourceBinding.BindedFolder("./static/js", "/static/js"));
 router.addRegexURL(".*\.css$", new resourceBinding.BindedFolder("./static/css", "/static/css"));
 router.addRegexURL(".*\.ttf$", new resourceBinding.BindedFolder("./static/fonts", "/static/fonts"));

@@ -29,6 +29,24 @@ export class Gamepad {
         this.controlDown = this.element.children[2];
         this.controlRight = this.element.children[3];
 
+
+        this.controlLeft.touchstart = () => {
+            this.eventBus.dispatchEvent(ArrowDirectionEvent.create([-1, 0]));
+        };
+
+        this.controlRight.touchstart = () => {
+            this.eventBus.dispatchEvent(ArrowDirectionEvent.create([1, 0]));
+        };
+
+        this.controlDown.touchstart = () => {
+            this.eventBus.dispatchEvent(ArrowDirectionEvent.create([0, -1]));
+        };
+
+        this.controlUp.touchstart = () => {
+            this.eventBus.dispatchEvent(ArrowDirectionEvent.create([0, 1]));
+        };
+
+
         this.controlLeft.onpointerdown = () => {
             this.eventBus.dispatchEvent(ArrowDirectionEvent.create([-1, 0]));
         };
@@ -46,7 +64,10 @@ export class Gamepad {
         };
 
         Array.from(this.element.children).forEach(
-            child => (child as any).onpointerup = () => this.eventBus.dispatchEvent(ArrowDirectionEvent.create([0, 0]))
+            child => {
+                (child as any).onpointerup = () => this.eventBus.dispatchEvent(ArrowDirectionEvent.create([0, 0]));
+                (child as any).ontouchend = () => this.eventBus.dispatchEvent(ArrowDirectionEvent.create([0, 0]))
+            }
         );
     }
 }
