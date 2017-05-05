@@ -5,6 +5,7 @@ const INFO_URL = 'http://polyhedron-team.herokuapp.com/cached_urls';
 
 
 self.addEventListener('install', event => {
+    console.log(event);
     (event as any).waitUntil(
         fetch(INFO_URL)
             .then(response => response.json())
