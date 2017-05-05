@@ -20,8 +20,6 @@ exports.config = {
             frameRate: FRAME_RATE,
             fillFactor: 0.8,
             ballRelativeRadius: 0.05,
-            // relativeBallOffset: [0.15, 0.1],
-            // relativeBallVelocity: [0.01, 0.005],
             ballVelocity: [0.00, 0.08],
             platformVelocity: 0.03,
             minimalOffset: 1,

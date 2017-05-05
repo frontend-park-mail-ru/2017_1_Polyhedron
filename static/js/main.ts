@@ -41,6 +41,6 @@ import {loadWorker} from "../../core/client_side/site_service/offline_mode/worke
 
     const starter = new Starter();
     starter.start();
-    //loadWorker('/worker_script.js');  // TODO uncomment
+    loadWorker('/worker_script.js');
 })();
 
