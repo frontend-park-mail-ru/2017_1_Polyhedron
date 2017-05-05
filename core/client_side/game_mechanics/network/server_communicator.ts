@@ -50,7 +50,7 @@ export class ServerCommunicator {
             try {
                 this._eventBus.dispatchEvent(this._eventMap[gameEventClass].create(data));
             } catch (error) {
-                console.error(error);   // TODO refactor
+               // console.error(error);   // TODO refactor
             }
         });
     }

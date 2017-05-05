@@ -13,10 +13,12 @@ router.addPlainURL("/api", new resourceBinding.BindedFile("./swagger.json"));
 
 router.addPlainURL("/cached_urls", new resourceBinding.BindedFunction(caching.getCachedUrlGen({
     foldersInfo: [
+
         ['./static/css', '/static/css/'],
         ['./static/fonts', '/static/fonts/'],
         ['./static/images', '/static/images/'],
         ['./static/js', '/static/js/'],
+
         ['./dist', '/dist/']
     ],
 
@@ -33,15 +35,10 @@ router.addPlainURL("/static/manifest.json", new resourceBinding.BindedFile("./st
 router.addRegexURL("^/lib/.*\.js$", new resourceBinding.BindedFolder("./static/_lib/js/", "/lib/"));
 router.addRegexURL("^/lib/.*\.css$", new resourceBinding.BindedFolder("./static/_lib/css/", "/lib/"));
 
-router.addRegexURL(".*\.js$", new resourceBinding.BindedFolder("./static/js", "/static/js"));
-router.addRegexURL(".*\.css$", new resourceBinding.BindedFolder("./static/css", "/static/css"));
 router.addRegexURL(".*\.ttf$", new resourceBinding.BindedFolder("./static/fonts", "/static/fonts"));
-router.addRegexURL(".*\.gif$", new resourceBinding.BindedFolder("./static/images", "/static/images"));
-router.addRegexURL(".*\.png$", new resourceBinding.BindedFolder("./static/images", "/static/images"));
-router.addRegexURL(".*\.ico$", new resourceBinding.BindedFolder("./static/images", "/static/images"));
+router.addRegexURL(".*\.(gif|jp?g|png|ico)$", new resourceBinding.BindedFolder("./static/images", "/static/images"));
 
-router.addRegexURL("^/dist/.*\.js$", new resourceBinding.BindedFolder("./dist/", "/dist/"));
-router.addRegexURL("^/dist/.*\.css$", new resourceBinding.BindedFolder("./dist/", "/dist/"));
+router.addRegexURL("^/dist/.*\.(js|css)$", new resourceBinding.BindedFolder("./dist/", "/dist/"));
 
 const server = serverLib.getStaticServer(router);
 const port = process.env.PORT || DEFAULT_PORT;

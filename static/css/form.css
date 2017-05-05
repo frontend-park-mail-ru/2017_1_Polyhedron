@@ -1,15 +1,14 @@
-
 .input-block {
   margin: 1rem 0.5rem;
   padding-bottom: 0;
 
   @mixin underlined $border-primary-color;
-}
 
-.input-block:active,
-.input-block:hover {
-  @mixin underlined $border-accented-color;
-  @mixin glow-more;
+  &:hover,
+  &:active {
+    @mixin underlined $border-accented-color;
+    @mixin glow-more;
+  }
 }
 
 .input-block__label {
@@ -37,9 +36,9 @@
   margin-top: 1rem;
 
   @mixin underlined $border-primary-color;
-}
 
-.input-block__input_control:hover,
-.input-block__input_control:active {
-  @mixin glow-more;
+  &:hover,
+  &:active {
+    @mixin glow-more;
+  }
 }
