@@ -9,14 +9,17 @@ import {Autowired, Load} from "../experimental/decorators";
 import {Application} from "../experimental/application";
 import {ServerCommunicator} from "../network/server_communicator";
 import {clientSideServices, serverSideServices} from "../../configs/services";
-import {gameEvents, networkEvents} from "../event_system/events";
-import TestWorldUpdateEvent = networkEvents.TestWorldUpdateEvent;
+import {gameEvents, networkEvents, serviceEvents} from "../event_system/events";
+import TestWorldUpdateEvent = networkEvents.WorldUpdateEvent;
 import DrawEvent = gameEvents.DrawEvent;
 import {Rectangular} from "../drawing/interfaces";
-import {getByCircularIndex, revertYAxis} from "../base/common";
+import {getByCircularIndex, Point, Vector} from "../base/common";
 import {Platform} from "../game_components/platform";
 import {TriangleField} from "../game_components/triangle_field";
-import {router} from "../../../../static/js/pages/main";
+import RenderPageEvent = serviceEvents.RenderPageEvent;
+import {GameWorldState} from "../event_system/messages";
+import GameStartEvent = networkEvents.GameStartEvent;
+import PlatformMovedEvent = gameEvents.PlatformMovedEvent;
 
 
 const PLATFORM_TOLERANCE = 5;
@@ -28,8 +31,6 @@ const MODES = {
     multi: 'multi',
     server: 'server'
 };
-
-const DEFAULT_MODE = MODES.multi;
 
 
 export class Game {
@@ -55,7 +56,7 @@ export class Game {
 
     private _running: boolean;
 
-    constructor(mode = DEFAULT_MODE) {
+    constructor(mode) {
         this._field = {
             height: this._gameConfig.fieldSize,
             width: this._gameConfig.fieldSize
@@ -69,19 +70,24 @@ export class Game {
         this._running = false;
     }
 
-    public start() {
-        this._setListeners();
+    public init() {
         this._initWorld();
-        this._running = true;
-
-        const time = MILLISECONDS_PER_SECOND / this._gameConfig.frameRate;
-        this._setIntervalID = setInterval(() => this._makeIteration(time), time);
+        this._redraw();
+        this._setListeners();
 
         if (this._mode === MODES.single) {
             this._createBots();
         } else {
             this._communicator = new ServerCommunicator();
         }
+    }
+
+    public start() {
+
+        this._running = true;
+
+        const time = MILLISECONDS_PER_SECOND / this._gameConfig.frameRate;
+        this._setIntervalID = setInterval(() => this._makeIteration(time), time);
     }
 
     public stop() {
@@ -95,11 +101,12 @@ export class Game {
         this._setIntervalID = setInterval(() => this._makeIteration(time), time);
     }
 
-    public getWorldState() {
-        return {
-            type: TestWorldUpdateEvent.name,
-            data: this._world.getState()
-        };
+    public getWorldState(): GameWorldState {
+        return this._world.getState();
+    }
+
+    public movePlatformByIndex(index: number, position: Point) {
+        this._getPlatformByIndex(index).moveTo(position);
     }
 
     private _getPlatformByIndex(index): Platform {
@@ -133,9 +140,17 @@ export class Game {
 
     private _setListeners() {
         this.eventBus.addEventListener(
-            events.networkEvents.TestWorldUpdateEvent.eventName,
+            events.networkEvents.WorldUpdateEvent.eventName,
             event => {
                 this._world.setState(event.data.detail);
+            }
+        );
+
+        this.eventBus.addEventListener(
+            GameStartEvent.eventName,
+            event => {
+                this._world.setState(event.data.detail);
+                this.start();
             }
         );
 
@@ -168,8 +183,8 @@ export class Game {
         this._handleUserInput(time);
 
         const activePlatformOffset = math.subtract(this._activePlatform.position, this._lastPlatformPosition);
-        if (math.norm(activePlatformOffset) > PLATFORM_TOLERANCE) {
-            this._throwPlatformMovedEvent(activePlatformOffset);
+        if (math.norm(activePlatformOffset) > this._gameConfig.minimalOffset) {
+            this.eventBus.dispatchEvent(PlatformMovedEvent.create(this._activePlatform.position));
             this._lastPlatformPosition = this._activePlatform.position;
         }
 
@@ -180,39 +195,20 @@ export class Game {
         const velocity = math.multiply(this._platformVelocityDirection, this._gameConfig.platformVelocity);
         const localOffset = math.multiply(this._platformVelocityDirection, this._gameConfig.platformVelocity * time);
         this._world.movePlatform(this._getPlatformByIndex(0), localOffset, velocity);
-
-        const offset = localOffset[0];
-        if (offset > this._gameConfig.minimalOffset) {
-            this._throwPlatformMovedEvent(localOffset[0]);
-        }
-    }
-
-    private _throwPlatformMovedEvent(platformOffset) {
-        /*
-         window.dispatchEvent(
-         events.PlatformMovedEvent.create(platformOffset)
-         );
-         */
     }
 
     private _handleDefeatEvent(event) {
         // TODO replace with server-dependent logic
-        // const sectorId = this._getItemIndex(event.detail);
-        // if (sectorId === this._playerItemsIndex) {
-        //     alert("You lose");
-        // } else {
-        //     alert("You win");
-        // }
-        // this._world.userSectors[sectorId].setLoser();
-        // this._redraw();
-        // this.stop();
     }
 
     private _handleClientDefeatEvent(event) {
         if (this._running && this._mode === MODES.single) {
             const isWinner = event.detail !== this._activePlatform.id;
 
-            router.renderAndSave('/gameover', {isWinner});
+            this.eventBus.dispatchEvent(RenderPageEvent.create({
+                url: '/gameover',
+                options: {isWinner}
+            }));
             this._running = false;
             this.stop();
         }

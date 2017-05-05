@@ -16,6 +16,9 @@ export class GameStarter {
         const loop = new ClientSideGame(mode);
         this.variableMap.set('loop', loop);
 
-        loop.start();
+        loop.init();
+        if (mode === 'single') {
+            loop.start();
+        }
     }
 }

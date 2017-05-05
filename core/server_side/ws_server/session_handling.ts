@@ -6,6 +6,11 @@ import * as randomString from 'randomstring';
 const SESSION_NAME = 'SESSIONID';
 
 
+export function setSession(headers, session: string) {
+    headers.push('Set-Cookie: ' + createSessionCookie(session));
+}
+
+
 export function createSession(idLength: number = 20) {
     return randomString.generate(idLength);
 }

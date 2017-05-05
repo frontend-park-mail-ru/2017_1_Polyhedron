@@ -51,31 +51,13 @@ export namespace networkEvents {
     export class ConnectionClosedEvent extends BaseEvent {}
 
 
-    export class WorldUpdateEvent extends BaseEvent {
-        public static create(eventDetail) {
-            const detail = {
-                platformsUpdate: [],
-
-                ballUpdate: {}
-            };
-
-            detail.platformsUpdate = eventDetail.platformsUpdate.map(
-                platformUpdate => {
-                    return {
-                        index: platformUpdate.index - eventDetail.playerIndex,
-                        position: platformUpdate.position
-                    };
-                }
-            );
-
-            detail.ballUpdate = eventDetail.ballUpdate;
-
-            return new MyCustomEvent(this.eventName, {detail});
-        }
-    }
+    export class WorldUpdateEvent extends BaseEvent {}
 
 
-    export class TestWorldUpdateEvent extends BaseEvent {}   // TODO remove
+    export class GetReadyEvent extends BaseEvent {}
+
+
+    export class GameStartEvent extends BaseEvent {}
 
 
     export class DefeatEvent extends BaseEvent {
@@ -107,4 +89,9 @@ export namespace gameEvents {
 
 export namespace controllerEvents {
     export class ArrowDirectionEvent extends BaseEvent {}
+}
+
+
+export namespace serviceEvents {
+    export class RenderPageEvent extends BaseEvent {}
 }

@@ -25,18 +25,14 @@ export class WSEndpoint {
         });
     }
 
-    constructor() {
-        this._socket = new WebSocket(this._url);
-        this._initSocket();
-        this._setListeners();
-    }
-
-    public requestRoom() {
-        this.sendMessage(REQUEST_TYPES.roomRequest);
-    }
-
-    public submitGameStart() {
-        this.sendMessage(REQUEST_TYPES.gameStart);
+    public start() {
+        try {
+            this._socket = new WebSocket(this._url);
+            this._initSocket();
+            this._setListeners();
+        } catch (err) {
+            console.error(err);
+        }
     }
 
     public sendMessage(messageType, data = {}) {

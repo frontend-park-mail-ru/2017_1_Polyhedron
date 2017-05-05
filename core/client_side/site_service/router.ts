@@ -1,13 +1,29 @@
+'use strict';
+
+import {Autowired} from "../game_mechanics/experimental/decorators";
+import {EventBus} from "../game_mechanics/event_system/event_bus";
+import {serviceEvents} from "../game_mechanics/event_system/events";
+import RenderPageEvent = serviceEvents.RenderPageEvent;
+
 
 export class Router {
     private _viewMap: any;
     private _defaultView: any;
     private _currView: any;
 
+    @Autowired(EventBus)
+    private eventBus;
+
     constructor(viewMap, defaultView) {
         this._viewMap = viewMap || {};
         this._defaultView = defaultView;
         this._currView = null;
+
+        this.eventBus.addEventListener(RenderPageEvent.eventName, event => {
+            const url = event.detail.url;
+            const options = event.detail.options;
+            this.render(url, options);
+        });
     }
 
     public register(url, view) {

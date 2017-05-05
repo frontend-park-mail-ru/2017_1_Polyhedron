@@ -21,3 +21,8 @@ export interface GameWorldState {
     ballState: BallState;
     platformsState: PlatformState[];
 }
+
+
+export interface GetReady {
+    playerNames: string[];
+}

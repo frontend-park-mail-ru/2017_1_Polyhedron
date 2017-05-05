@@ -67,10 +67,9 @@ export class GameWorld implements Drawable, Serializable<GameWorldState> {
 
     public setState(state: GameWorldState) {
         this._ball.setState(state.ballState);
-
-        const platformsState = state.platformsState.sort((state1, state2) => state1.angle - state2.angle);
-
-        // TODO add platforms info handling
+        state.platformsState.forEach((data, index) => {
+            this._platforms[index].setState(data);
+        });
     }
 
     public get ball(): Ball {
