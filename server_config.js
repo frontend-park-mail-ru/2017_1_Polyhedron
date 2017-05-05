@@ -21,7 +21,8 @@ router.addPlainURL("/cached_urls", new resourceBinding.BindedFunction(caching.ge
     ],
 
     plainUrls: [
-        '/', '/game'
+        '/', '/index', '/about', '/choice', '/game', '/battle', '/gameover',
+        '/leaders', '/login', '/signup', '/waiting', '/404'
     ]
 })));
 
