@@ -13,15 +13,15 @@ router.addPlainURL("/api", new resourceBinding.BindedFile("./swagger.json"));
 
 router.addPlainURL("/cached_urls", new resourceBinding.BindedFunction(caching.getCachedUrlGen({
     foldersInfo: [
-        ['./static/css'],
-        ['./static/fonts'],
-        ['./static/images'],
-        ['./static/js'],
+        ['./static/css', '/static/css/'],
+        ['./static/fonts', '/static/fonts/'],
+        ['./static/images', '/static/images/'],
+        ['./static/js', '/static/js/'],
         ['./dist', '/dist/']
     ],
 
     plainUrls: [
-        '/'
+        '/', '/game'
     ]
 })));
 
