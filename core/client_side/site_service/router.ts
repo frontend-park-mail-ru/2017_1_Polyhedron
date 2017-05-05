@@ -24,6 +24,12 @@ export class Router {
             const options = event.detail.options;
             this.render(url, options);
         });
+
+        window.addEventListener('onpopstate', () => {
+            if (this._currView) {
+                this._currView.reset();
+            }
+        });
     }
 
     public register(url, view) {

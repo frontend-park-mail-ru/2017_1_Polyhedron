@@ -28,6 +28,11 @@ class Router {
             const options = event.detail.options;
             this.render(url, options);
         });
+        window.addEventListener('onpopstate', () => {
+            if (this._currView) {
+                this._currView.reset();
+            }
+        });
     }
     register(url, view) {
         this._viewMap[url] = view;

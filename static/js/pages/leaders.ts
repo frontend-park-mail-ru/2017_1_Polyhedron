@@ -21,6 +21,8 @@ export class Leaders extends BasePage {
     @Autowired(VariableContext)
     private variableMap: VariableContext;
 
+    private reseted: boolean;
+
     constructor(heading, content, alert, options?, leaderCount?) {
         super(heading, content, alert, options);
         this.text = new Text({
@@ -30,9 +32,11 @@ export class Leaders extends BasePage {
             parent: this._content
         });
         this._leaderCount = leaderCount || DEFAULT_LEADER_COUNT;
+        this.reseted = false;
     }
 
     public async render() {
+        this.reseted = false;
         this._heading.innerHTML = "Топ-10";
         this.text.render();
 
@@ -43,10 +47,16 @@ export class Leaders extends BasePage {
                 return response.json();
             })
             .then(responseJSON => {
-                this.leaders = new LeaderBoard({
-                    items: responseJSON.data,
-                    parent: this._content
-                }).render();
+                if (!this.reseted) {
+                    this.leaders = new LeaderBoard({
+                        items: responseJSON.data,
+                        parent: this._content
+                    }).render();
+                }
             });
+    }
+
+    public reset() {
+        this.reseted = true;
     }
 }
