@@ -11,6 +11,10 @@ import {
 } from "./game_related_objects";
 import {Autowired} from "../../client_side/game_mechanics/experimental/decorators";
 import {GameWorldState} from "../../client_side/game_mechanics/event_system/messages";
+import {networkEvents} from "../../client_side/game_mechanics/event_system/events";
+import GetReadyEvent = networkEvents.GetReadyEvent;
+import GameStartEvent = networkEvents.GameStartEvent;
+import WorldUpdateEvent = networkEvents.WorldUpdateEvent;
 
 
 class GameServer {
@@ -86,10 +90,10 @@ class GameServer {
 
     private _dispatchWorldUpdate(wsArray, state: GameWorldState) {
         wsArray.forEach((ws, ind) => {
-            const message = JSON.stringify({
-                type: 'WorldUpdateEvent',
-                data: rotateGameWorldState(state, ind)
-            });
+            const message = this._createEventMessage(
+                WorldUpdateEvent,
+                rotateGameWorldState(state, ind)
+            );
 
             ws.send(message);
         });
@@ -97,10 +101,10 @@ class GameServer {
 
     private _dispatchGameStartMessage(wsArray, initialState: GameWorldState) {
         wsArray.forEach((ws, ind) => {
-            const message = JSON.stringify({
-                type: 'GameStartEvent',
-                data: rotateGameWorldState(initialState, ind)
-            });
+            const message = this._createEventMessage(
+                GameStartEvent,
+                rotateGameWorldState(initialState, ind)
+            );
 
             ws.send(message);
         });
@@ -109,13 +113,16 @@ class GameServer {
     }
 
     private _dispatchGetReadyMessage(wsArray) {
-        const message = JSON.stringify({
-            type: 'GetReadyEvent',
-            data: 'start'
-        });
-
+        const message = this._createEventMessage(GetReadyEvent, {});
         dispatchMessage(message, wsArray);
         GameServer.logger.debug('Get ready');
+    }
+
+    private _createEventMessage(eventClass, data): string {
+        return JSON.stringify({
+            type: eventClass.eventName,
+            data
+        });
     }
 
     private _isCompleteParty(wsArray) {

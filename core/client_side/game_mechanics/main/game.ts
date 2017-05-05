@@ -22,8 +22,6 @@ import GameStartEvent = networkEvents.GameStartEvent;
 import PlatformMovedEvent = gameEvents.PlatformMovedEvent;
 
 
-const PLATFORM_TOLERANCE = 5;
-
 const MILLISECONDS_PER_SECOND = 1000;
 
 const MODES = {
@@ -83,11 +81,8 @@ export class Game {
     }
 
     public start() {
-
         this._running = true;
-
-        const time = MILLISECONDS_PER_SECOND / this._gameConfig.frameRate;
-        this._setIntervalID = setInterval(() => this._makeIteration(time), time);
+        this._setIntervalID = setInterval(() => this._makeIteration(this._gameConfig.time), this._gameConfig.time);
     }
 
     public stop() {
@@ -97,8 +92,7 @@ export class Game {
 
     public continueGame() {
         this._running = true;
-        const time = MILLISECONDS_PER_SECOND / this._gameConfig.frameRate;
-        this._setIntervalID = setInterval(() => this._makeIteration(time), time);
+        this._setIntervalID = setInterval(() => this._makeIteration(this._gameConfig.time), this._gameConfig.time);
     }
 
     public getWorldState(): GameWorldState {

@@ -1,6 +1,6 @@
 'use strict';
 
-export interface Serializable<T> {
+export interface Stateful<T> {
     getState(): T;
     setState(state: T): void;
 }

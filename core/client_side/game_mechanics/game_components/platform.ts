@@ -6,14 +6,14 @@ import {Rectangle} from '../geometry_shapes/rectangle';
 import {Line} from '../geometry_shapes/line';
 import * as math from '../../../_lib/math';
 import {getIdGenerator} from '../../../common/id_generator';
-import {Serializable} from "../experimental/interfaces";
+import {Stateful} from "../experimental/interfaces";
 import {PolygonObstacle} from "../base/collision_handling";
 import {PlatformState} from "../event_system/messages";
 import {Drawable, Rectangular} from "../drawing/interfaces";
 import {specificToCanvasCS} from "../drawing/canvas_transform";
 
 
-export class Platform extends GameComponent implements Drawable, PolygonObstacle, Serializable<PlatformState> {
+export class Platform extends GameComponent implements Drawable, PolygonObstacle, Stateful<PlatformState> {
     private static generateId = getIdGenerator();
     public readonly id: number;
     private _rectangle: Rectangle;

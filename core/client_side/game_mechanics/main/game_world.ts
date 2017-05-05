@@ -11,12 +11,12 @@ import {EventBus} from "../event_system/event_bus";
 import {Autowired, Load} from "../experimental/decorators";
 import {getNearestCollisionMultiObstacle} from "../base/collision_handling";
 import {GameWorldState} from "../event_system/messages";
-import {Serializable} from "../experimental/interfaces";
+import {Stateful} from "../experimental/interfaces";
 import {Drawable, Rectangular} from "../drawing/interfaces";
 import {platformFromTriangleField} from "../game_components/helper_functions";
 
 
-export class GameWorld implements Drawable, Serializable<GameWorldState> {
+export class GameWorld implements Drawable, Stateful<GameWorldState> {
     @Autowired(EventBus)
     private eventBus: EventBus;
 

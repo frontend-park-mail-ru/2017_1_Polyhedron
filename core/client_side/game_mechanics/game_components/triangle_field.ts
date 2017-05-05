@@ -108,12 +108,9 @@ export class TriangleField extends GameComponent implements Drawable, PolygonObs
                 .map(point => specificToCanvasCS(point, canvas, initialRectangle));
 
             context.beginPath();
-            for (let i = 0; i !== points.length; ++i) {
-                if (i === 0) {
-                    context.moveTo(points[i][0], points[i][1]);
-                } else {
-                    context.lineTo(points[i][0], points[i][1]);
-                }
+            context.moveTo(points[0][0], points[0][1]);
+            for (let i = 1; i !== points.length; ++i) {
+                context.lineTo(points[i][0], points[i][1]);
             }
             context.closePath();
 

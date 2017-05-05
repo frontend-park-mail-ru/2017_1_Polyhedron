@@ -1,6 +1,5 @@
 'use strict';
 
-
 export function dispatchMessage(message: string, wsArray) {
     wsArray.forEach(ws => ws.send(message));
 }

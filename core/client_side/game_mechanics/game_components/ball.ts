@@ -2,7 +2,7 @@
 import * as math from '../../../_lib/math';
 import {Circle} from '../geometry_shapes/circle';
 import {GameComponent} from '../base/game_component';
-import {Serializable} from '../experimental/interfaces';
+import {Stateful} from '../experimental/interfaces';
 import {CircleCollider} from "../base/collision_handling";
 import {BallState} from "../event_system/messages";
 import {Drawable, Rectangular} from "../drawing/interfaces";
@@ -10,7 +10,7 @@ import {specificToCanvasCS, getCanvasScaleFactor} from "../drawing/canvas_transf
 import {getProjectionMatrix, getReflectionMatrix} from "../base/geometry";
 
 
-export class Ball extends GameComponent implements CircleCollider, Serializable<BallState>, Drawable {
+export class Ball extends GameComponent implements CircleCollider, Stateful<BallState>, Drawable {
     private _circle: Circle;
 
     constructor(radius: number) {

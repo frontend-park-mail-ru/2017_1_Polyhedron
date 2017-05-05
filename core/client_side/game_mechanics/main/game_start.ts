@@ -2,7 +2,7 @@
 import {ClientSideGame} from './game';
 import {Autowired} from "../experimental/decorators";
 import {VariableContext} from "../experimental/context";
-import {Drawer, FullScreenDrawer} from "../drawing/drawer";
+import {Drawer} from "../drawing/drawer";
 
 
 export class GameStarter {
