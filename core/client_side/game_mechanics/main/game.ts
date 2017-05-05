@@ -22,7 +22,7 @@ import GameStartEvent = networkEvents.GameStartEvent;
 import PlatformMovedEvent = gameEvents.PlatformMovedEvent;
 
 
-const MILLISECONDS_PER_SECOND = 1000;
+const GAME_OVER_PAGE_URL = '/gameover';
 
 const MODES = {
     single: 'single',
@@ -200,7 +200,7 @@ export class Game {
             const isWinner = event.detail !== this._activePlatform.id;
 
             this.eventBus.dispatchEvent(RenderPageEvent.create({
-                url: '/gameover',
+                url: GAME_OVER_PAGE_URL,
                 options: {isWinner}
             }));
             this._running = false;
