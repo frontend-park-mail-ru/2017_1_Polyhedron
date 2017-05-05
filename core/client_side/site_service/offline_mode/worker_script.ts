@@ -1,7 +1,7 @@
 'use strict';
 
 const CACHE_NAME = 'cache_v_1';
-const INFO_URL = 'https://polyhedron-team.herokuapp.com/cached_urls';
+const INFO_URL = '/cached_urls';
 
 
 self.addEventListener('install', event => {
