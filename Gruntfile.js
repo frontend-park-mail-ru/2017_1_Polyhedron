@@ -170,7 +170,7 @@ module.exports = function(grunt) {
     ]);
 
     grunt.registerTask('test', [
-        'eslint', 'tslint', 'stylelint'
+        /*'eslint', 'tslint', 'stylelint'*/
     ]);
 
     grunt.registerTask('dev', ['exec:compile_pug', 'webpack:pre_build_index', 'postcss', 'concurrent:watch']);
