@@ -29,6 +29,13 @@ export class Top extends Component {
                 userpanel.innerHTML = renderTop.template({
                     user: responseJSON.data
                 });
+            })
+            .catch(() => {
+                this.variableMap.set('user', null);
+                const userpanel = document.querySelector(".js-top");
+                userpanel.innerHTML = renderTop.template({
+                    user: null
+                });
             });
         return this;
     }

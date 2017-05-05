@@ -4,6 +4,7 @@ import {BasePage} from './base';
 import {Text} from '../components/text/text';
 import {Autowired} from "../../../core/client_side/game_mechanics/experimental/decorators";
 import {VariableContext} from "../../../core/client_side/game_mechanics/experimental/context";
+import {router} from "./main";
 
 
 export class GameOver extends BasePage {
@@ -31,9 +32,18 @@ export class GameOver extends BasePage {
         });
     }
 
-    public render() {
+    public async render(options) {
         this._heading.innerHTML = "Партия завершена";
         this.variableMap.get('userpanel').render();
-        this.winnerText.render();
+
+        if (!options) {
+            throw new Error('Tried to render gameover page without options');
+        }
+
+        if (options.isWinner) {
+            this.winnerText.render();
+        } else {
+            this.loserText.render();
+        }
     }
 }

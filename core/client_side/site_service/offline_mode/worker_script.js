@@ -1,12 +1,6 @@
 'use strict';
 const CACHE_NAME = 'cache_v_1';
-const INFO_URL = 'http://localhost:3000/cached_urls'; // TODO remove
-self.addEventListener('install', event => {
-    // console.log('install', event);   // TODO set up proper logging
-});
-self.addEventListener('activate', event => {
-    // console.log('activate', event);  // TODO set up proper logging
-});
+const INFO_URL = '/cached_urls';
 self.addEventListener('install', event => {
     event.waitUntil(fetch(INFO_URL)
         .then(response => response.json())
@@ -17,7 +11,9 @@ self.addEventListener('install', event => {
 });
 self.addEventListener('fetch', event => {
     // TODO maybe need to enable cors (check after deploy to heroku)
-    const lastModifiedPromise = fetch(event.request.url, { method: 'HEAD' })
+    const lastModifiedPromise = fetch(event.request.url, {
+        method: 'HEAD'
+    })
         .then(response => response.headers.get('Last-Modified'))
         .catch(err => null);
     const cachedResponsePromise = caches.match(event.request);

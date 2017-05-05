@@ -4,9 +4,11 @@ import {Triangle} from '../geometry_shapes/triangle';
 import {GameComponent} from '../base/game_component';
 import {getIdGenerator} from '../../../common/id_generator';
 import {Ball} from "./ball";
-import {Drawable} from "../experimental/interfaces";
-import {Point, PolygonObstacle} from "../base/collision_handling";
+import {PolygonObstacle} from "../base/collision_handling";
 import {Line} from "../geometry_shapes/line";
+import {Drawable, Rectangular} from "../drawing/interfaces";
+import {specificToCanvasCS} from "../drawing/canvas_transform";
+import {Point} from "../base/common";
 
 
 export class TriangleField extends GameComponent implements Drawable, PolygonObstacle {
@@ -99,31 +101,31 @@ export class TriangleField extends GameComponent implements Drawable, PolygonObs
         return baseLine.getClosestPoint(origin);
     }
 
-    public draw(canvas: HTMLCanvasElement) {
-        const context = canvas.getContext("2d");
-        const points = this.getPointArray();
+    public getDrawing() {
+        return (canvas, initialRectangle?: Rectangular) => {
+            const context = canvas.getContext("2d");
+            const points = this.getPointArray()
+                .map(point => specificToCanvasCS(point, canvas, initialRectangle));
 
-        context.beginPath();
-        for (let i = 0; i !== points.length; ++i) {
-            if (i === 0) {
-                context.moveTo(points[i][0], points[i][1]);
-            } else {
+            context.beginPath();
+            context.moveTo(points[0][0], points[0][1]);
+            for (let i = 1; i !== points.length; ++i) {
                 context.lineTo(points[i][0], points[i][1]);
             }
-        }
-        context.closePath();
+            context.closePath();
 
-        let fillStyle = null;
-        if (this.isNeutral()) {
-            fillStyle = 'white';
-        } else if (this.isLoser()) {
-            fillStyle = 'blue';
-        } else {
-            fillStyle = 'red';
-        }
-        context.fillStyle = fillStyle;
-        context.fill();
-        context.lineWidth = 1;
-        context.stroke();
+            let fillStyle = null;
+            if (this.isNeutral()) {
+                fillStyle = 'white';
+            } else if (this.isLoser()) {
+                fillStyle = 'blue';
+            } else {
+                fillStyle = 'red';
+            }
+            context.fillStyle = fillStyle;
+            context.fill();
+            context.lineWidth = 1;
+            context.stroke();
+        };
     }
 }

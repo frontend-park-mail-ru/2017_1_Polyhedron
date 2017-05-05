@@ -9,12 +9,14 @@ import * as events from '../event_system/events';
 import {GameComponent} from "../base/game_component";
 import {EventBus} from "../event_system/event_bus";
 import {Autowired, Load} from "../experimental/decorators";
-import {getOffsetChecker} from "../base/geometry";
-import {ConfigContext} from "../experimental/context";
 import {getNearestCollisionMultiObstacle} from "../base/collision_handling";
+import {GameWorldState} from "../event_system/messages";
+import {Stateful} from "../experimental/interfaces";
+import {Drawable, Rectangular} from "../drawing/interfaces";
+import {platformFromTriangleField} from "../game_components/helper_functions";
 
 
-export class GameWorld {
+export class GameWorld implements Drawable, Stateful<GameWorldState> {
     @Autowired(EventBus)
     private eventBus: EventBus;
 
@@ -28,37 +30,12 @@ export class GameWorld {
     private _platforms: Platform[];
     private _ball: Ball;
     private _score: number;
-
     @Load('game')
     private _gameConfig;
 
     private _lastCollidedObject: GameComponent = null;
 
-    private static _platformFromTriangleField(triangleField: TriangleField) {
-        const platformConfig = ConfigContext.getInstance().get('platform');
-
-        const relativeDistance = platformConfig.relativeDistance;
-        const relativeLength = platformConfig.relativeLength;
-        const totalLength = triangleField.getWidthOnRelativeDistance(relativeDistance);
-        const platformLength = totalLength * relativeLength;
-
-        const platformWidth = platformConfig.aspectRatio * platformLength;
-        const platform = new Platform(platformLength, platformWidth);
-
-        // using such coordinates because triangleField coordinate system origin is in the topmost corner.
-        const position = triangleField.toGlobals([0, -triangleField.height * (1 - relativeDistance)]);
-        const rotation = triangleField.rotation;
-
-        platform.moveTo(position);
-        platform.rotateTo(rotation);
-
-        platform.positionValidator = getOffsetChecker(platform, triangleField);
-        triangleField.addChild(platform);
-
-        return platform;
-    }
-
-    constructor(userNum: number, sectorHeight: number, ballRadius: number, position: number[]) {
+    constructor(userNum: number, sectorHeight: number, ballRadius: number, position: number[] = [0, 0]) {
         this._userNum = userNum;
         this._sectorAngle = Math.PI / userNum;
         this._sectorHeight = sectorHeight;
@@ -81,6 +58,20 @@ export class GameWorld {
         ++this._score;
     }
 
+    public getState(): GameWorldState {
+        return {
+            ballState: this._ball.getState(),
+            platformsState: this._platforms.map(platform => platform.getState())
+        };
+    }
+
+    public setState(state: GameWorldState) {
+        this._ball.setState(state.ballState);
+        state.platformsState.forEach((data, index) => {
+            this._platforms[index].setState(data);
+        });
+    }
+
     public get ball(): Ball {
         return this._ball;
     }
@@ -97,28 +88,20 @@ export class GameWorld {
         return this._platforms;
     }
 
-    public draw(canvas) {
-        this._userSectors.forEach(sector => sector.draw(canvas));
-        this._neutralSectors.forEach(sector => sector.draw(canvas));
-        this._platforms.forEach(platform => platform.draw(canvas));
-        this._ball.draw(canvas);
+    public getDrawing() {
+        return (canvas, initialRectangle?: Rectangular) => {
+            (this._userSectors as Drawable[])
+                .concat(this._neutralSectors, this._platforms, [this._ball])
+                .map(drawable => drawable.getDrawing())
+                .forEach(draw => draw(canvas, initialRectangle));
 
-        this._writeScore(canvas);
+            this._writeScore(canvas);
+        };
     }
 
     public movePlatform(platform, localOffsetVector, velocityVector?) {
         const globalOffset = platform.toGlobalsWithoutOffset(localOffsetVector);
         platform.moveByWithConstraints(globalOffset, velocityVector);
-    }
-
-    public updateBallState(position, velocity) {
-        if (position) {
-            this._ball.moveTo(position);
-        }
-
-        if (velocity) {
-            this._ball.velocity = velocity;
-        }
     }
 
     public makeIteration(time) {
@@ -169,7 +152,7 @@ export class GameWorld {
                 this._handlePlatformCollision(
                     firstCollisionData.collision.obstacle,
                     this.ball,
-                    firstCollisionData.collision.point
+                    firstCollisionData.collision.direction
                 );
             } else if (firstCollisionData.tag === 'userSector') {
                 this._handleUserSectorCollision(firstCollisionData.collision.obstacle, this.ball);
@@ -200,7 +183,7 @@ export class GameWorld {
     }
 
     private _initPlatforms() {
-        this._platforms = this._userSectors.map(sector => GameWorld._platformFromTriangleField(sector));
+        this._platforms = this._userSectors.map(sector => platformFromTriangleField(sector));
     }
 
     private _initBall() {
@@ -208,7 +191,7 @@ export class GameWorld {
         this._ball.moveTo(this._position);
     }
 
-    private _handleUserSectorCollision(sector, ball) {
+    private _handleUserSectorCollision(sector: TriangleField, ball: Ball) {
         if (sector !== this._lastCollidedObject) {
             ball.bounceNorm(sector.getBottomNorm());
             this._lastCollidedObject = sector;
@@ -224,9 +207,9 @@ export class GameWorld {
         }
     }
 
-    private _handlePlatformCollision(platform, ball, point) {
+    private _handlePlatformCollision(platform, ball, norm) {
         if (platform !== this._lastCollidedObject) {
-            ball.bouncePoint(point, platform.velocity);
+            ball.bounceNorm(norm, platform.velocity);
             this._lastCollidedObject = platform;
 
             this.eventBus.dispatchEvent(events.gameEvents.BallBounced.create(platform.id));

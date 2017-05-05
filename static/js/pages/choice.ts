@@ -23,7 +23,7 @@ export class ChoiceGameMode extends BasePage {
         });
     }
 
-    public render() {
+    public async render() {
         this._heading.innerHTML = "Выбор режима";
         this.variableMap.get('userpanel').render();
         this.menu.render();

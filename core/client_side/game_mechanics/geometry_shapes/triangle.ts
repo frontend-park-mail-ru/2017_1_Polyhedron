@@ -1,7 +1,8 @@
+'use strict';
+
+import {Point} from "../base/common";
 
 
-import {Line} from "./line";
-import {Point} from "../base/collision_handling";
 export class Triangle {
     private _height: number;
     private _sectorAngle: number;

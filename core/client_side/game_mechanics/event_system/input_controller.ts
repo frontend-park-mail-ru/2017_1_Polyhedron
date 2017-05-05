@@ -71,9 +71,9 @@ export class InputController {
         if (!this._leftPressed && !this._rightPressed) {
             return 0;
         } else if (this._leftPressed && !this._rightPressed) {
-            return -1;
-        } else if (!this._leftPressed && this._rightPressed) {
             return 1;
+        } else if (!this._leftPressed && this._rightPressed) {
+            return -1;
         } else {
             return 0;
         }

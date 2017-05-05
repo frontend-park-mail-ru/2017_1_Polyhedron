@@ -5,8 +5,8 @@ import * as geometry from './geometry';
 
 
 export class CoordinateSystem {
-    private _origin: number[];
-    private _angle: number;
+    protected _origin: number[];
+    protected _angle: number;
 
     constructor(origin: number[], angle: number) {
         this._origin = origin;

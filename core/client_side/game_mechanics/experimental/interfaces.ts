@@ -1,12 +1,8 @@
+'use strict';
 
-
-export interface Scalable {
-    rescale(scaleFactor: number);
-}
-
-
-export interface Drawable {
-    draw(canvas: HTMLCanvasElement);
+export interface Stateful<T> {
+    getState(): T;
+    setState(state: T): void;
 }
 
 
@@ -18,18 +14,6 @@ export interface NamedConstructible {
 
 export interface Constructible {
     new(...args: any[]): {};
-}
-
-
-interface ServiceInfo {
-    cls: NamedConstructible;
-    args?: any[];
-}
-
-
-export interface ContextConfig {
-    services?: ServiceInfo[];
-    dataSources?: {};
 }
 
 

@@ -44,6 +44,7 @@ export class ConfigContext extends AbstractContext {
     }
 }
 
+
 export class ServiceContext extends AbstractContext {
     private static _context = new ServiceContext();
 

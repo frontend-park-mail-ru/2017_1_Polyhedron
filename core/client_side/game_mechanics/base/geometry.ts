@@ -1,10 +1,34 @@
 'use strict';
 import * as math from './../../../_lib/math';
 import {Polygon, Area} from '../experimental/interfaces';
+import {Vector} from "./common";
 
 
-export function move(vector: number[], offset: number[]) {
+export function move(vector: Vector, offset: Vector) {
     return math.add(move, offset);
+}
+
+
+export function getProjectionMatrix(normVec: Vector): number[][] {
+    // TODO find error
+    const [nx, ny] = math.divide(normVec, math.norm(normVec));
+
+    return [
+        [nx * nx, nx * ny],
+        [nx * ny, ny * ny]
+    ];
+}
+
+export function getReflectionMatrix(normVec: Vector) {
+    const normVec0 = math.divide(normVec, math.norm(normVec));
+
+    const normMatrix = [
+        [normVec0[0] * normVec0[0], normVec0[0] * normVec0[1]],
+        [normVec0[0] * normVec0[1], normVec0[1] * normVec0[1]]
+    ];
+
+    const identityMatrix = math.eye(2);
+    return math.subtract(identityMatrix, math.multiply(normMatrix, 2));
 }
 
 

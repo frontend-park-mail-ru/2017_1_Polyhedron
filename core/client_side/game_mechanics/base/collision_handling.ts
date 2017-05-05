@@ -2,11 +2,7 @@
 
 import {SolidBody} from "./solid_body";
 import * as math from './../../../_lib/math';
-import {Platform} from "../game_components/platform";
-import {Ball} from "../game_components/ball";
-
-
-export type Point = number[];
+import {Point, Vector} from "./common";
 
 
 export interface CircleCollider extends SolidBody {
@@ -22,11 +18,13 @@ export interface PolygonObstacle extends SolidBody {
 export class CollisionInfo {
     public time: number;
     public point: Point;
+    public direction: Vector;
     public obstacle: any;
 
-    constructor(time: number, point: Point) {
+    constructor(time: number, point: Point, direction: Vector) {
         this.time = time;
         this.point = point;
+        this.direction = direction;
     }
 }
 
@@ -89,9 +87,10 @@ export function getCollision(
     );
     const closestPoint = obstacle.getClosestPoint(relPosition);
     const distance = math.norm(math.subtract(closestPoint, relPosition));
+    const norm = math.subtract(relPosition, closestPoint);
 
     if (distance <= collider.radius) {
-        return new CollisionInfo(time, closestPoint);
+        return new CollisionInfo(time, closestPoint, norm);
     } else {
         return null;
     }

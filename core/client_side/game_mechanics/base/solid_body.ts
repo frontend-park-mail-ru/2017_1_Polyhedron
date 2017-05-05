@@ -5,8 +5,8 @@ import * as math from './../../../_lib/math';
 
 
 export class SolidBody extends CoordinateSystem {
-    private _velocity: number[];
-    private _angularVelocity: number;
+    protected _velocity: number[];
+    protected _angularVelocity: number;
 
     constructor(origin: number[] = [0, 0], angle: number = 0, velocity: number[] = [0, 0], angularVelocity: number = 0) {
         super(origin, angle);

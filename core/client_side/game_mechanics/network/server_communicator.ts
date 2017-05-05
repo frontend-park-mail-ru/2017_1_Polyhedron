@@ -37,8 +37,11 @@ export class ServerCommunicator {
     }
 
     private _setListeners() {
-        this._eventBus.addEventListener(events.gameEvents.PlatformMovedEvent.eventName, event => this.handlePlatformMovedEvent(event));
-        this._eventBus.addEventListener(events.networkEvents.WorldUpdateEvent.eventName, event => this.handleWorldUpdateEvent(event));
+        this._eventBus.addEventListener(
+            events.gameEvents.PlatformMovedEvent.eventName,
+            event => this.handlePlatformMovedEvent(event)
+        );
+
         this._eventBus.addEventListener(events.networkEvents.ServerMessageEvent.eventName, (event: CustomEvent) => {
             const detail = event.detail;
             const gameEventClass = detail.type;
@@ -57,9 +60,5 @@ export class ServerCommunicator {
             type: events.gameEvents.PlatformMovedEvent.eventName,
             data: event.detail
         }));
-    }
-
-    private handleWorldUpdateEvent(event: events.networkEvents.WorldUpdateEvent) {
-        // console.log(event); // TODO refactor
     }
 }

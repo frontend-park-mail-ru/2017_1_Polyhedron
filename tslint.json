@@ -17,6 +17,7 @@
     "arrow-parens": false,
     "no-namespace": false,
     "no-trailing-whitespace": false,
+    "no-console": [true, "log"],
 
     "callable-types": true,
     "interface-name": false,

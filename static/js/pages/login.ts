@@ -38,7 +38,7 @@ export class Login extends BasePage {
         });
     }
 
-    public render() {
+    public async render() {
         this._heading.innerHTML = "Вход в игру";
         this.variableMap.get('userpanel').render();
 
