@@ -11,7 +11,11 @@ self.addEventListener('install', event => {
 });
 self.addEventListener('fetch', event => {
     // TODO maybe need to enable cors (check after deploy to heroku)
-    const lastModifiedPromise = fetch(event.request.url, { method: 'HEAD' })
+    const lastModifiedPromise = fetch(event.request.url, {
+        method: 'HEAD',
+        mode: 'cors',
+        credentials: 'include'
+    })
         .then(response => response.headers.get('Last-Modified'))
         .catch(err => null);
     const cachedResponsePromise = caches.match(event.request);

@@ -102,6 +102,7 @@ module.exports = function(grunt) {
             },
             src: [
                 'core/server_side/**/*.js',
+                '!core/server_side/ws_server/*.js',
                 './tests/*.js',
                 '.pug_compiler.js',
                 '!core/server_side/ws_server/server.js'
