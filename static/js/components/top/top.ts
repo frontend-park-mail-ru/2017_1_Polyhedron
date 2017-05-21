@@ -18,7 +18,7 @@ export class Top extends Component {
         this.template = renderTop.template;
     }
 
-    public render() {
+    public render(hide_menu = false, hide_login = false, hide_reg = false) {
         this.backendAPI.getuser()
             .then(response => {
                 return response.json();
@@ -27,7 +27,10 @@ export class Top extends Component {
                 this.variableMap.set('user', responseJSON.data);
                 const userpanel = document.querySelector(".js-top");
                 userpanel.innerHTML = renderTop.template({
-                    user: responseJSON.data
+                    user: responseJSON.data,
+                    hide_menu: hide_menu,
+                    hide_login: hide_login,
+                    hide_reg: hide_reg
                 });
             });
         return this;
