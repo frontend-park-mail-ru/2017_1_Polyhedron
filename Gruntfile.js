@@ -166,7 +166,7 @@ module.exports = function(grunt) {
 
 
     grunt.registerTask('postinstall', [
-        'exec:compilePug', 'exec:compileSwagger', 'webpack', /*'exec:minifyBundle',*/ 'postcss'
+        'exec:compilePug', 'exec:compileSwagger', 'webpack', /*'exec:minifyBundle',*/ 'postcss', 'exec:saveCachedUrls'
     ]);
 
     grunt.registerTask('test', [
