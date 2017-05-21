@@ -2,10 +2,12 @@
 
 if [ $TRAVIS_BRANCH == 'master' ]
 then
+    export API_KEY=nD6SI04xOLgJ8TAPbTUb5lvgVGGhc7wMtiryq6DjtlWrGLJOiLmlXrJadfbzt2+qQDqL4IJIlVlDwl4CP1mDJlMormoOt+UpNtCGVPlHP9VFdDonDadUDgUE5eNmh5A3cOEO/CnXWCbc1nK+nOgTsN6wwBdKb+7fPjSmqpLkIhW/HT/FssLIShjPA+Tr7BVocGMeilb2Z8tsQjxFCDTzIUpviy2ITVPmWg/wHg3S4IiQbw19CIObCktxAgDhhUuL0FfCzzL/9Hbj+hzI5PbMFEXKmxnK3T3B7Dj4w7ef5wDPV5EShbV6yN7urOU3TNfJK4asGRhQsdymP9HgCxr3I5lWPlrHHC/ETFLH5ngjqYmoNuZLw+M5TjB6iutkif+7uK0MBrY5A8D3tTdtcuQb4dTymwRL1nuy75dUZCnZaErRAP+k8Iqwk3a3Fd1eG8E/AikDanG1xuL6m0CXarrdYmZvPD0dS4E4fD5pADte8VsWd0q3gTHCrtQOXdj0TUg6K6imQ3Rubvfq0D+3lbT9W/rQdd2QKH92dybarchxNQZne8hKVZDXwj/MWAKxWsNl6yVsbVeUPwygDl8ZOY1pU48OxREzbq+fvPy3dg3idxGhrmMplu9+aFK6+dZfHqt/B2O9png9kUkt+YlzRAwiGUpdtZih/ApOtRdD2SLMwLM=
     docker login --username=_ --password=$(echo $API_KEY) registry.heroku.com
     docker build -t registry.heroku.com/polyhedron/web .
     docker push registry.heroku.com/polyhedron/web
 else
+    export API_KEY=NdMEJIejvVuMnKdngCDRmuAAVvijF4GsuVu3srXuaV+jk4nmCgdJJYkLoC8RNg+uwBTcs4VcktzbdneYcKLFjwz8q0K4e3SJpRdipkWsb9z4TtlEFOu2RAZHMbAiI/kFFdE261PDMbCR9EC6H0Ilw0H1qN54kPjSElSKzhlUyac33JidbBltWGeQyMPG0pzJrg0J5C+4s2pK7icda5xTpQO+Kxp0rZVMHBl7kqCs9FVVzYjytqZATF8PhZaJVv+MoMkg0aSPL3NogLjMbwgwyP3OqezS/xhSkYebbd5DIZSn37OMamjgQwvb1QFbXabae7WjuelFnGM7B5yQTHUXYxFGoqKJgnNAs7b6b1/aKVSJNRw8HL9NAIo5/wId5NoiV7oI7o5Wbmz5JvDSJJ6GceEXcfDqRwcZ/ZIPEFRmGJbKWsqjP3ZIg4ooAsUQsIuylWVTI2hEhxVC8Wxmqug2OArw8FDjG40J5QcRyMb8sHu8fx91b5th0UOR3FJXHDlUGAkdaxClvSMJcsE18jMvLsZDE8AP+vveF/PkLVyLQg+vmS+Md+EnRsk9IaSXBGigI1iFsZmABCAhpvON/b7yCJEIeszS9SeQKOaI1moy1f7UI7ltILMrPYzQgQldYLYUts2Zv7SDCP07tHUW3onJMKToKWwEaCQI4JDyZhM+7zw=
     docker login --username=_ --password=$(echo $API_KEY) registry.heroku.com
     docker build -t registry.heroku.com/polyhedron-team/web .
     docker push registry.heroku.com/polyhedron-team/web
