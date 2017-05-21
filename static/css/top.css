@@ -1,5 +1,6 @@
 .top {
   padding: 0.5rem;
+  height: 1.3rem;
 
   @mixin underlined $border-primary-color;
 }
