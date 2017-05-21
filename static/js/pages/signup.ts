@@ -43,6 +43,7 @@ export class Signup extends BasePage {
 
     public async render() {
         this._heading.innerHTML = "Регистрация";
+        this.variableMap.get('userpanel').set_options(false, false, true);
         this.variableMap.get('userpanel').render();
         if (this.variableMap.get('user') !== null) {
             this.authorised.render();

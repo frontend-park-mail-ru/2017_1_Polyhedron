@@ -1,20 +1,25 @@
 if locals.user
-    a(data-page="index" href="#") В меню
-    |
-    span.top__divider &#183;
-    |
-    a(data-page="leaders" href="#") Привет, #{user.login}!
+    if locals.hide_menu !== true
+        a(data-page="index" href="#") В меню
+        |
+        span.top__divider &#183;
+        |
+    a(data-page="leaders" href="#") Привет, #{user}!
     |
     span.top__divider &#183;
     |
     a(data-page="logout" href="#") Выйти
 else
-    a(data-page="index" href="#") Меню
-    |
-    span.top__divider &#183;
-    |
-    a(data-page="login" href="#") Войти
-    |
-    span.top__divider &#183;
-    |
-    a(data-page="signup" href="#") Зарегистрироваться
+    if locals.hide_menu !== true
+        a(data-page="index" href="#") Меню
+        |
+        span.top__divider &#183;
+        |
+    if locals.hide_login !== true
+        a(data-page="login" href="#") Войти
+    if locals.hide_reg !== true && locals.hide_login !== true
+        |
+        span.top__divider &#183;
+        |
+    if locals.hide_reg !== true
+        a(data-page="signup" href="#") Зарегистрироваться

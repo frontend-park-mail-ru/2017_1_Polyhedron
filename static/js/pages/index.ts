@@ -26,7 +26,8 @@ export class Index extends BasePage {
 
     public async render() {
         this._heading.innerHTML = "Многопользовательский пинг-понг";
-        this.variableMap.get('userpanel').render();
+        this.variableMap.get('userpanel').set_options(true, false, false);
+        this.variableMap.get('userpanel').forceRender();
         this.menu.render();
     }
 }

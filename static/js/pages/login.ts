@@ -40,9 +40,10 @@ export class Login extends BasePage {
 
     public async render() {
         this._heading.innerHTML = "Вход в игру";
-        this.variableMap.get('userpanel').render();
+        this.variableMap.get('userpanel').set_options(false, true, false);
+        this.variableMap.get('userpanel').forceRender();
 
-        if (this.variableMap.get('user') !== null) {
+        if (this.variableMap.get('user')) {
             this.authorised.render();
         } else {
             this.form.render();
