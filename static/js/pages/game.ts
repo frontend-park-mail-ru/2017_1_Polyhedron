@@ -20,6 +20,7 @@ export class Game extends BasePage {
 
     public render() {
         this._heading.innerHTML = this._options.multi ? "Сражение" : "Игра";
+        this.variableMap.get('userpanel').set_options(false, false, false);
         this.variableMap.get('userpanel').render();
         this._content.innerHTML = renderGame.template(this._options);
 

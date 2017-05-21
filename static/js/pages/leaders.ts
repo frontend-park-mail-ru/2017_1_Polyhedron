@@ -36,6 +36,7 @@ export class Leaders extends BasePage {
         this._heading.innerHTML = "Топ-10";
         this.text.render();
 
+        this.variableMap.get('userpanel').set_options(false, false, false);
         this.variableMap.get('userpanel').render();
 
         this.backendAPI.getLeaders(this._leaderCount)

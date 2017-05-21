@@ -1,6 +1,6 @@
 .leaderboard {
   width: 0;
-  min-width: $min-width;
+  min-width: $ min-width;
   margin: -3rem auto auto;
 }
 
@@ -26,9 +26,13 @@
   @mixin glow-more;
 }
 
-@media
-only screen and (max-width: 760px),
-(min-device-width: 768px) and (max-device-width: 1024px)  {
+@media only screen and (max-width: 760px),
+  (min-device-width: 768px) and (max-device-width: 1024px) {
+  .leaderboard {
+    width: 0;
+    min-width: $min-width;
+  }
+
   .leaderboard * {
     display: block;
     border: 0;
@@ -44,22 +48,30 @@ only screen and (max-width: 760px),
     height: 2rem;
     line-height: 2rem;
     text-align: left;
-  }
 
-  .leader__info:before {
-    position: absolute;
-    top: 0;
-    left: 0;
-    width: 48%;
-    white-space: nowrap;
-    text-align: right;
+    &::before {
+      position: absolute;
+      top: 0;
+      left: 0;
+      width: 48%;
+      white-space: nowrap;
+      text-align: right;
+    }
+
+    &:nth-of-type(1)::before {
+      content: "Место: ";
+    }
+
+    &:nth-of-type(2)::before {
+      content: "Логин: ";
+    }
+
+    &:nth-of-type(3)::before {
+      content: "Счёт: ";
+    }
   }
 
   .leader__info_w10 {
     width: inherit;
   }
-
-  td:nth-of-type(1):before { content: "Место: "; }
-  td:nth-of-type(2):before { content: "Логин: "; }
-  td:nth-of-type(3):before { content: "Счёт: "; }
 }

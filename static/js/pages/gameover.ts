@@ -33,6 +33,7 @@ export class GameOver extends BasePage {
 
     public render() {
         this._heading.innerHTML = "Партия завершена";
+        this.variableMap.get('userpanel').set_options(false, false, false);
         this.variableMap.get('userpanel').render();
         this.winnerText.render();
     }

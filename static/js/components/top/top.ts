@@ -13,12 +13,25 @@ export class Top extends Component {
     @Autowired(VariableContext)
     private variableMap: VariableContext;
 
+    private hideMenu: boolean;
+    private hideLogin: boolean;
+    private hideReg: boolean;
+
     constructor(options = {}) {
         super(options);
         this.template = renderTop.template;
+        this.hideMenu = false;
+        this.hideReg = false;
+        this.hideLogin = false;
     }
 
-    public render(hide_menu = false, hide_login = false, hide_reg = false) {
+    public set_options(hideMenu, hideLogin, hideReg) {
+        this.hideMenu = hideMenu;
+        this.hideLogin = hideLogin;
+        this.hideReg = hideReg;
+    }
+
+    public render() {
         this.backendAPI.getuser()
             .then(response => {
                 return response.json();
@@ -28,9 +41,9 @@ export class Top extends Component {
                 const userpanel = document.querySelector(".js-top");
                 userpanel.innerHTML = renderTop.template({
                     user: responseJSON.data,
-                    hide_menu: hide_menu,
-                    hide_login: hide_login,
-                    hide_reg: hide_reg
+                    hide_menu: this.hideMenu,
+                    hide_login: this.hideLogin,
+                    hide_reg: this.hideReg
                 });
             });
         return this;
