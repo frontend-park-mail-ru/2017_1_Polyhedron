@@ -12,8 +12,3 @@ export function getByCircularIndex<T>(arr: T[], index: number): T {
     itemIndex = itemIndex >= 0 ? itemIndex : itemIndex + arr.length;
     return arr[itemIndex];
 }
-
-
-export function revertYAxis([x, y]): Vector {
-    return [x, -y];
-}

@@ -9,7 +9,7 @@ const DEFAULT_PORT = 3000;
 const router = new serverLib.Router();
 
 router.setDefault(new resourceBinding.BindedFile("./html/index.html"));
-router.addPlainURL("/api", new resourceBinding.BindedFile("./swagger.json"));
+router.addPlainURL("/api", new resourceBinding.BindedFile("./swagger.yml"));
 
 router.addPlainURL("/cached_urls", new resourceBinding.BindedFunction(caching.getCachedUrlGen({
     foldersInfo: [
@@ -31,9 +31,6 @@ router.addPlainURL("/cached_urls", new resourceBinding.BindedFunction(caching.ge
 router.addPlainURL("/worker_script.js", new resourceBinding.BindedFile("./core/client_side/site_service/offline_mode/worker_script.js"));
 router.addPlainURL("/test", new resourceBinding.BindedFile("./core/client_side/site_service/offline_mode/test.html"));
 router.addPlainURL("/static/manifest.json", new resourceBinding.BindedFile("./static/manifest.json"));
-
-router.addRegexURL("^/lib/.*\.js$", new resourceBinding.BindedFolder("./static/_lib/js/", "/lib/"));
-router.addRegexURL("^/lib/.*\.css$", new resourceBinding.BindedFolder("./static/_lib/css/", "/lib/"));
 
 router.addRegexURL(".*\.ttf$", new resourceBinding.BindedFolder("./static/fonts", "/static/fonts"));
 router.addRegexURL(".*\.(gif|jp?g|png|ico)$", new resourceBinding.BindedFolder("./static/images", "/static/images"));

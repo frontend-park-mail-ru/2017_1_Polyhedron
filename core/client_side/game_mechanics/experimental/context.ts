@@ -16,9 +16,7 @@ export abstract class AbstractContext implements IContext {
     }
 
     public set(key: string, val: any): void {
-        if (!this._map[key]) {
-            this._map[key] = val;
-        }
+        this._map[key] = val;
     }
 
     public remove(key: string): any {
@@ -27,8 +25,8 @@ export abstract class AbstractContext implements IContext {
         return result;
     }
 
-    public replace(key: string, val: any): void {
-        this._map[key] = val;
+    public contains(key: string): boolean {
+        return (key in this._map);
     }
 }
 

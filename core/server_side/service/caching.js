@@ -1,6 +1,7 @@
 'use strict';
 
 const fo = require('../../common/file_operations');
+const fs = require('fs');
 const path = require('path');
 
 
@@ -51,4 +52,11 @@ function getCachedUrlGen({foldersInfo, plainUrls}) {
     };
 }
 
+function saveCachedUrls(outPath, {foldersInfo, plainUrls}) {
+    const filesUrls = getFilesUrls(foldersInfo);
+    const fileContent = JSON.stringify(filesUrls.concat(plainUrls));
+    fs.writeFileSync(outPath, fileContent);
+}
+
 module.exports.getCachedUrlGen = getCachedUrlGen;
+module.exports.saveCachedUrls = saveCachedUrls;

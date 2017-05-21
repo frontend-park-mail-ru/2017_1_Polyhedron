@@ -24,11 +24,14 @@ export class Top extends Component {
                 return response.json();
             })
             .then(responseJSON => {
-                this.variableMap.set('user', responseJSON.data);
-                const userpanel = document.querySelector(".js-top");
-                userpanel.innerHTML = renderTop.template({
-                    user: responseJSON.data
-                });
+                if (this.variableMap.get('user') !== responseJSON.data) {
+                    this.variableMap.set('user', responseJSON.data);
+                    const userpanel = document.querySelector(".js-top");
+                    userpanel.innerHTML = renderTop.template({
+                        user: responseJSON.data
+                    });
+                }
+
             })
             .catch(() => {
                 this.variableMap.set('user', null);
@@ -40,6 +43,11 @@ export class Top extends Component {
         return this;
     }
 
+    public forceRender(user: any): void {
+        const userpanel = document.querySelector(".js-top");
+        userpanel.innerHTML = renderTop.template({user});
+    }
+
     public login() {
         this.backendAPI.getuser()
             .then(response => {
@@ -48,7 +56,7 @@ export class Top extends Component {
             .then(responseJSON => {
                 this.variableMap.set('user', responseJSON.data);
 
-                const userpanel = document.querySelector(".js-top");
+                const userpanel = this.variableMap.get('userpanel');
                 userpanel.innerHTML = renderTop.template();
             });
     }
@@ -56,7 +64,7 @@ export class Top extends Component {
     public logout() {
         this.variableMap.set('user', null);
 
-        this.render();
+        this.forceRender(null);
         this.backendAPI.logout();
     }
 }

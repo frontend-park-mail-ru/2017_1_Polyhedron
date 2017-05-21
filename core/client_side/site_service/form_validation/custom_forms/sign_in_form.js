@@ -51,6 +51,7 @@ class SignInForm extends base_form_1.Form {
             }
             else {
                 alert(messages_1.MESSAGE_MAP.LOGIN_SUCCESS);
+                this.variableMap.get('userpanel').forceRender(responseJson);
                 this.variableMap.get('router').renderAndSave('/');
             }
         })

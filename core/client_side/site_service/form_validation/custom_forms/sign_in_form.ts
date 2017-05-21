@@ -61,6 +61,7 @@ export class SignInForm extends Form {
                     alert(MESSAGE_MAP.INVALID_CREDENTIALS);
                 } else {
                     alert(MESSAGE_MAP.LOGIN_SUCCESS);
+                    this.variableMap.get('userpanel').forceRender(responseJson);
                     this.variableMap.get('router').renderAndSave('/');
                 }
 

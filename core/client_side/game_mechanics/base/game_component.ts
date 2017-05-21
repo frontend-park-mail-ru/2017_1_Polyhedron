@@ -9,7 +9,6 @@ type validatorType = (position: number[]) => boolean;
 export abstract class GameComponent extends SolidBody {
     private _positionValidator: validatorType;
     private _children: GameComponent[];
-    private _scale: number;
 
     constructor(
         positionValidator: validatorType = () => true
@@ -52,7 +51,7 @@ export abstract class GameComponent extends SolidBody {
     public abstract get shape(): any
 
     public moveToWithConstraints(newPosition: number[]) {
-        if (this._positionValidator(newPosition)) {
+        if (this._positionValidator(math.subtract(newPosition, this.position))) {
             this.moveTo(newPosition);
         }
     }
