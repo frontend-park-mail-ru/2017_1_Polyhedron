@@ -14,12 +14,25 @@ branches:
     - master
     - dev
 
+#script:
+#  - docker login --username=_ --password=$(echo $API_KEY) registry.heroku.com
+#  - docker build -t registry.heroku.com/polyhedron-team/web .
+#  - docker push registry.heroku.com/polyhedron-team/web
+
 deploy:
   provider: heroku
   app:
   # Your branch name: Your heroku application name
     master: polyhedron
+      script:
+        - docker login --username=_ --password=$(echo $API_KEY) registry.heroku.com
+        - docker build -t registry.heroku.com/polyhedron-team/web .
+        - docker push registry.heroku.com/polyhedron-team/web
     dev: polyhedron-team
+      script:
+        - docker login --username=_ --password=$(echo $API_KEY) registry.heroku.com
+        - docker build -t registry.heroku.com/polyhedron-team/web .
+        - docker push registry.heroku.com/polyhedron-team/web
   api_key:
     # Your branch name:
       # secure: Your api secret
