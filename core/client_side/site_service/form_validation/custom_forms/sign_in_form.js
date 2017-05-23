@@ -12,6 +12,7 @@ const messages_1 = require("../messages");
 const fields = require("../form_fields");
 const decorators_1 = require("../../../game_mechanics/experimental/decorators");
 const context_1 = require("../../../game_mechanics/experimental/context");
+const top_1 = require("../../../../../static/js/components/top/top");
 const LOGIN_SELECTORS = {
     form: '#signInForm',
     fields: {
@@ -40,6 +41,7 @@ class SignInForm extends base_form_1.Form {
         }, submitter);
     }
     _sendData() {
+        top_1.Top.startLoadingAnimation();
         this.backendAPI.login(this._fields.email.getValue(), this._fields.password.getValue())
             .then(response => {
             return response.json();
@@ -48,14 +50,19 @@ class SignInForm extends base_form_1.Form {
             if (responseJson.errors) {
                 // console.log(responseJson.errors);    // TODO set up proper logging
                 alert(messages_1.MESSAGE_MAP.INVALID_CREDENTIALS);
+                this.variableMap.set('user', null);
             }
             else {
-                alert(messages_1.MESSAGE_MAP.LOGIN_SUCCESS);
-                this.variableMap.get('router').renderAndSave('/');
+                this.variableMap.set('user', responseJson.data);
             }
+            this.variableMap.get('userpanel').forceRender();
+            this.variableMap.get('router').renderAndSave('/');
         })
             .catch(err => {
             alert(messages_1.MESSAGE_MAP.CONNECTION_FAIL);
+            this.variableMap.set('user', null);
+            this.variableMap.get('userpanel').forceRender();
+            this.variableMap.get('router').renderAndSave('/');
             // console.log(err);    // TODO set up proper logging
         });
     }

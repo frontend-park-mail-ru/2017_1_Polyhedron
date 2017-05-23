@@ -27,7 +27,8 @@ export class About extends BasePage {
 
     public async render() {
         this._heading.innerHTML = "Об игре";
-        this.variableMap.get('userpanel').render();
+        this.variableMap.get('userpanel').setOptions(false, false, false);
+        this.variableMap.get('userpanel').forceRender();
         this.text.render();
     }
 }

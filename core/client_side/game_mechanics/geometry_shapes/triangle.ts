@@ -60,11 +60,6 @@ export class Triangle {
         return 2 * (1 - bottomDistance / this._height) * this._halfWidth;
     }
 
-    public scale(scaleFactor) {
-        this._height *= scaleFactor;
-        this._halfWidth *= scaleFactor;
-    }
-
     private _underLeftSide(x: number, y: number): boolean {
         return y < this.height + x * this.height / this.halfWidth;
     }

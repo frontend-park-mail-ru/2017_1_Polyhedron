@@ -76,7 +76,8 @@ class GameServer {
             ws.on('message', message => {
                 const index = getSessionIndex(getUserSession(ws));
                 const game = this._gameMap.get(getSessionPrefix(session));
-                game.movePlatformByIndex(index, JSON.parse(message).data);
+                game.getPlatformByIndex(index).moveTo(JSON.parse(message).data);    // TODO check if correct
+                // game.movePlatformByIndex(index, JSON.parse(message).data);
             });
         });
     }

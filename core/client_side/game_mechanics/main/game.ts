@@ -41,7 +41,6 @@ export class Game {
     private _field: Rectangular;
 
     private _platformVelocityDirection: number[] = [0, 0];
-    private _lastCollidedObject: GameComponent;
 
     private _setIntervalID: number;
     private _lastPlatformPosition: number[];
@@ -59,8 +58,6 @@ export class Game {
             height: this._gameConfig.fieldSize,
             width: this._gameConfig.fieldSize
         };
-
-        this._lastCollidedObject = null;
 
         this._setIntervalID = null;
         this._lastPlatformPosition = null;
@@ -99,11 +96,11 @@ export class Game {
         return this._world.getState();
     }
 
-    public movePlatformByIndex(index: number, position: Point) {
-        this._getPlatformByIndex(index).moveTo(position);
-    }
+    // public movePlatformByIndex(index: number, position: Point) {
+    //     this.getPlatformByIndex(index).moveTo(position);
+    // }
 
-    private _getPlatformByIndex(index): Platform {
+    public getPlatformByIndex(index): Platform {
         return getByCircularIndex(this._world.platforms, index);
     }
 
@@ -151,9 +148,6 @@ export class Game {
         this.eventBus.addEventListener(events.networkEvents.DefeatEvent.eventName,
             event => this._handleDefeatEvent(event));
 
-        this.eventBus.addEventListener(events.gameEvents.ClientDefeatEvent.eventName,
-            event => this._handleClientDefeatEvent(event));
-
         this.eventBus.addEventListener(
             events.gameEvents.ClientDefeatEvent.eventName,
             event => this._handleClientDefeatEvent(event)
@@ -188,7 +182,7 @@ export class Game {
     private _handleUserInput(time: number) {
         const velocity = math.multiply(this._platformVelocityDirection, this._gameConfig.platformVelocity);
         const localOffset = math.multiply(this._platformVelocityDirection, this._gameConfig.platformVelocity * time);
-        this._world.movePlatform(this._getPlatformByIndex(0), localOffset, velocity);
+        this._world.movePlatform(this.getPlatformByIndex(0), localOffset, velocity);
     }
 
     private _handleDefeatEvent(event) {
@@ -209,7 +203,7 @@ export class Game {
     }
 
     private _createBots() {
-        this._bots = [1, 2, 3].map(i => new Bot(this._getPlatformByIndex(i), this._world.ball));
+        this._bots = [1, 2, 3].map(i => new Bot(this.getPlatformByIndex(i), this._world.ball));
     }
 
     private _redraw() {

@@ -12,6 +12,7 @@ const messages_1 = require("../messages");
 const fields = require("../form_fields");
 const decorators_1 = require("../../../game_mechanics/experimental/decorators");
 const context_1 = require("../../../game_mechanics/experimental/context");
+const top_1 = require("../../../../../static/js/components/top/top");
 const REGISTER_SELECTORS = {
     form: '#signUpForm',
     fields: {
@@ -54,6 +55,7 @@ class SignUpForm extends base_form_1.Form {
         }, submitter);
     }
     _sendData() {
+        top_1.Top.startLoadingAnimation();
         this.backendAPI.register(this._fields.email.getValue(), this._fields.login.getValue(), this._fields.password.getValue())
             .then(response => {
             if (response.status === 200) {

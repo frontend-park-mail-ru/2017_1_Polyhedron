@@ -5,6 +5,8 @@ import {MESSAGE_MAP} from '../messages';
 import * as fields from '../form_fields';
 import {Autowired} from "../../../game_mechanics/experimental/decorators";
 import {VariableContext} from "../../../game_mechanics/experimental/context";
+import {Waiter} from "../../../../../static/js/components/waiter/waiter";
+import {Top} from "../../../../../static/js/components/top/top";
 
 
 const LOGIN_SELECTORS = {
@@ -51,6 +53,7 @@ export class SignInForm extends Form {
     }
 
     protected _sendData() {
+        Top.startLoadingAnimation();
         this.backendAPI.login(this._fields.email.getValue(), this._fields.password.getValue())
             .then(response => {
                 return response.json();
@@ -59,14 +62,21 @@ export class SignInForm extends Form {
                 if (responseJson.errors) {
                     // console.log(responseJson.errors);    // TODO set up proper logging
                     alert(MESSAGE_MAP.INVALID_CREDENTIALS);
+                    this.variableMap.set('user', null);
                 } else {
-                    alert(MESSAGE_MAP.LOGIN_SUCCESS);
-                    this.variableMap.get('router').renderAndSave('/');
+                    this.variableMap.set('user', responseJson.data);
                 }
+
+                this.variableMap.get('userpanel').forceRender();
+                this.variableMap.get('router').renderAndSave('/');
 
             })
             .catch(err => {
                 alert(MESSAGE_MAP.CONNECTION_FAIL);
+                this.variableMap.set('user', null);
+
+                this.variableMap.get('userpanel').forceRender();
+                this.variableMap.get('router').renderAndSave('/');
                 // console.log(err);    // TODO set up proper logging
             });
     }

@@ -28,7 +28,11 @@ export function Autowired(constructFunc: NamedConstructible, ...args: any[]) {
     loadDataSources();
 
     const context = ServiceContext.getInstance();
-    context.set(constructFunc.name, new constructFunc(...args));
+
+    if (!context.contains(constructFunc.name)) {
+        context.set(constructFunc.name, new constructFunc(...args));
+    }
+
 
     return (target: any, key: string) => {
         target[key] = context.get(constructFunc.name);

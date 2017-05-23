@@ -25,7 +25,8 @@ export class ChoiceGameMode extends BasePage {
 
     public async render() {
         this._heading.innerHTML = "Выбор режима";
-        this.variableMap.get('userpanel').render();
+        this.variableMap.get('userpanel').setOptions(false, false, false);
+        this.variableMap.get('userpanel').forceRender();
         this.menu.render();
     }
 }

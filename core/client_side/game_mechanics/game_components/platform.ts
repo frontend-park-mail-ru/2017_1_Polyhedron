@@ -79,27 +79,6 @@ export class Platform extends GameComponent implements Drawable, PolygonObstacle
             .sort((obj1, obj2) => obj1.distance - obj2.distance)[0].point;
     }
 
-    public getBouncePoint(ball) {
-        const lineArray = this.getLineArray();
-
-        const pointsData = lineArray
-            .map(line => line.getClosestPoint(ball.position))
-            .map(point => {
-                return {
-                    point,
-                    distance: math.norm(math.subtract(point, ball.position))
-                };
-            })
-            .filter(obj => obj.distance <= ball.radius);
-
-        if (pointsData.length === 0) {
-            return null;
-        }
-
-        return pointsData
-            .sort((obj1, obj2) => obj1.distance - obj2.distance)[0].point;
-    }
-
     public getDrawing() {
         return (canvas, initialRectangle?: Rectangular) => {
             const context = canvas.getContext("2d");

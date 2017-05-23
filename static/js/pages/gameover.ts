@@ -34,7 +34,8 @@ export class GameOver extends BasePage {
 
     public async render(options) {
         this._heading.innerHTML = "Партия завершена";
-        this.variableMap.get('userpanel').render();
+        this.variableMap.get('userpanel').setOptions(false, false, false);
+        this.variableMap.get('userpanel').forceRender();
 
         if (!options) {
             throw new Error('Tried to render gameover page without options');

@@ -5,6 +5,7 @@ import {MESSAGE_MAP} from '../messages';
 import * as fields from '../form_fields';
 import {Autowired} from "../../../game_mechanics/experimental/decorators";
 import {VariableContext} from "../../../game_mechanics/experimental/context";
+import {Top} from "../../../../../static/js/components/top/top";
 
 
 const REGISTER_SELECTORS = {
@@ -68,6 +69,8 @@ export class SignUpForm extends Form {
     }
 
     protected _sendData() {
+        Top.startLoadingAnimation();
+
         this.backendAPI.register(
             this._fields.email.getValue(),
             this._fields.login.getValue(),

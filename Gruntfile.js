@@ -1,6 +1,5 @@
 'use strict';
 
-const webpack = require('webpack');
 const path = require("path");
 
 
@@ -10,7 +9,7 @@ module.exports = function(grunt) {
         pkg: grunt.file.readJSON('package.json'),
 
         webpack: {
-            pre_build_index: {
+            preBuildIndex: {
                 progress: true,
                 entry: "./static/js/main.ts",
                 output: {
@@ -84,7 +83,7 @@ module.exports = function(grunt) {
                 files: [
                     './templates/*.pug'
                 ],
-                tasks: ['exec:compile_pug', 'webpack']
+                tasks: ['exec:compilePug', 'webpack']
             },
 
             css: {
@@ -132,8 +131,8 @@ module.exports = function(grunt) {
                 src: ['tests/test.js']
             },
 
-            backend_test: {
-                src: ['tests/backend_test.js']
+            backendTest: {
+                src: ['tests/backendTest.js']
             }
         },
 
@@ -147,9 +146,10 @@ module.exports = function(grunt) {
         },
 
         exec: {
-            compile_pug: 'node compilers/pug_compiler.js',
-            compile_swagger: 'node compilers/swagger_compiler.js',
-            minify_bundle: 'node compilers/minificator.js'
+            compilePug: 'node compilers/pug_compiler.js',
+            compileSwagger: 'node compilers/swagger_compiler.js',
+            minifyBundle: 'node compilers/minificator.js',
+            saveCachedUrls: 'node compilers/cache_url_generator.js'
         },
 
     });
@@ -166,12 +166,13 @@ module.exports = function(grunt) {
 
 
     grunt.registerTask('postinstall', [
-        'exec:compile_pug', 'exec:compile_swagger', 'webpack', /*'exec:minify_bundle',*/ 'postcss'
+        'exec:compilePug', 'exec:compileSwagger', 'webpack', /*'exec:minifyBundle',*/ 'postcss', 'exec:saveCachedUrls'
     ]);
 
     grunt.registerTask('test', [
         'eslint', 'tslint', 'stylelint'
     ]);
 
-    grunt.registerTask('dev', ['exec:compile_pug', 'webpack:pre_build_index', 'postcss', 'concurrent:watch']);
+    grunt.registerTask('dev', ['exec:compilePug', 'webpack:preBuildIndex', 'postcss',
+        'exec:saveCachedUrls', 'concurrent:watch']);
 };

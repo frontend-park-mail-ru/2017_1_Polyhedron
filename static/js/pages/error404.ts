@@ -23,7 +23,8 @@ export class Error extends BasePage {
 
     public async render() {
         this._heading.innerHTML = "Ошибка";
-        this.variableMap.get('userpanel').render();
+        this.variableMap.get('userpanel').setOptions(false, false, false);
+        this.variableMap.get('userpanel').forceRender();
         this.text.render();
     }
 }

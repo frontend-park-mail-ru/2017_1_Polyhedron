@@ -16,18 +16,6 @@ export class Line {
         this._coordinateSystem = new CoordinateSystem(this._startPoint, this.angle);
     }
 
-    public getClosestPointDistance(globalPoint): number {
-        const [localX, localY] = this._coordinateSystem.toLocals(globalPoint);
-
-        if (localX < 0) {
-            return math.norm(math.subtract(globalPoint, this._startPoint));
-        } else if (localX > this.length) {
-            return math.norm(math.subtract(globalPoint, this._endPoint));
-        } else {
-            return Math.abs(localY);
-        }
-    }
-
     public getClosestPoint(globalPoint): number[] {
         const localX = this._coordinateSystem.toLocals(globalPoint)[0];
 
@@ -38,10 +26,6 @@ export class Line {
         } else {
             return this._coordinateSystem.toGlobals([localX, 0]);
         }
-    }
-
-    public getLineDistance(globalPoint): number {
-        return Math.abs(this._coordinateSystem.toLocals(globalPoint)[1]);
     }
 
     public get angle(): number {
@@ -61,9 +45,5 @@ export class Line {
 
     public get length(): number {
         return math.norm(math.subtract(this._endPoint, this._startPoint));
-    }
-
-    private _withinLineRange(localPoint): boolean {
-        return 0 <= localPoint[0] && localPoint[0] <= this.length;
     }
 }
