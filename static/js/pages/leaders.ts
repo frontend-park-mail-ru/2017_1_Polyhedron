@@ -46,7 +46,7 @@ export class Leaders extends BasePage {
         this.text.render();
         this.waiter.render();
 
-        this.variableMap.get('userpanel').set_options(false, false, false);
+        this.variableMap.get('userpanel').setOptions(false, false, false);
         this.variableMap.get('userpanel').forceRender();
 
         this.backendAPI.getLeaders(this._leaderCount)

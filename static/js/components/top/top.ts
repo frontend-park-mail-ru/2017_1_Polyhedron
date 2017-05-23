@@ -37,7 +37,7 @@ export class Top extends Component {
         this.firstRender = true;
     }
 
-    public set_options(hideMenu, hideLogin, hideReg) {
+    public setOptions(hideMenu, hideLogin, hideReg) {
         this.hideMenu = hideMenu;
         this.hideLogin = hideLogin;
         this.hideReg = hideReg;

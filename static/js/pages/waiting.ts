@@ -45,7 +45,7 @@ export class Waiting extends BasePage {
 
     public async render() {
         this._heading.innerHTML = "Подготовка партии";
-        this.variableMap.get('userpanel').set_options(false, false, false);
+        this.variableMap.get('userpanel').setOptions(false, false, false);
         this.variableMap.get('userpanel').forceRender();
         this.text.render();
 

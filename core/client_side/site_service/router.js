@@ -49,13 +49,7 @@ class Router {
                 this._currView.reset();
             }
             return view.render(options)
-                .then(() => {
-                this._currView = view;
-                return;
-            })
-                .catch((err) => {
-                throw err;
-            });
+                .then(() => this._currView = view);
         });
     }
     renderAndSave(url, options) {

@@ -29,9 +29,9 @@ export class Game extends BasePage {
 
         this._heading.innerHTML = this._options.mode === 'multi' ? "Сражение" : "Игра";
 
-        this.variableMap.get('userpanel')
-            .set_options(false, false, false)
-            .render();
+        const userPanel = this.variableMap.get('userpanel');
+        userPanel.setOptions(false, false, false);
+        userPanel.render();
 
         this._content.innerHTML = renderGame.template(this._options);
         this.gamepad.render(this._content.querySelector('.game'));
