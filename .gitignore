@@ -54,3 +54,4 @@ dist
 /core/common/id_generator.js.map
 /static/cached_urls
 !/core/client_side/site_service/offline_mode/worker_script.js
+!/core/client_side/site_service/offline_mode/worker_module.js
