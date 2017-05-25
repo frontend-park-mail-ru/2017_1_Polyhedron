@@ -1,18 +1,46 @@
 .game {
   position: absolute;
-  z-index: 1;
-  top: 0;
+  top: 3rem;
   left: 0;
-  margin: 3rem 0 0;
-  min-width: $game-width;
+  height: 90%;
+  width: 100%;
+  display: table-cell;
+  vertical-align: middle;
+  z-index: 1;
+}
+
+#game {
+  position: absolute;
+  top: 50%;
+  width: $game-width;
+  height: @width;
+  margin-top: calc(-0.5*@width);
+  margin-left: calc(-0.5*@width);
+}
+
+.replay {
+  position: absolute;
+  top: 3rem;
   width: 100%;
 }
 
-@media only screen and (max-width: 760px),
+@media only screen and (max-width: 768px),
   (min-device-width: 768px) and (max-device-width: 1024px) {
   .game {
-    transform: scale(0.5);
-    transform-origin: 0 0;
-    bottom: 0;
+    position: inherit;
+    height: 90%;
+  }
+
+  #game {
+    position: inherit;
+    width: $min-width;
+    height: @width;
+    margin: 0;
+    margin-top: -3rem;
+  }
+
+  .replay {
+    top: 4rem;
+    width: $min-width;
   }
 }
