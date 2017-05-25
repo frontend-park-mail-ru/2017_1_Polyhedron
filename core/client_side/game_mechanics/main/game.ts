@@ -96,10 +96,6 @@ export class Game {
         return this._world.getState();
     }
 
-    // public movePlatformByIndex(index: number, position: Point) {
-    //     this.getPlatformByIndex(index).moveTo(position);
-    // }
-
     public getPlatformByIndex(index): Platform {
         return getByCircularIndex(this._world.platforms, index);
     }
