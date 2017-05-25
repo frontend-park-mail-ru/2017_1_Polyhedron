@@ -1,9 +1,13 @@
 "use strict";
 Object.defineProperty(exports, "__esModule", { value: true });
+const PAGE_SELECTORS = {
+    alert: '.js-alert',
+};
 class Form {
     constructor(fields, submitter) {
         this._fields = fields;
         this._submitter = submitter;
+        this._alert = document.querySelector(PAGE_SELECTORS.alert);
         this._setFieldsHook();
         this._submitter.addEventListener('click', (event) => {
             event.preventDefault();
@@ -22,7 +26,7 @@ class Form {
             this._sendData();
         }
         else {
-            alert('Пожалуйста, введите корректные данные');
+            this._alert.innerHTML = 'Пожалуйста, введите корректные данные';
         }
     }
     _sendData() {

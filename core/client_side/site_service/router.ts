@@ -48,6 +48,8 @@ export class Router {
         if (this._currView) {
             this._currView.reset();
         }
+        view.clearAlert();
+
         return view.render(options)
             .then(() => this._currView = view);
     }
