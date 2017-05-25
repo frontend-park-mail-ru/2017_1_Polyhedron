@@ -13,7 +13,10 @@ const OUTPUT = './static/cached_urls';
             ['./dist', '/dist/']
         ],
 
-        plainUrls: ['/']
+        plainUrls: [
+            '/', '/index', '/about', '/choice', '/game', '/battle', '/gameover',
+            '/leaders', '/login', '/signup', '/waiting', '/404'
+        ]
     });
     console.log('Cached URL generation finished');
 })();
