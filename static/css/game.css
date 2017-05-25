@@ -14,8 +14,8 @@
   top: 50%;
   width: $game-width;
   height: @width;
-  margin-top: -400px;
-  margin-left: -400px;
+  margin-top: calc(-0.5*@width);
+  margin-left: calc(-0.5*@width);
 }
 
 .replay {

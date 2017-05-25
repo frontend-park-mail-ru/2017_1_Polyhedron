@@ -11,7 +11,7 @@ $glow-inner-color: red;
 $border-primary-color: gray;
 $border-accented-color: white;
 
-$game-width: 800px;
+$game-width: 700px;
 $min-width: 20rem;
 
 @define-mixin importFont $font, $file {
