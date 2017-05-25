@@ -14,13 +14,13 @@
   top: 50%;
   width: $game-width;
   height: @width;
-  margin-top: calc(-0.5*@width);
-  margin-left: calc(-0.5*@width);
+  margin-top: calc(-0.5 * @width);
+  margin-left: calc(-0.5 * @width);
 }
 
 .replay {
   position: absolute;
-  top: 3rem;
+  top: 0;
   width: 100%;
 }
 
