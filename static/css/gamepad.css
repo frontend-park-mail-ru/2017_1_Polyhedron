@@ -3,6 +3,7 @@ $control-margin: 0.5rem;
 $control-shift: calc($control-size + $control-margin);
 
 .controls {
+  display: none;
   position: absolute;
   z-index: 2;
   bottom: $control-margin;
@@ -51,4 +52,13 @@ $control-shift: calc($control-size + $control-margin);
 .controls__button.controls__button_right {
   top: $control-shift;
   right: 0;
+}
+
+@media only screen and (max-width: 768px),
+  (min-device-width: 768px) and (max-device-width: 1024px) {
+  .controls {
+    display: block;
+    transform: scale(0.5, 0.5);
+    transform-origin: bottom right;
+  }
 }

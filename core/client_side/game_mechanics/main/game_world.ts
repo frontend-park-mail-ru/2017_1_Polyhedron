@@ -222,7 +222,7 @@ export class GameWorld implements Drawable, Stateful<GameWorldState> {
         context.textAlign = "center";
         context.fillStyle = "white";
 
-        const message = "Вы отбили " + this._score + " мячей";
+        const message = "Мячей отбито: " + this._score;
         context.fillText(message, canvas.width * 0.5, canvas.height);
     }
 }

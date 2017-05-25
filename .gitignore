@@ -37,17 +37,21 @@ jspm_packages
 .node_repl_history
 
 # Additional
-*~
+
 .idea
 .DS_Store
 dist
 /static/**/*.map
 /static/**/*.js
 /swagger.json
-/core/client_side/game_mechanics/**/*.js
-/core/client_side/game_mechanics/**/*.map
 /core/server_side/ws_server/*.js
 /core/server_side/ws_server/*.map
+
+/core/client_side/**/*.js
+/core/client_side/**/*.map
+
 /core/common/id_generator.js
 /core/common/id_generator.js.map
 /static/cached_urls
+!/core/client_side/site_service/offline_mode/worker_script.js
+!/core/client_side/site_service/offline_mode/worker_module.js

@@ -8,7 +8,6 @@ html {
   height: 100%;
   width: 100%;
   min-width: $game-width;
-  overflow-x: hidden;
   padding: 0;
   margin: 0;
   background: black url('/static/images/background.jpg') 50% 50%;
@@ -25,6 +24,7 @@ body {
   height: 100%;
   margin: 0;
   background: url('/static/images/emblem.jpg') no-repeat 60vw 50%;
+  overflow-x: hidden;
 }
 
 a {
@@ -83,4 +83,19 @@ a {
   height: 0;
 
   @mixin closer;
+}
+
+@media only screen and (max-width: 768px),
+  (min-device-width: 768px) and (max-device-width: 1024px) {
+  html {
+    min-width: auto;
+  }
+
+  .header {
+    font-size: 350%;
+  }
+
+  .container__inner {
+    vertical-align: top;
+  }
 }

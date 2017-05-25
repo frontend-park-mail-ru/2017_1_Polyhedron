@@ -1,11 +1,17 @@
+import {MESSAGE_MAP} from "./messages";
+const PAGE_SELECTORS = {
+    alert: '.js-alert',
+};
 
 export class Form {
     protected _fields: any;   // TODO make more concrete type
     protected _submitter: Element;
+    protected _alert: Element;
 
     constructor(fields, submitter) {
         this._fields = fields;
         this._submitter = submitter;
+        this._alert = document.querySelector(PAGE_SELECTORS.alert);
         this._setFieldsHook();
 
         this._submitter.addEventListener('click', (event) => {
@@ -31,7 +37,7 @@ export class Form {
         if (this.isValid()) {
             this._sendData();
         } else {
-            alert('Пожалуйста, введите корректные данные');
+            this._alert.innerHTML = MESSAGE_MAP.VALIDATE_DATA;
         }
     }
 

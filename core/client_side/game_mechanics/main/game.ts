@@ -31,6 +31,8 @@ const MODES = {
 };
 
 
+const ALERT_SELECTOR = '.js-alert';
+
 export class Game {
     @Autowired(EventBus)
     private eventBus: EventBus;
@@ -39,6 +41,8 @@ export class Game {
     private _gameConfig: any;
 
     private _field: Rectangular;
+
+    private _alert: Element;
 
     private _platformVelocityDirection: number[] = [0, 0];
 
@@ -58,6 +62,7 @@ export class Game {
             height: this._gameConfig.fieldSize,
             width: this._gameConfig.fieldSize
         };
+        this._alert = document.querySelector(ALERT_SELECTOR);
 
         this._setIntervalID = null;
         this._lastPlatformPosition = null;
@@ -95,10 +100,6 @@ export class Game {
     public getWorldState(): GameWorldState {
         return this._world.getState();
     }
-
-    // public movePlatformByIndex(index: number, position: Point) {
-    //     this.getPlatformByIndex(index).moveTo(position);
-    // }
 
     public getPlatformByIndex(index): Platform {
         return getByCircularIndex(this._world.platforms, index);
@@ -193,12 +194,18 @@ export class Game {
         if (this._running && this._mode === MODES.single) {
             const isWinner = event.detail !== this._activePlatform.id;
 
+            // if (isWinner) {
+            //     this._alert.innerHTML = 'Вы победили!';
+            // } else {
+            //     this._alert.innerHTML = 'Вы проиграли';
+            // }
+
+            // TODO either remove below or above
             this.eventBus.dispatchEvent(RenderPageEvent.create({
                 url: GAME_OVER_PAGE_URL,
                 options: {isWinner}
             }));
             this._running = false;
-            this.stop();
         }
     }
 

@@ -125,7 +125,7 @@ function arange(begin: number, end: number, step: number): number[] {
     const range = end - begin;
     const checkPointNum = Math.floor(range / step);
     const checkPointArray = checkPointNum === 0 ? [] : Array.from(Array(checkPointNum)).map((_, index) => {
-        return begin + range / checkPointNum * (index + 1);
+        return begin + step * (index + 1);
     });
 
     const lastElement = checkPointArray[checkPointArray.length - 1];

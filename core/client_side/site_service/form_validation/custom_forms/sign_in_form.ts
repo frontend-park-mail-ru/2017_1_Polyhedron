@@ -60,24 +60,19 @@ export class SignInForm extends Form {
             })
             .then(responseJson => {
                 if (responseJson.errors) {
-                    // console.log(responseJson.errors);    // TODO set up proper logging
-                    alert(MESSAGE_MAP.INVALID_CREDENTIALS);
-                    this.variableMap.set('user', null);
+                    this._alert.innerHTML = MESSAGE_MAP.INVALID_CREDENTIALS;
                 } else {
+                    this._alert.innerHTML = MESSAGE_MAP.LOGIN_SUCCESS;
                     this.variableMap.set('user', responseJson.data);
+                    this.variableMap.get('router').renderAndSave('/');
                 }
 
                 this.variableMap.get('userpanel').forceRender();
-                this.variableMap.get('router').renderAndSave('/');
+                // this.variableMap.get('router').renderAndSave('/');   // TODO uncomment
 
             })
             .catch(err => {
-                alert(MESSAGE_MAP.CONNECTION_FAIL);
-                this.variableMap.set('user', null);
-
-                this.variableMap.get('userpanel').forceRender();
-                this.variableMap.get('router').renderAndSave('/');
-                // console.log(err);    // TODO set up proper logging
+                this._alert.innerHTML = MESSAGE_MAP.CONNECTION_FAIL;
             });
     }
 }

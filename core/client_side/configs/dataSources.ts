@@ -29,7 +29,7 @@ export const config = {
             time: MILLISECONDS_PER_SECOND / CLIENT_FRAME_RATE,
             fillFactor: 0.8,
             ballRelativeRadius: 0.05,
-            ballVelocity: [0.00, 0.08],
+            ballVelocity: [0.00, 0.06],
             platformVelocity: 0.03,
             minimalOffset: 1,
 
