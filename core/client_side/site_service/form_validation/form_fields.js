@@ -9,12 +9,12 @@ const DEFAULT_PARAMETERS = {
     login: {
         minLength: 2,
         maxLength: 100,
-        pattern: /^[a-z][a-z0-9]*?([_][a-z0-9]+){0,2}$/i,
+        pattern: /^[a-z0-9_]*$/i,
     },
     password: {
         minLength: 2,
         maxLength: 100,
-        pattern: /^[a-z][a-z0-9]*?([_][a-z0-9]+){0,2}$/i,
+        pattern: /^[a-z0-9_]*$/i,
     }
 };
 const DEFAULT_TEXT_MESSAGES = {

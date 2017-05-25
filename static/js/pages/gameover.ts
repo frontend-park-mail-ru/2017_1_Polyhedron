@@ -19,14 +19,14 @@ export class GameOver extends BasePage {
         this.winnerText = new Text({
             items: [
                 {text: 'Вы победили!'},
-                {text: '<a href="/choice">Еще партию?</a>'},
+                {text: '<a href="/game">Еще партию?</a>'},
             ],
             parent: this._content
         });
         this.loserText = new Text({
             items: [
                 {text: 'К сожалению, Вы проиграли.'},
-                {text: '<a href="/choice">Отыграемся?</a>'},
+                {text: '<a href="/game">Отыграемся?</a>'},
             ],
             parent: this._content
         });

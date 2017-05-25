@@ -31,7 +31,7 @@ export class Game extends BasePage {
 
         const userPanel = this.variableMap.get('userpanel');
         userPanel.setOptions(false, false, false);
-        userPanel.render();
+        userPanel.forceRender();
 
         this._content.innerHTML = renderGame.template(this._options);
         this.gamepad.render(this._content.querySelector('.game'));

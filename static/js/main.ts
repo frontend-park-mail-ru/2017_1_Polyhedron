@@ -19,8 +19,8 @@ import {loadWorker} from "../../core/client_side/site_service/offline_mode/worke
 
             router.renderAndSave(window.location.pathname);
 
-            document.body.addEventListener('click', event => {
-                const target = event.target as any; // TODO strange: need to make typecast
+            document.body.addEventListener('click', (event: any) => {
+                const target = event.target;
 
                 if (target.nodeName === "A" && target.dataset.page) {
                     event.preventDefault();
@@ -40,6 +40,6 @@ import {loadWorker} from "../../core/client_side/site_service/offline_mode/worke
     }
     const starter = new Starter();
     starter.start();
-    loadWorker('/worker_script.js');
+    // loadWorker('/worker_script.js'); // TODO uncomment
 })();
 

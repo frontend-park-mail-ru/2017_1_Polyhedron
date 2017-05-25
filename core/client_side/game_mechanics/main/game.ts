@@ -32,7 +32,6 @@ const MODES = {
 
 
 const ALERT_SELECTOR = '.js-alert';
-const DEFAULT_MODE = MODES.multi;
 
 export class Game {
     @Autowired(EventBus)
@@ -195,17 +194,17 @@ export class Game {
         if (this._running && this._mode === MODES.single) {
             const isWinner = event.detail !== this._activePlatform.id;
 
-            if (isWinner) {
-                this._alert.innerHTML = 'Вы проиграли';
-            } else {
-                this._alert.innerHTML = 'Вы победили!';
-            }
+            // if (isWinner) {
+            //     this._alert.innerHTML = 'Вы победили!';
+            // } else {
+            //     this._alert.innerHTML = 'Вы проиграли';
+            // }
 
             // TODO either remove below or above
-            // this.eventBus.dispatchEvent(RenderPageEvent.create({
-            //     url: GAME_OVER_PAGE_URL,
-            //     options: {isWinner}
-            // }));
+            this.eventBus.dispatchEvent(RenderPageEvent.create({
+                url: GAME_OVER_PAGE_URL,
+                options: {isWinner}
+            }));
             this._running = false;
         }
     }

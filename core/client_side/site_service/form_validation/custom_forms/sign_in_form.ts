@@ -60,11 +60,10 @@ export class SignInForm extends Form {
             })
             .then(responseJson => {
                 if (responseJson.errors) {
-                    // console.log(responseJson.errors);    // TODO set up proper logging
-
                     this._alert.innerHTML = MESSAGE_MAP.INVALID_CREDENTIALS;
                 } else {
                     this._alert.innerHTML = MESSAGE_MAP.LOGIN_SUCCESS;
+                    this.variableMap.set('user', responseJson.data);
                     this.variableMap.get('router').renderAndSave('/');
                 }
 
