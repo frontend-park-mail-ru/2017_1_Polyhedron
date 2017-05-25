@@ -47,6 +47,7 @@ class SignInForm extends base_form_1.Form {
             .then(responseJson => {
             if (responseJson.errors) {
                 // console.log(responseJson.errors);    // TODO set up proper logging
+
                 alert(messages_1.MESSAGE_MAP.INVALID_CREDENTIALS);
             }
             else {

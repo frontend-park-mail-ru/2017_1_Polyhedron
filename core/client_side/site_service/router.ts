@@ -26,6 +26,7 @@ export class Router {
         if (this._currView) {
             this._currView.reset();
         }
+        view.clearAlert();
         view.render(options);
         this._currView = view;
     }

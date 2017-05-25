@@ -58,15 +58,15 @@ export class SignInForm extends Form {
             .then(responseJson => {
                 if (responseJson.errors) {
                     // console.log(responseJson.errors);    // TODO set up proper logging
-                    alert(MESSAGE_MAP.INVALID_CREDENTIALS);
+                    this._alert.innerHTML = MESSAGE_MAP.INVALID_CREDENTIALS;
                 } else {
-                    alert(MESSAGE_MAP.LOGIN_SUCCESS);
+                    this._alert.innerHTML = MESSAGE_MAP.LOGIN_SUCCESS;
                     this.variableMap.get('router').renderAndSave('/');
                 }
 
             })
             .catch(err => {
-                alert(MESSAGE_MAP.CONNECTION_FAIL);
+                this._alert.innerHTML = MESSAGE_MAP.CONNECTION_FAIL;
                 // console.log(err);    // TODO set up proper logging
             });
     }

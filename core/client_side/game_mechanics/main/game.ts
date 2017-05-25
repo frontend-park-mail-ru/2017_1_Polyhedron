@@ -22,6 +22,8 @@ const MODES = {
 
 const DEFAULT_MODE = MODES.multi;
 
+const ALERT_SELECTOR = '.js-alert';
+
 
 @Application(services)
 export class Game {
@@ -33,6 +35,8 @@ export class Game {
 
     private _canvas: HTMLCanvasElement;
     private _context: CanvasRenderingContext2D;
+
+    private _alert: Element;
 
     private _platformVelocityDirection: number[] = [0, 0];
     private _lastCollidedObject: GameComponent;
@@ -49,6 +53,8 @@ export class Game {
     constructor(canvas, mode?) {
         this._canvas = canvas;
         this._context = canvas.getContext("2d");
+
+        this._alert = document.querySelector(ALERT_SELECTOR);
 
         this._lastCollidedObject = null;
 
@@ -195,9 +201,9 @@ export class Game {
         // TODO сделать что-нибудь поинтереснее
         const sectorId = this._getItemIndex(event.detail);
         if (sectorId === this._playerItemsIndex) {
-            alert("You lose");
+            this._alert.innerHTML = 'Вы проиграли';
         } else {
-            alert("You win");
+            this._alert.innerHTML = 'Вы победили!';
         }
         this._world.userSectors[sectorId].setLoser();
         this._redraw();
@@ -210,8 +216,10 @@ export class Game {
 
         if (sectorId === playerId) {
             // alert("Вы проиграли");
+            this._alert.innerHTML = 'Вы проиграли';
         } else {
             // alert("Вы победили!");
+            this._alert.innerHTML = 'Вы победили!';
         }
 
         this._world.userSectors.filter(sector => sector.id === sectorId).forEach(sector => sector.setLoser());

@@ -75,15 +75,15 @@ export class SignUpForm extends Form {
         )
             .then(response => {
                 if (response.status === 200) {
-                    alert(MESSAGE_MAP.SIGN_UP_SUCCESS);
+                    this._alert.innerHTML = MESSAGE_MAP.SIGN_UP_SUCCESS;
                     this.variableMap.get('router').render("/");
                 } else {
-                    alert(MESSAGE_MAP.SIGN_UP_FAIL);
+                    this._alert.innerHTML = MESSAGE_MAP.SIGN_UP_FAIL;
                 }
                 // console.log(response);   // TODO set up proper logging
             })
             .catch(err => {
-                alert(MESSAGE_MAP.CONNECTION_FAIL);
+                this._alert.innerHTML = MESSAGE_MAP.CONNECTION_FAIL;
                 // console.log(err);    // TODO set up proper logging
             });
     }

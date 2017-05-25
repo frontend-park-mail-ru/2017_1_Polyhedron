@@ -26,6 +26,10 @@ export abstract class BasePage {
         this._options = options;
     }
 
+    public clearAlert() {
+        this._alert.innerHTML = "";
+    }
+
     public abstract render();
 
     public reset() {
