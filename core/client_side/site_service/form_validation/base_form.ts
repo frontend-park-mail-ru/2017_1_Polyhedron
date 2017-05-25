@@ -1,3 +1,4 @@
+import {MESSAGE_MAP} from "./messages";
 const PAGE_SELECTORS = {
     alert: '.js-alert',
 };
@@ -36,7 +37,7 @@ export class Form {
         if (this.isValid()) {
             this._sendData();
         } else {
-            this._alert.innerHTML = 'Пожалуйста, введите корректные данные';
+            this._alert.innerHTML = MESSAGE_MAP.VALIDATE_DATA;
         }
     }
 
